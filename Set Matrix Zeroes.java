@@ -2,7 +2,6 @@
 Given a m x n matrix, if an element is 0, set its entire row and column to 0. Do it in place.
  O(mn)解法：克隆原来的matrix，然后扫描原来的matrix，遇到0，则在克隆版本中将对应的行列置0。
  
-
 O(m+n)解法：用两个bool数组O(n)和O(m)，分别记录每行和每列的是否需要被置0。最后根据这两个数组来置0整个矩阵。
 
 public class Solution {
@@ -99,6 +98,57 @@ public class Solution {
         
     }
 
-    
+}
+
+-------------看似对且容易的解法： 
+
+public class Solution {
+   
+       int m, n;  
+
+    public void setZeroes(int[][] matrix) {
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
+            return; 
+        }
+         m = matrix.length;
+         n = matrix[0].length;
+         
+        
+        
+
+        for (int i = 0; i < m; i ++){
+            for(int j = 0; j < n; j ++){
+                
+                if (matrix[i][j] == 0 ){ //若这个element==0； 
+                   for(int k =0; k< m ; k ++){
+                       if( matrix[k][j] != 0){ //此列全设为-9999
+                       //!!不能直接设为0，不然循环到原本不为零但被改为零的数时又会使这数行列全都变零，所以要用个临时变量数
+                           matrix[k][j] = -99999;
+                       }
+                   }
+                   for(int k =0; k< n; k ++){
+                       if(matrix[i][k] != 0){ //此行全设为-9999
+                           matrix[i][k] = -99999; 
+                       }
+                   }
+                }
+            }
+        }
+        
+        for (int  i = 0 ; i < m ; i ++){
+            for (int j = 0; j < n ; j ++){
+                if(matrix[i][j] == -99999 ){ //将所有改变为零的数变为零
+                    matrix[i][j] = 0; 
+                }
+            }
+        }
+        
+       
+        
+    }
+
+    这种方法看似简单，但其实-99999可能会作为array中的数出现，有潜在风险。像这种array中元素不定的题一般不擅自用一个奇怪的数
+    来作为判断条件。除非像num of islands那题中明确说 array中只有0 和1. 
+ 
   
 }
