@@ -12,6 +12,7 @@ According to the definition of LCA on Wikipedia: “The lowest common ancestor i
 For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another example is LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.
 
 
+两种方法都是利用BST的性质！ 
 
 /**
  * Definition for a binary tree node.
@@ -40,4 +41,47 @@ public class Solution {
         }
         return root; 
     }
+}
+
+-------------------BFS 遍历
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 
+
+
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || p == null || q == null){
+            return root;
+        }
+        Queue<TreeNode> lca = new LinkedList<TreeNode>(); 
+        lca.offer(root);
+        
+        while(lca.size() >0){
+            TreeNode cur = lca.poll();
+            if(p.val >= cur.val && q.val <= cur.val){//如果在root的两侧，则root为LCA 
+                return cur;
+            }
+            
+            if(p.val <= cur.val && q.val >= cur.val){ //如果在root的两侧，则root为LCA 
+                return cur;
+            }
+            
+            if(p.val <= cur.val && q.val<= cur.val){ //如果比root值小，说明在root的左边，往左边遍历 
+                lca.offer(cur.left);
+            }
+            if(p.val >= cur.val && q.val >= cur.val){ //如果比root值大，说明在root的右边 
+                lca.offer(cur.right);
+            }
+        }
+         return root;
+    }
+   
 }
