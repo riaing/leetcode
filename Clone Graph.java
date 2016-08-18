@@ -89,6 +89,7 @@ public class Solution {
         
         for (UndirectedGraphNode neighbor : node.neighbors) {
          
+         错误方法：无法区分neighbor是本身还是个新node
          /* UndirectedGraphNode neibrNode = new UndirectedGraphNode(neighbor.label);
           copyNode.neighbors.add(neibrNode); //不能加入newNode会出现需要{0,0,0} but {0,0,0#0#0}的情况
             if (!map.containsKey(neighbor)) {
