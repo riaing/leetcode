@@ -63,26 +63,26 @@ public class Solution {
         
     }
     private int searchLeft(int[] nums, int start, int end,int target){
-        while(start<= end){ //chqnge to = then right! 
+        while(start< end){ 
             int mid = start+ (end -start)/2;
             if(nums[mid] != target){
                 start =mid +1;
             }
             else{
-                end = mid -1;
+                end = mid;
             }
         }
         return start; 
     }
     
     private int searchRight(int[] nums, int start, int end, int target){
-        while(start<= end){ //change to = then right ! 
+        while(start< end){ 
             int mid = start+ (end+1 -start)/2;
             if(nums[mid] != target){
                 end = mid  - 1;
             }
             else{
-                start = mid +1;
+                start = mid;
             }
         }
         return end; 
