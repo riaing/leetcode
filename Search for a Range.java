@@ -7,7 +7,66 @@ If the target is not found in the array, return [-1, -1].
 For example,
 Given [5, 7, 7, 8, 8, 10] and target value 8,
 return [3, 4].
+---------------当做是找repeat target中第一个和最后一个的combine题
+public class Solution {
+    
+    public int[] searchRange(int[] nums, int target) {
+        int[] none = new int[2];
+        
+        //找the first one
+        int start = 0;
+        int end = nums.length-1;
+        while(start< end){ 
+            int mid = start+ (end -start)/2;
+            if(nums[mid] == target){
+                end =mid;
+            }
+            else if (nums[mid] < target){
+                start = mid +1;
+            }
+            else{
+                end = mid-1 ; // eg 【2，2】find 1, then end will be -1
+            }
+        }
+        
+        if(nums[start] == target){ //end maybe out of index if nums only has two element. 
+            none[0] = start;
+        }
+        else{
+            none[0] = -1;
+        }
+        //重新定义start，end，找last one
+         start = 0;
+         end = nums.length-1;
+        while(start< end){ 
+            int mid = start+ (end+1 -start)/2;
+            if(nums[mid] == target){
+                start =mid;
+            }
+            else if (nums[mid] < target){
+                start = mid +1; //start maybe out of index, if [2,2]find 3, start will be 2. 
+            }
+            else{
+                end = mid-1 ;
+            }
+        }
+        
+        if(nums[end] == target){//must be end, since start could be out of index: [2,2]:find3: start will be 2. 
+            none[1] = end; 
+        }
+        else{
+            none[1] = -1;
+        }
+        return none; 
 
+        
+    }
+    
+}
+
+
+
+----------------------------------先找到一个target的方法。会有三个while-----------------
 思路：
 既然要求O(log n)那必然又是binary search变种。要找到target在数组中的左右边界，必然先得要在数组中找到一个target。一种条件反射的思路是binary search找到target，即A[mid] = target，然后从mid开始向左右扫描来发现左右边界。但显然这种算法不是O(log n)的，比如当所有元素都一样，并且等于target时，算法退化为O(n)。
 所以这里当A[mid] = target时，我们必须继续用二分法来查找左右边界。以下面数组为例：
