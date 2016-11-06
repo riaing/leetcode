@@ -22,7 +22,7 @@ shuffle()方法要返回数组里面元素重新排序之后的数组,采用的�
 
 public class Solution {
     private int[] nums;
-    private Random random;
+    private Random random; //因为random.nextInt 不是statcid method，所以要new 这个object！！！ very important 
     private int[] ori;
     
     public Solution(int[] nums) {
