@@ -10,15 +10,16 @@ public class Solution {
         
         boolean[] Prime = new boolean[n];
         Arrays.fill(Prime, true); 
-        for (int i =2; i < n ; i ++ ){ O(N) 
+        for (int i =2; i *i  < n ; i ++ ){ O(logn)  //实际上如果 i * i 大于 n的话， 那么 i后面没被false的都是素数了, 
+        //以121 = 11*11 为例， 把11的倍数设为F时，首先是11*2 =22. 然而22已经在对2的倍数处理时做过了。原因是 11*(2) < 11* (11), 
+        //所以处理2的倍数时，2的11倍肯定会被处理到。  同理，处理13的倍数时，13*2 肯定被处理过了因为是2的13倍。 
             if(Prime[i]){
-                if ( i * i < n ){ //实际上如果 i * i 大于 n的话， 那么 i后面没被false的都是素数了
-                       //make it 2倍 4倍。。。都为non prime
-                    for ( int j = i *2 ; j < n ; j=j + i){ O(logN) 
-                        Prime[j] = false; 
+                       
+                    for ( int j = 2 ; j *i < n ; j ++ ){ O(logN) //make it 2倍 4倍。。。都为non prime
+                    
+                   // for ( int j = i ; j *i < n ; j ++ ){  //
+                        Prime[j *i] = false; 
                     }
-                }
-             
             }
         }
         int count = 0; 
