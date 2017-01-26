@@ -34,7 +34,7 @@ public class Solution {
                        
                     for ( int j = 2 ; j *i < n ; j ++ ){ O(logN) //make it 2倍 4倍。。。都为non prime
                     
-                   // for ( int j = i ; j *i < n ; j ++ ){  //
+                   // for ( int j = i ; j *i < n ; j ++ ){  //从J = I 开始就可以了，因为J =2时肯定在2的倍数时处理过了
                         Prime[j *i] = false; 
                     }
             }
