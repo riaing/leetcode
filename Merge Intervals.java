@@ -11,4 +11,5 @@ Input: [[1,4],[4,5]]
 Output: [[1,5]]
 Explanation: Intervals [1,4] and [4,5] are considerred overlapping. 
 
-首先需要sort整个list，按照interval的start。之后，go over every emelment in the list, 每个current interval和要ruturn的list中的最后一个interval比，
+首先需要sort整个list，按照interval的start。之后，go over every emelment in the list, 每个current interval
+和要ruturn的list中的最后一个interval比，如果两个不重合，则把current加到return list中的最后一个，
