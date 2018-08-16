@@ -71,3 +71,5 @@ public class BSTIterator {
  * while (i.hasNext()) v[f()] = i.next();
  */
  -----------------------------------------------------
+ 
+    For 0(n) time and o(1) space, see https://github.com/awangdev/LintCode/blob/master/Java/Binary%20Search%20Tree%20Iterator.java 
