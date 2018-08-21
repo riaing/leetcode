@@ -58,3 +58,37 @@ class Solution {
     }
 }
 
+-------------solustion 2: use for loop, 思路与上一样，都要在最后check最后的情况，但简单明了了多
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> results = new ArrayList<String>();
+        if (nums == null || nums.length == 0) {
+            return results; 
+        }
+
+        int start = 0;
+        int i = 1; 
+        for (; i < nums.length; i++) {
+            if (nums[i] - nums[i-1] == 1) {
+                continue;
+            }
+            if (start == i-1) {
+                results.add(Integer.toString(nums[start]));
+                start ++; 
+            }
+            else {
+                String tmp = nums[start] + "->" + nums[i-1];
+                results.add(tmp);
+                start = i;
+            }
+        }
+        if (start == i -1) {
+            results.add(Integer.toString(nums[start]));
+        }
+        else {
+             String tmp = nums[start] + "->" + nums[i-1];
+                results.add(tmp);
+        }
+        return results;   
+    }
+}
