@@ -1,3 +1,4 @@
+一些变种题： https://github.com/tongzhang1994/Facebook-Interview-Coding/blob/master/253.%20Meeting%20Rooms%20II.java 
 Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), find the minimum number of conference rooms required.
 
 Example 1:
