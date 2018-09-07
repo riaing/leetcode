@@ -68,3 +68,52 @@ class Solution {
         return maxLength; 
     }
 }
+
+--------------解法二：stack。 
+/*
+dir\n\tsub\n\t\tfile.txt
+
+level 0: 0 char 
+level 1: dir(3) - redundantNumOft (0) + \(1) +  last level's char(0) = 4 char 
+level 2: \tsub(4) - redundantNumOft(1) + \(1) + last level's char(4) = 8 char 
+level 3: \t\tfile.txt(10) - redundantNumOft(2) + \(1 which will be remove later) + last level's char(7) = 15; 
+
+so level = reduendantNumOft + 1
+
+新！！！！！！！
+for stack: 
+level 0 : stack has 0, size = 1 
+level 1: stack must has one value(value of 0 from level 0) in it, representing the level 0's length, so stack must size = 1
+level 2: stack must has two value(level 0 and level 1's values) in it. 
+
+so when at current level, pop stack out until stack.size() == current level, which means you find the previous level's length by stack.peek(); 
+*/
+class Solution {
+    public int lengthLongestPath(String input) {
+   
+        // split the string by \n
+        String[] files = input.split("\n");
+        //Stack's size -1 represents the level
+        Deque<Integer> stack = new LinkedList<Integer>();
+        stack.push(0); 
+        
+        int maxLength = 0; 
+        for (String s : files) {
+            // Get how many \t to delete from the string. if no \t, lastIndexOf will return -1.
+            // This num is also the previous level number. 
+            int redundantNumOft = s.lastIndexOf("\t") + 1; 
+            // Find the parent length. 
+            while(redundantNumOft +1 < stack.size()) {
+                stack.pop();
+            }
+            int curLength = stack.peek() + s.length() - redundantNumOft + 1; // +1 is for the /. 
+        
+            stack.push(curLength); 
+            
+            if (s.contains(".")) {
+                maxLength = Math.max(maxLength, curLength -1); // -1 is to remove the auto added / from above 
+            }
+        }
+        return maxLength; 
+    }
+}
