@@ -29,3 +29,7 @@ class Solution {
         return res; 
     }
 }
+
+Time Complexity: O(N)O(N), where NN is the length of T and WW is the number of allowed values for T[i]. Each index gets pushed and popped at most once from the stack.
+
+Space Complexity: O(W)O(W). The size of the stack is bounded as it represents strictly increasing temperatures.
