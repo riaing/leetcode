@@ -82,3 +82,7 @@ class Solution {
 思考：如解答中说的一样，当nums[half1 -1] == nums2[half2 - 1]时，其实返回任意 nums[half -1]就可以，具体为什么没想清楚，只是从例子证实。所以我觉得
 用 "如果相等就扔掉任意一半的思路反而更好理解". 
  [3，], [3,4]; k = 2, 第一次recursion中half1 = 1， half2 = 1.并且median确实是3
+ 
+ 这里的时间从以上思路来看可以写成 O(log（m）+ log(n), which could be equal to O(log(m +n)),详解见http://forums.codeguru.com/showthread.php?491516-how-is-O(logm-logn)-O(log(m-n))-O-is-big-oh 
+
+用 "如果相等就扔掉任意一半的思路反而更好理解". 
