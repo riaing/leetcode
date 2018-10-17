@@ -44,7 +44,8 @@ class Solution {
                 currentStreak++;
             }
             // 这种解法不太好，比如很难想到这里为什么是next-pre-1. 所以我们直接用一个var currentStreak来表示当前的最长length。 
-            res = Math.max(res, next - pre -1);
+            // 用next - pre -1 的话就不需要currentStreak来记录了
+            //res = Math.max(res, next - pre -1);
             res = Math.max(res, currentStreak );
         }
         return res; 
