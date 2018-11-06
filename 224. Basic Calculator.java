@@ -61,3 +61,77 @@ class Solution {
         return res;
     }
 }
+
+-----------------stack 2: 非常直白但稍微耗时的方法，不推荐了就
+Loop整个string，
+1， == (， 入栈
+2， == - ，入栈
+3， == 数字，整个数字入栈（while loop确保几位数的数字被当成一个数字入栈）
+4， 当喷到)时。取出栈中碰到第一个(的所有数。
+  - 设置变量res， 当stack.peek() == ‘-‘时，res*（-1）
+  - 当tack.peek() ==数字时，1， 判断此时stack.peek()是不是"-", 是的话数字* -1，不然直接res +=数字
+  - 当 当stack.peek() ==‘(‘时，把当前res入栈
+
+class Solution {
+    // Char to int: char - '0'; 
+    public int calculate(String s) {
+        Deque<String> stack = new LinkedList<String>();
+        
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push("(");
+            }
+            else if (s.charAt(i) == '+') {
+                continue;
+            }
+            else if (s.charAt(i) == '-') {
+                stack.push("-");
+            }
+            else if (s.charAt(i) >= '0'){
+                StringBuilder builder = new StringBuilder();
+                while (i < s.length() && s.charAt(i) >= '0') {
+                    builder.append(s.charAt(i));
+                    i++;
+                }
+                stack.push(builder.toString());
+                // One step back for forloop 
+                i --; 
+            }
+            else if(s.charAt(i) == ')') {
+                int num = 0; 
+                String cur = stack.pop();
+                while(cur != "(") {
+                    if (cur == "-") {
+                        num = num * -1;
+                    }
+                    else {
+                        int curInt = Integer.parseInt(cur);
+                        if (stack.peek() == "-") {
+                            curInt = curInt * -1; 
+                            stack.pop();
+                        }
+                        num = num + curInt;
+                    }
+                    cur = stack.pop();
+                }
+                stack.push(Integer.toString(num)); 
+            }            
+        }
+        int res = 0; 
+        while (!stack.isEmpty()) {
+            String curString = stack.pop();
+            if (curString == "-") {
+                res = res * -1;
+            }
+            else {
+                int curInt = Integer.parseInt(curString);
+                        if (stack.peek() == "-") {
+                            curInt = curInt * -1; 
+                            stack.pop();
+                        }
+                res = res + curInt;
+            }
+        }
+    return res;
+    }
+}
