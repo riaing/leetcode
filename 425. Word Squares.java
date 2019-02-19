@@ -56,7 +56,16 @@ Output:
 Explanation:
 The output consists of two word squares. The order of output does not matter (just the order of words in each word square matters).
 ------------------------------hashmap 解法 -------------------------------------------------------------------------------------
-class Solution {
+思路：一行行的填词，第n行的词的prefix必须和前面所有行n列一样。eg: 第0行为baba，那么第一行的第一个字母必须是a。所以我们把单词按照prefix存到map里，
+在填下一行的词时，先确定prefix，然后到map里找是否有相应的word，再每个word进行递归。eg：
+第0行："area","lead","wall","lady","ball"  ->比如此时是 "wall"。此时的matrix为{wall}
+第1行：在map中找以a（前几行的第1列）为key的string list：{area} -> 把area填在此行。此时的matrix为{wall，area}
+第2行：确定此时的prefix（前几行的第2列）：le。在map中找le为key的list：{lead} -> 把lead填进去，此时的matrix为{wall，area，lead}
+第3行：此时的prefix应为前几行的第3列：lad。在map中找到的list}为{lady}，填入matrix。此时的matrix为{wall，area，lead，lady}，
+进行下一次递归：发现此时行数为4，等于word的长度，则返回matrix。
+
+  
+  class Solution {
     // Mapping for prefix to each word. 
     private Map<String, List<String>> getPrefixMap(String[] words) {
         Map<String, List<String>> prefixMap = new HashMap<String, List<String>>();
