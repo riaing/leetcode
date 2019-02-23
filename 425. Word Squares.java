@@ -111,4 +111,83 @@ The output consists of two word squares. The order of output does not matter (ju
         dfs(prefixMap, new ArrayList<String>(), 0, words[0].length(), result);
         return result;
     }
+    
+    -----------------------------Trie----------------------------------------------------------------------------
+    主要是想清楚trie的构造：每个trienode有一堆children（List<String>），并且每个trieNode都要对应到单词。
+    class Solution {
+    class TrieNode {
+        List<String> startWith;
+        TrieNode[] children; 
+        
+        TrieNode() {
+            startWith = new ArrayList<>();
+            children = new TrieNode[26];
+        }
+    }
+    
+    class Trie {
+        TrieNode root;
+        
+        Trie(String[] words) {
+            root = new TrieNode();
+            for (String word : words) {
+                TrieNode cur = root;
+                for (char c : word.toCharArray()) {
+                    int index = c - 'a';
+                    if (cur.children[index] == null) {
+                        cur.children[index] = new TrieNode();
+                    }
+                    cur.children[index].startWith.add(word);
+                    cur = cur.children[index];
+                }
+            }
+        }
+        
+        List<String> findByPrefix(String prefix) {
+            List<String> result = new ArrayList<>();
+            TrieNode cur = root;
+            for (char c : prefix.toCharArray()) {
+                int index = c -'a';
+                if (cur.children[index] == null) {
+                    return result;
+                }
+                cur = cur.children[index];
+            }
+            result.addAll(cur.startWith);
+            return result;
+        }
+    }
+    
+     public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> results = new ArrayList<List<String>>();
+        List<String> square = new ArrayList<String>();
+         // Similar to hashmap, put prefix into the trie. 
+         Trie tri = new Trie(words); 
+        for (String word : words) {
+            square.add(word);
+            dfs(tri, square, results, words[0].length());
+            square.remove(word);
+        }
+         return results;          
+    }
+    
+    private void dfs(Trie tri, List<String> square, List<List<String>> results, int len) {
+        if (square.size() == len) {
+            results.add(new ArrayList<>(square));
+            return;
+        }
+        
+        int row = square.size();
+        // get current prefix from matrix;
+        String prefix = "";
+        for (int i = 0; i < square.size(); i++){
+            prefix += square.get(i).charAt(row);
+        }
+        for (String item : tri.findByPrefix(prefix)) {
+            square.add(item);
+            dfs(tri, square, results, len);
+            square.remove(square.size() -1);
+        }
+    }
+}
 }
