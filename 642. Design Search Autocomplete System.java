@@ -57,6 +57,8 @@ Priority Queue找到top 3的String。
 
 难点：HashMap和priority Queue的combine运用，comparator的写法，StringA.compareTo(StringB)比的是第一个不一样的char的Ascii number。
 
+以下comment部分是用pair来存（String，times）而非Map。但问题是当出现重复String并且要更新times时不好用。用Map更简单
+
 class AutocompleteSystem {
     String s; 
     TrieNode root;
