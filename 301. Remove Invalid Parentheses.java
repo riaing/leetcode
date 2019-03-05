@@ -15,6 +15,7 @@ Example 3:
 Input: ")("
 Output: [""]
 
+---------------------------------------DFS---------------------------------------------------------------------
 解法：先分别找到左右两边invalid括号的个数nleft，nright。
 递归的思想是，对于每一个左右括号，我们都可以把它们delete。所以需要遍历整个string，找到所有能删掉nleft个左括号和nright个右括号的情况。
 那么遍历整个string，我们先从删除右括号开始，如果当前char是右括号并且此时nright>0,我们删掉这个右括号，nright--，然后进行下一层递归。
@@ -79,6 +80,68 @@ class Solution {
             }
         }
     } 
+    
+    private boolean validString(String s) {
+        int cnt = 0;
+        for (char c: s.toCharArray()) {
+            if (c == '(') {
+                cnt ++; 
+            }
+            if (c == ')') {
+                cnt --;
+            }
+            // if in the middle ）> （，definitely wrong. eg: ")("
+            if (cnt < 0) {
+                return false;
+            }
+        }
+        return cnt == 0;
+    }
+}
+
+--------------------------BFS time O(N!), space 0(N!)-----------------------------------------------------------------------
+ 遍历string，删除左右括号。如果删除后的string不valid，加入queue中，如果valid，加入res中。注意这里用set存string是否出现过，出现的话跳过避免重复运算
+   1           ()) ->依次删除左右括号
+   n        ))  ()  (){其实这个已存在，这里写出以便visualize}
+  n-1      )  ) ( ) ( ) 
+  所以time是 1+n+n-1+...+1 = n! 
+  space是n！（一般都是leave node 的个数）
+                                 
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> res = new ArrayList<String>();
+        Queue<String> queue = new LinkedList<String>();
+        queue.offer(s);
+        Set<String> used = new HashSet<String>();
+        // boolean to record if at the current level, have found valid string. 
+        boolean findMinNum = false; 
+        while (!queue.isEmpty()) {
+            int curLevel = queue.size();
+            for (int k = 0; k< curLevel; k++) {
+                String cur = queue.poll();
+                if (validString(cur)) {
+                    res.add(cur);
+                    used.add(cur);
+                    findMinNum = true;
+                }
+                else {
+                    for (int i = 0; i < cur.length(); i++) {
+                        if (cur.charAt(i) == '(' || cur.charAt(i) == ')') {
+                            String newString = cur.substring(0, i) + cur.substring(i+1);
+                            if (!used.contains(newString)) {
+                                queue.offer(newString);
+                                used.add(newString);
+                            }
+                        }
+                    }
+                } 
+            }
+            if(findMinNum) {
+                return res;
+            }
+        }
+        return res;
+    }
     
     private boolean validString(String s) {
         int cnt = 0;
