@@ -26,11 +26,7 @@ Output: [""]
 time: O(2^N) since in the worst case we will have only left parentheses in the expression and for every bracket we will
 have two options i.e. whether to remove it or consider it. Considering that the expression has N parentheses, 
 the time complexity will be O(2^N)
-space: o(N):Space Complexity : O(N) because we are resorting to a recursive solution and for a recursive solution there is 
-always stack space used as internal function states are saved onto a stack during recursion. The maximum depth of recursion 
-decides the stack space used. Since we process one character at a time and the base case for the recursion is when we 
-have processed all of the characters of the expression string, the size of the stack would be O(N). Note that we are not 
-considering the space required to store the valid expressions. We only count the intermediate space here
+space: o(2^N)
 
 class Solution {
     public List<String> removeInvalidParentheses(String s) {
