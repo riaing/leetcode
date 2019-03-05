@@ -96,6 +96,7 @@ class Solution {
 }
 
 --------------------------BFS time O(N!), space 0(N!)-----------------------------------------------------------------------
+                                                      http://www.cnblogs.com/grandyang/p/4944875.html 
  遍历string，删除左右括号。如果删除后的string不valid，加入queue中，如果valid，加入res中。注意这里用set存string是否出现过，出现的话跳过避免重复运算
    1           ()) ->依次删除左右括号
    n        ))  ()  (){其实这个已存在，这里写出以便visualize}
