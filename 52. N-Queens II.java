@@ -21,6 +21,8 @@ Explanation: There are two distinct solutions to the 4-queens puzzle as shown be
   ".Q.."]
 ]
 
+--------------------------------solution 1，global var表示解的个数----------------------------------------------------
+
 class Solution {
     boolean[] col_used; 
     boolean[] diagonal_used; 
@@ -59,6 +61,56 @@ class Solution {
                 
             }
         }        
+    }
+    
+    // Give a position(i,j), check if put the queue here, no queues on col j and on diagonal 
+    // now position has valid row i-1, so only for loop this range. 
+    private boolean validPlace(int[] position, int i, int j, int n) {
+        if (col_used[j] || diagonal_used[i-j + n -1] || ver_diagonal_used[i+j]) {
+            return false;
+        }
+        return true;
+    }
+}
+
+---------------solution 2, 递归直接返回解的个数--------------------------------------------------------------------------------
+ class Solution {
+    boolean[] col_used; 
+    boolean[] diagonal_used; 
+    boolean[] ver_diagonal_used;
+    public int totalNQueens(int n) {
+         
+        col_used = new boolean[n]; 
+        diagonal_used = new boolean[2*n-1];
+        ver_diagonal_used = new boolean[2*n-1];
+        // index is the row and val is the column 
+        int[] position = new int[n];
+        
+        return helper(n, 0, position);
+    }
+    // return the number of valid solutions. 
+    private int helper(int n, int index, int[] position) {
+        if (index == position.length) {
+            return 1;
+        }
+        
+        int res = 0; 
+        //iterate through each col and see if can put queen at the position 
+        for (int j = 0; j < n; j++) {
+            if (validPlace(position, index, j, n)) {
+                position[index] = j;
+                col_used[j] = true;
+                diagonal_used[index - j + n-1] = true;
+                ver_diagonal_used[index+j] = true;
+                //从j开始总共有多少中valid的情况
+                res = res + helper(n, index+1, position);
+                col_used[j] = false;
+                diagonal_used[index - j + n-1] = false;
+                ver_diagonal_used[index+j] = false;
+                
+            }
+        }
+        return res;
     }
     
     // Give a position(i,j), check if put the queue here, no queues on col j and on diagonal 
