@@ -94,5 +94,86 @@ class Solution {
     }
 }
 
+-----------------------solution 2,数组记录已存在queen所在的列/对角线-------------------------------------------------------
+用三个boolean数组col_used, diagonal_used, ver_diagonal_used来表示列，正对角线，反对角线上是否已经有了queen。
+数组的index代表第几个列/对角线，值表示这条列/对角线上是否已经有queen。
+正对角线的记法为i-j, 反对角线的记法为i+j， eg:
+x x 
+x x 
+正对角线有三条， 1：(0, 0)（1,1）/ 2:(0,1) / 3:(1, 0)。可发现规律 （i-j）相同的在同一条对角线上（因为正对角线上的点其实是横坐标+1，纵坐标+1， 可知同一条线上肯定i-j相等）
+反对角线有三条：1，（0，1）（1，0）。。。发现(i+j)在同一条线上。（因为反对角线上的点其实是横坐标+1，纵坐标-1，可知
+同一条线上肯定i+j相等） 
+
+1， 对角线总共有 2n-1条： 
+diagonal(i-j) -> min diaganal : 0 -(n-1), max: (n-1) - 0, so total diagonals are (n-1) - 0 - (0-(n-1)) + 1 = 2n -1
+2，因为第一条对角线的最小值是 0-(n-1)，所以我们平移n-1位使得最小对角线可以放在diagonal[]的第0位 
+ because i-j could be nagative, so we shift the number right by n-1, so min diagonal[0 - (n-1) + (n-1)] = diagonal[0]. 
+
+ Time: 相比solution 1，减少了每次判断valid的时间(validPlace()).solution 1是需要遍历o(n)，而这里直接查看三个数组 o（1）.所以time为o（n！）
+ space： O（n + n + 2n-1 + 2n-1） = O(n). 相比solution 1 多用了数组来减少valid时间。
+ 
+class Solution {
+        boolean[] col_used; 
+        boolean[] diagonal_used; 
+        boolean[] ver_diagonal_used; 
+    
+    public List<List<String>> solveNQueens(int n) {
+        col_used = new boolean[n]; 
+        diagonal_used = new boolean[2*n-1];
+        ver_diagonal_used = new boolean[2*n-1];
+        // index is the row and val is the column 
+        int[] position = new int[n];
+        List<List<String>> res = new ArrayList<List<String>>();
+    
+        helper(n, 0, position, res);
+        return res;
+    }
+    
+    private void helper(int n, int index, int[] position, List<List<String>> res) {
+        if (index == position.length) {
+            
+            // construct the string from saved position. 
+            List<String> cur = new ArrayList<String>();
+            for (int col : position) {
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < n; i++) {
+                    if (i == col) {
+                        builder.append('Q');
+                    }
+                    else {
+                        builder.append('.');
+                    } 
+                }
+                //form the string and add it to current list. 
+                cur.add(builder.toString());
+            }
+            res.add(cur);
+            return;
+        }
+        //iterate through each col and see if can put queen at the position 
+        for (int j = 0; j < n; j++) {
+            if (validPlace(position, index, j, n)) {
+                position[index] = j;
+                col_used[j] = true;
+                diagonal_used[index - j + n-1] = true;
+                ver_diagonal_used[index+j] = true;
+                helper(n, index+1, position, res);
+                col_used[j] = false;
+                diagonal_used[index - j + n-1] = false;
+                ver_diagonal_used[index+j] = false;
+                
+            }
+        }        
+    }
+    
+    // Give a position(i,j), check if put the queue here, no queues on col j and on diagonal 
+    // now position has valid row i-1, so only for loop this range. 
+    private boolean validPlace(int[] position, int i, int j, int n) {
+        if (col_used[j] || diagonal_used[i-j + n -1] || ver_diagonal_used[i+j]) {
+            return false;
+        }
+        return true;
+    }
+}
 
 
