@@ -33,3 +33,37 @@ class Solution {
 Time Complexity: O(N)O(N), where NN is the length of T and WW is the number of allowed values for T[i]. Each index gets pushed and popped at most once from the stack.
 
 Space Complexity: O(W)O(W). The size of the stack is bounded as it represents strictly increasing temperatures.
+
+ 
+    -----------------solution 2 思路一样，换了写法，这个写法match别的类似的题而已-----------------------------------
+    类似题：Largest Rectangle in Histogram 
+    class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        // Initialize an array with element = 0; 
+        int[] res = new int[temperatures.length];
+        
+        // Stack to record the index 
+        Deque<Integer> stack = new LinkedList<Integer>();
+        
+        int i = 0;
+        while (i < temperatures.length) {
+            if (stack.isEmpty() || temperatures[i] <= temperatures[stack.peek()]) {
+                stack.push(i);
+                i++;
+            }
+            else {
+                int cur = stack.pop();
+                res[cur] = i - cur;
+                
+            }
+        }
+        // 这个其实不需要因为initialize res的时候自动放的0.
+        while (!stack.isEmpty()) {
+            int cur = stack.pop();
+            res[cur] = 0;
+        }
+        //以上不需要
+        
+        return res;
+    }
+}
