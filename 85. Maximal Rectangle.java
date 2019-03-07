@@ -1,4 +1,4 @@
-Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+Given a 2D binary matrix filled with 0’s and 1‘s, find the largest rectangle containing only 1’s and return its area.
 
 Example:
 
@@ -12,6 +12,7 @@ Input:
 Output: 6 
 ----------------------------------------------------------------------------------------------------------------------
 完全是Largest Rectangle in Histogram的在运用，1，算出每一行的每列上的最大高度 2，对于这样的每一行，找Largest Rectangle in Histogram 
+
 https://www.cnblogs.com/lichen782/p/leetcode_maximal_rectangle.html 
 
 
