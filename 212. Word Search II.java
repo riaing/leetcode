@@ -20,6 +20,7 @@ You may assume that all inputs are consist of lowercase letters a-z.
 --------------------------------------------------------------------------------
 hashmap solution： https://www.jiuzhang.com/solutions/word-search-ii/ 
 -------------------------------trie solution---------------------------------------------------------------------------
+  
 take way: 
 1, Backtracking时候, 在board[][] 上面mark就可以, 不需要开一个visited[][]
 2，只dfs一遍board，看能找到几个string，直接对board DFS:   
@@ -29,6 +30,8 @@ take way:
 注意：
 1，trie的leave node存单词，如果某个node中有单词，说明找到了单词
 2，因为可能有几条路径组成相同的单词，所以我们在找到单词加入res时要进行去重判断
+time complexity： 递归：M(row)*N(col）* 4^k（word length） trie: n个word * k（word length）
+space complexity: 如果有n个word并且word最长为k，trie就有n*k(字符数）个node。最后的nodes又存string，所以总空间 n*k*2
 
 class Solution {
     class TrieNode {
