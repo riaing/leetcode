@@ -61,4 +61,48 @@ class Solution {
         }
      
     }
+    
+    ----------------------------------------BFS---------------------------------------------------------
+    // 每个node访问一遍，每个node O(n*k) -> O(n^2 *k)
+//如果改成字母比较的话就是0 (n*26*k)
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Queue<String> queue = new LinkedList<String>();
+        Set<String> set = new HashSet<String>(wordList);
+        int curLen = 1; 
+        queue.offer(beginWord);
+        while (!queue.isEmpty()) {
+            curLen++;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String a = queue.poll();
+                Set<String> remove = new HashSet<String>();
+                //O(n*k)
+                for (String s : set) {
+                    if (transformable(a, s)) {
+                        if (s.equals(endWord)) {
+                            return curLen;
+                        }
+                        queue.offer(s);
+                        remove.add(s);
+                    }
+                }
+                set.removeAll(remove);
+            }
+        }
+        return 0;
+    }
+    // 改用找到所有A的transform word，查看哪些在wordset里也可以。那就是o (26*k)
+    private boolean transformable(String a, String b) {
+        int differLetter = 0; 
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) != b.charAt(i)) {
+                differLetter++;
+            }
+        }
+        return differLetter == 1; 
+    }
+}
+
+
 }
