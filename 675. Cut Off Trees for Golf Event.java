@@ -135,3 +135,7 @@ class Solution {
         return -1;
     }
 }
+
+----------------------A* algorithm and hadlock‘s altorithm-----------------
+ https://leetcode.com/problems/cut-off-trees-for-golf-event/solution/ 
+ 
