@@ -19,7 +19,7 @@ Note:
 这道题我们可以用递归来做，首先我们还是求出数组的所有数字之和sum，首先判断sum是否能整除k，不能整除的话直接返回false。
 Virtual bucket: https://www.youtube.com/watch?v=qpgqhp_9d1s 
 
-time: o(n！)? 
+time: o(k^n)? 
 **/
 class Solution {
     public boolean canPartitionKSubsets(int[] nums, int k) {
