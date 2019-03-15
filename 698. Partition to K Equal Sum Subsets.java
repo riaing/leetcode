@@ -23,7 +23,7 @@ curSum为当前子集合之和，在递归函数中，如果k=1，说明此时�
 数字已经访问过了则直接跳过，否则标记为已访问。然后调用递归函数，k保持不变，因为还在累加当前的子集合，start传入i+1，curSum传入curSum+nums[i]，因为
 要累加当前的数字，如果递归函数返回true了，则直接返回true。否则就将当前数字重置为未访问的状态继续遍历
 
-time: o(n* n^2)? 
+time: o(n！)? 
 **/
 class Solution {
     public boolean canPartitionKSubsets(int[] nums, int k) {
@@ -69,7 +69,7 @@ class Solution {
  /**
 比如先给数组按从大到小的顺序排个序，然后在递归函数中，我们可以直接判断，如果curSum大于target了，直接返回false，因为题目中限定了都是正数，并且我们也给数组排序了，后面的数字只能更大，这个剪枝操作大大的提高了运行速度
 
-time: o(n* n^2)? 
+time: o(n！)? 
 **/
 class Solution {
     public boolean canPartitionKSubsets(int[] nums, int k) {
