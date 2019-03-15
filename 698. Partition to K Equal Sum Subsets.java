@@ -58,6 +58,7 @@ class Solution {
             }
             // we can't put this number into bucket, then we backtracking
             bucket[i] -= nums[index];
+            if (bucket[i] == 0) { break;} //说明nums[index]不能放到任何一个empty的bucket里面。直接返回。
         }
         return false;
     }
