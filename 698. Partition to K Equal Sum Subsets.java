@@ -14,6 +14,55 @@ Note:
 1 <= k <= len(nums) <= 16.
 0 < nums[i] < 10000.
 
+ 
+ 
+ 
+ ------------------------------real bucket ------------------------------------------------------------------------------
+ /**
+https://www.youtube.com/watch?v=8XEcEYsG6Ck 
+
+**/
+class Solution {
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        Arrays.sort(nums);
+        //find the average num of this list, all subsets must add up to this ave
+        int sum = 0;
+        for(int num : nums) {
+            sum += num;
+        }
+        // if it's not divisible, return false; 
+        if (sum % k != 0) {
+            return false;
+        }
+        int ave = sum / k;
+        if (nums[nums.length-1] > ave) {
+            return false;
+        }
+        return search(new int[k], nums.length-1, ave, nums);  
+    }
+    
+    
+    private boolean search(int[] bucket, int index, int target, int[] nums) {
+        if(index < 0) {
+            return true;
+        }
+
+        for (int i = 0; i < bucket.length; i++) {
+            if (bucket[i] + nums[index] > target) {
+                continue;
+            }
+            // put this number into bucket
+            bucket[i] += nums[index];
+            if (search(bucket, index-1, target, nums)) {
+                return true;
+            }
+            // we can't put this number into bucket, then we backtracking
+            bucket[i] -= nums[index];
+        }
+        return false;
+    }
+}
+
 -----------------------------virtual bucket，理解递归-----------------------------------------------------------------------------------
 /**
 这道题我们可以用递归来做，首先我们还是求出数组的所有数字之和sum，首先判断sum是否能整除k，不能整除的话直接返回false。
