@@ -64,3 +64,37 @@ class Solution {
         }
     }
 }
+-------------如果想要在递归时先粘上符号的话-----------------
+    class Solution {
+    private String[] operator = {"+", "-", "*"};
+    
+    public List<String> addOperators(String num, int target) {
+       
+        List<String> tmp = new ArrayList<String>();
+        //这里处理了第一位数放进递归不加符号的特殊情况。
+        for(int i = 0; i< num.length(); i++){
+            dfs(num, tmp, num.substring(0, i), 0);
+        }
+        
+        return tmp;
+    }
+    
+    private void dfs(String num, List<String> res, String cur, int index) {
+            
+         if (index == num.length()) {
+             res.add(cur);
+             return;
+         }
+        //每次增加一位数，再进行递归。
+        for (int i = index; i<num.length(); i++) {
+            String rec = num.substring(index, i+1);
+            
+     
+                for (int j = 0; j< operator.length; j++) {
+                    dfs(num, res, cur + rec + operator[j], i+1);
+                }
+            
+        }
+    }
+}
+
