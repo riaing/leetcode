@@ -38,14 +38,7 @@ Note:
 S contains only digits.
 
 -----------------------------------------recursion------------------------------------------------
-/**
-Time complexity is O(10^n).
 
-At each level, we branch at most 10 times, as the for-loop will run until Integer.MAX_VALUE is reached (which is maximum 10 digits in length).
-Our recursive calls go to a maximum depth of n.
-The time complexity of any recursive function is O(branches^depth)
-Therefore the upper-bound time complexity is O(10^n)
-*/
 class Solution {
     List<Integer> res;
     public List<Integer> splitIntoFibonacci(String S) {
