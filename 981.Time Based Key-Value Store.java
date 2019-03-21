@@ -102,3 +102,6 @@ class TimeMap {
  * obj.set(key,value,timestamp);
  * String param_2 = obj.get(key,timestamp);
  */
+
+-------------using treeMap.floorKey(key) funciton ------------------------------------
+ https://leetcode.com/problems/time-based-key-value-store/solution/ 
