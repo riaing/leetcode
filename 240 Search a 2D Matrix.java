@@ -117,3 +117,47 @@ public class Solution {
         return row[end] == target || row[start] == target;
     }
 }
+-----------------------------------3.22.19 update:一遍二分，treat as 1D array-----------------------------------------------------
+  /* treat as a sorted array, 2D ->1D
+找到某个index的行列方法：
+row = index / #columns
+col = index % #columns
+*/
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // [], [[]] as corner case 
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false; 
+        }
+        return findTargetInSortedArray(matrix, target);
+  
+    }
+    
+    private boolean findTargetInSortedArray(int[][] matrix, int target) {
+        // 重点1， 用long，因为可能overflow
+        long start = 0;
+        long end = matrix.length * matrix[0].length - 1;
+        while (start + 1 < end) {
+            long mid = start + (end - start) / 2;
+            //重点2， 给个index，判断在2D array中行列的计算
+            int rowIndex = (int) mid / matrix[0].length;
+            int colIndex = (int) mid % matrix[0].length;
+            if (matrix[rowIndex][colIndex] == target) {
+                return true;
+            }
+            else if (matrix[rowIndex][colIndex] > target) {
+                end = mid;
+            }
+            else {
+                start = mid;
+            }
+        }
+        // start = 0. end = 1 
+        int startRow = (int) start / matrix[0].length;
+        int startCol =  (int) start % matrix[0].length;
+        int endRow = (int) end / matrix[0].length; 
+        int endCol =  (int) end % matrix[0].length; 
+        
+        return matrix[startRow][startCol] == target || matrix[endRow][endCol] == target;
+    }
+}
