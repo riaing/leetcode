@@ -101,3 +101,23 @@ class Solution {
         }
     }
 } 
+-------------------------leetcode答案解法: 寻找第一个下降的位置-------------------
+对于peak A[i] 来说，[1, 2, 3, 4, 1], the comparisons A[i] < A[i+1] would be True, True, True, False.
+
+We can binary search over this array of comparisons, to find the largest index i such that A[i] < A[i+1]. 
+    For more on binary search, see the LeetCode explore topic here.
+    
+ class Solution {
+    public int peakIndexInMountainArray(int[] A) {
+        int lo = 0, hi = A.length - 1;
+        while (lo < hi) {
+            int mi = lo + (hi - lo) / 2;
+            if (A[mi] < A[mi + 1])
+                lo = mi + 1;
+            else
+                hi = mi;
+        }
+        return lo;
+    }
+}
+
