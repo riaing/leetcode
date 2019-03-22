@@ -64,3 +64,40 @@ public class Solution {
        return start; 
     }
 }
+-----------------------3.21.19 update with 九章模板---------------------------------------------------
+class Solution {
+    public int findPeakElement(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return Integer.MIN_VALUE;
+        }
+        int start = 0;
+        int end = nums.length - 1;
+        
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            // mid is the peak
+            if (nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1]) {
+                return mid;
+            }
+            // a increasing line 
+            else if (nums[mid] > nums[mid-1] && nums[mid] < nums[mid+1]) {
+                start = mid;
+            }
+            // a decreasing line 
+            else if (nums[mid] < nums[mid-1] && nums[mid] > nums[mid+1]) {
+                end = mid;
+            }
+            // now is like mid是个谷底，那么走左右两边都行。这里其实可以和以上条件并在一起。当我们要求求左边或者右边的peak时，这个action就有意义了。
+            else {
+                start = mid;
+            }
+        }
+        // now only two element left. 
+        if (nums[start] < nums[end]) {
+            return end;
+        }
+        else{
+            return start;
+        }
+    }
+} 
