@@ -3,14 +3,17 @@ Implement int sqrt(int x).
 Compute and return the square root of x.
 
 
-对于一个非负数n，它的平方根不会小于大于（n/2+1）（谢谢@linzhi-cs提醒）。在[0, n/2+1]这个范围内可以进行二分搜索，求出n的平方根。
+对于一个非负数n，它的平方根不会小于大于（n/2+1)。在[0, n/2+1]这个范围内可以进行二分搜索，求出n的平方根。
+
 
 public class Solution {
     public int mySqrt(int x) {
         long start = 0;
+        // 这里直接用x的一半，而不是x
         long end = x/2+1;
         
         while(start< end){
+        //看到这种数字的题，特别是乘法，一定要考虑overflow的问题,所以用long
             long mid = start + (end -start)/2;
             if(mid*mid == x){
                 return (int)mid;
