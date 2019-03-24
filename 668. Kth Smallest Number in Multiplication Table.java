@@ -28,7 +28,7 @@ The k will be in the range [1, m * n]
 ------------------------------bineray search-----------------------------------------------------------------
 解释讲得比较好。。https:// https://www.youtube.com/watch?v=qvtYRm4reL4 
 类似的题还有 Find the Duplicate Number， K-th Smallest Prime Fraction 
-Time：
+Time：M*logM*N
 class Solution {
     public int findKthNumber(int m, int n, int k) {
         int start = 1;
