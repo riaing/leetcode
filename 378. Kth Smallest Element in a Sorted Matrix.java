@@ -76,8 +76,10 @@ class Solution {
                 hi = mid;
             }
         }
-        return hi; // here always lo = hi, so return either is right. 
-    }
+        return lo; 
+       // Q: Why we return lo at the end:
+       // A: Here lo=hi+1, for hi, we found <k elems, for lo, we found >=k elem, lo must have duplicates in matrix, return lo
+    
     
     // Find the number of element that <= mid
     // Time complexity  O(m+n)
