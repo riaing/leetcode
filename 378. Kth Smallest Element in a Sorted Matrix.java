@@ -44,3 +44,58 @@ class Solution {
         return queue.poll();
     }
 }
+-------------------------------------Bineray search------------------------------------------------------------
+   /**
+设lo = min(matrix) hi= max(matrix)  , mid =( L + R ) / 2 ，mid为我们猜测的答案。
+
+然后对于mid,通过searchLowerThanMid找matrix中有多少个元素(cnt）小于等于它，如果cnt < k, 说明k对应的元素比mid大，更新mid为lo+1；如果cnt >=k, 则hi = cnt。
+这样不停缩小hi和lo，总会使hi == lo，并且hi/lo肯定在matrix中
+
+我感觉这道题的精华部分是用count记录当前的数是第几小的数，跟k比较从而更新binary search的左右边界. 这种同化成binary search的思路很值得借鉴呐，而且这样一来今后凡是碰到 k-th smallest/largest之类的，其实都是binary search的general case, 除了用pq的方法之外的另一种方法
+
+横列都increasing的 matrix的性质：第一行第一个肯定是最小值，最后一行最后一个肯定是最大值，做法一般是从坐下开始找起，如果左下小于target，说明整列都小，则像右移动；如果大于，则像上移动。
+
+https://www.hrwhisper.me/leetcode-kth-smallest-element-sorted-matrix/ 
+*/
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length - 1;
+        int lo = matrix[0][0];
+        int hi = matrix[n][n];
+        // how many element that is smaller than mid
+       
+        // while loop time complexity O(logX) -> X = max - min.
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            int cnt = searchLowerThanMid(matrix, n, mid);
+
+            if (cnt < k) {
+                lo = mid + 1;
+            }
+            else {
+                hi = mid;
+            }
+        }
+        return hi; // here always lo = hi, so return either is right. 
+    }
+    
+    // Find the number of element that <= mid
+    // Time complexity  O(m+n)
+    private int searchLowerThanMid(int[][] matrix, int n, int mid) {
+        int i = n;
+        int j = 0;
+        int cnt = 0;
+        while(i >= 0 && j <= n) {
+            // means the whole col is smaller than mid 
+            if (matrix[i][j] <= mid) {
+                cnt += i+1; // n+1 is the number of element in the whole column
+                j++; // move to the next column;
+            }
+            else {
+                i--;
+            }
+        }
+        return cnt; 
+    }
+    
+}
