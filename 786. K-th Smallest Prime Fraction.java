@@ -25,7 +25,9 @@ class Solution {
         double hi = 1;
         int[] ans = new int[2];
      
-        while (hi-lo >= 1e-9) { // lo < hi, but since it's double, 用科学记数法1e-9 = 1*10^(-9)
+        //time complexity 取决于这里的精确度（1e-9），可以想象成在0-1之间分了10^9段,所以bineray search O(log10^9)
+        while (hi-lo >= 1e-9) { // lo < hi, but since it's double,我们给一个更精确的数, 用科学记数法1e-9 = 1*10^(-9)。这里也可以
+            //换成10*（-8）。。。题目中说Each A[i] will be between 1 and 30000.所以只要这个threshould< 1/30000就行。
             double mid = lo + (hi - lo) / 2.0;
             int[] estimate = equalOrSmallerToTarget(A, mid);
             if (estimate[0] >= K) {
