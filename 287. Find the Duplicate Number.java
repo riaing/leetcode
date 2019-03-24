@@ -18,7 +18,7 @@ There is only one duplicate number in the array, but it could be repeated more t
 -----------------------bineray search ------------------------------------------------------------------------------------
 /**
 我们在区间[1, n]中搜索，首先求出中点mid，然后遍历整个数组，统计所有小于等于mid的数的个数，如果个数小于等于mid，则说明重复值在[mid+1, n]之间，
-反之，重复值应在[1, mid-1]之间，然后依次类推，直到搜索完成，此时的low就是我们要求的重复值.
+反之，重复值应在[1, mid]之间，然后依次类推，直到搜索完成，此时的low就是我们要求的重复值.
 Time nlogx -> x= max - min;
 */
 class Solution {
