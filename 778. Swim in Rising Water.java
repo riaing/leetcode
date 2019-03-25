@@ -87,3 +87,54 @@ class Solution {
         return false;
     }
 }
+
+-------------------------PriorityQueue-----------------------------------------------------------------------------------
+ /**
+Time Complexity: O(N^2 log N). We may expand O(N^2) nodes, and each one requires O(logN) time to perform the heap operations(offer).
+
+Space Complexity: O(N^2) the maximum size of the heap.
+*/
+class Solution {
+    public int swimInWater(int[][] grid) {
+        return canReachEnd(grid);
+    }
+    
+
+    private int canReachEnd(int[][] grid) {
+        int answer = 0; 
+        boolean[][] used = new boolean[grid.length][grid.length];
+        // always go to the smallest number in next step. 
+        Comparator<int[]> comparator = new Comparator<int[]>() {
+          @Override
+          public int compare(int[] a, int[] b) {
+              return grid[a[0]][a[1]] - grid[b[0]][b[1]];
+          }
+        };
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(comparator);
+        
+        queue.offer(new int[]{0,0});
+        used[0][0] = true;
+        int[] row = {1,-1,0,0};
+        int[] col = {0, 0, 1,-1};
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int[] position = queue.poll();
+                answer = Math.max(answer, grid[position[0]][position[1]]);
+                if (position[0] == grid.length-1 && position[1] == grid.length-1) {
+                    return answer;
+                }
+                for (int j = 0; j < 4; j++) {
+                    int newRow = position[0] + row[j];
+                    int newCol = position[1] + col[j];
+                    if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid.length && !used[newRow][newCol]) {
+                        queue.offer(new int[]{newRow, newCol});
+                        used[newRow][newCol] = true;
+                    }
+                }
+            }
+        }
+        throw null;
+    }
+}
