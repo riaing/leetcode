@@ -86,3 +86,46 @@ class Solution {
  这里的时间从以上思路来看可以写成 O(log（m）+ log(n), which could be equal to O(log(m +n)),详解见http://forums.codeguru.com/showthread.php?491516-how-is-O(logm-logn)-O(log(m-n))-O-is-big-oh 
 
 用 "如果相等就扔掉任意一半的思路反而更好理解". 
+
+                    
+ ------------------3.24.19 update, same thoughts, 不改变array，用index-----------------------------------------------
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len = nums1.length + nums2.length;
+
+        if (len % 2 != 0) {
+         
+            return findKth(nums1, 0, nums2, 0, len / 2 + 1); //注意！len/2会返回median的index，所以加1
+        }
+        else {
+            return (findKth(nums1, 0, nums2, 0, len/2) + findKth(nums1, 0, nums2, 0, len/2+1)) / 2.0;
+        }   
+    }
+    
+    // find the Kth number 
+    private int findKth(int[] nums1, int start1, int[] nums2, int start2, int k) {
+      
+      
+        if (start1 >= nums1.length) {
+            return nums2[start2 + k-1];
+        }
+        if (start2 >= nums2.length) {
+            return nums1[start1 + k-1];
+        }
+        if (k == 1) {
+            //因为start代表了当前array的开头数
+            return Math.min(nums1[start1], nums2[start2]);
+        }
+        
+        //对比1，2array中第k/2元素的大小，
+        int index1 = Math.min(start1 + k/2 - 1, nums1.length - 1);
+        int index2 = Math.min(start2 + k/2 - 1, nums2.length - 1);
+        
+        if (nums1[index1] < nums2[index2]) { //说明nums1前面这一截不用
+            return findKth(nums1, index1 + 1, nums2, start2, k- (index1 - start1 + 1));//必须是k-k/2而不是k/2，因为是要找剩下的k-k/2个数，而k可能是奇数
+        }
+        else {
+            return findKth(nums1, start1, nums2, index2 + 1, k- (index2 - start2 + 1));
+        } 
+    }
+}
