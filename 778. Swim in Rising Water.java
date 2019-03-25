@@ -36,6 +36,7 @@ grid[i][j] is a permutation of [0, ..., N*N - 1].
 /**
 Bineray search时间，然后对于每个时间，BFS看是否能找到解。
 Time O(N^2*log(N^2)) -> O(N^2*logN)
+Space Complexity: O(N^2) the maximum size of the stack.
 */
 class Solution {
     public int swimInWater(int[][] grid) {
