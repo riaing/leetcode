@@ -43,7 +43,7 @@ class Solution {
         // Bineray search O(log(N^2))
         int n = grid.length;
         int lo = 0;
-        int hi = n*n; //根据左闭右开，这里其实是n*n-1+1
+        int hi = n*n-1;
         while(lo < hi) {
             int mid = lo + (hi - lo) / 2;
             if (!canReachEnd(mid, grid)) {
