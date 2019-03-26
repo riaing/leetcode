@@ -34,7 +34,6 @@ piles.length <= H <= 10^9
 ---------------------------------------------------------------------------------------------------------------------
 /**
 bineray search, 关键是确定min和max，我们猜hour，min=1-总要吃；max的话，因为题目中说吃完一串后那个小时就不动了，所以max可以是piles中最大的数。
-根据模板，我们再把max+1
 
 time:O(n*logW) W-> W is the maximum size of a pile.
 space: O(1)
@@ -47,7 +46,7 @@ class Solution {
         for (int num : piles) {
             max = Math.max(max, num);
         }
-        max++; //左闭右开，所以这里给max++
+       
         
         while (min < max) {
             int mid = min + (max - min) / 2;
