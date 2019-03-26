@@ -18,7 +18,32 @@ Example 4:
 
 Input: [1,3,5,6], 0
 Output: 0
---------------------------binary search------------------------------------------------------------------------
+    
+---------------纯想-------------------------------------------------------------------------------------    
+// find the first element that is grater or equal to target.
+//找到target右边第一个大于它的数
+    //写完后想corner case，只有两个数的情况
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length-1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < target) {
+                start = mid+1;
+            }
+            else if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] > target) {
+                end = mid;
+            } 
+        }
+        return nums[start] >= target ? start : start+1;
+    }
+}
+    
+--------------------------binary search 九章模板------------------------------------------------------------------------
 // find the first element that is grater or equal to target.
 class Solution {
     public int searchInsert(int[] nums, int target) {
