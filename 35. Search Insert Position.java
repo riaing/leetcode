@@ -32,9 +32,7 @@ class Solution {
             if (nums[mid] < target) {
                 start = mid+1;
             }
-            else if (nums[mid] == target) {
-                return mid;
-            }
+        
             if (nums[mid] > target) {
                 end = mid;
             } 
