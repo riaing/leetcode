@@ -28,7 +28,7 @@ Example 2:
 Input: inputs = ["TimeMap","set","set","get","get","get","get","get"], inputs = [[],["love","high",10],["love","low",20],["love",5],["love",10],["love",15],["love",20],["love",25]]
 Output: [null,null,null,"","high","high","low","low"]
 
-----------------------------binary search + hashmap ---------------------------------------------------------------
+----------------------------binary search + hashmap 九章模板 ---------------------------------------------------------------
 //binary search，找到左边第一个小于target的数。 
 // Time Complexity: O(1) for each set operation, and O(log N) for each get operation, where N is the number of entries in the TimeMap.
 //Space Complexity: O(N). 
@@ -105,3 +105,70 @@ class TimeMap {
 
 -------------using treeMap.floorKey(key) funciton ------------------------------------
  https://leetcode.com/problems/time-based-key-value-store/solution/ 
+
+
+---------------bineray自己的模板
+//binary search，找到左边第一个小于target的数。 
+// Time Complexity: O(1) for each set operation, and O(log N) for each get operation, where N is the number of entries in the TimeMap.
+//Space Complexity: O(N). 
+class TimeMap {
+    class Node {
+        String value;
+        int timestamp;
+        public Node(String value, int timestamp) {
+            this.value = value;
+            this.timestamp = timestamp;
+        }
+    }
+    Map<String, List<Node>> map;
+    
+    /** Initialize your data structure here. */
+    public TimeMap() {
+        this.map = new HashMap<String, List<Node>>();    
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        // because the timestamps for all TimeMap.set operations are strictly increasing, we are sure that the map's value list is sorted by timestamp
+        if (!map.containsKey(key)) {
+            map.put(key, new ArrayList<Node>());
+        }
+        map.get(key).add(new Node(value, timestamp));
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) {
+            return "";
+        }
+        // search in the value list to find the target timestamp or the first one left to the target timestamp, if cannot find, return ""
+        return search(timestamp, map.get(key));
+    }
+    
+    private String search(int target, List<Node> input) {
+        int start = 0;
+        int end = input.size()-1;
+        while (start < end) {
+            int mid = start + (end - start)/2+1;
+            int midTimestamp = input.get(mid).timestamp;
+            //start=mid时，考虑两个数的loop，解决方法是mid+1.
+           if (midTimestamp <= target) {
+                start = mid;
+            }
+            else {
+                end = mid - 1;
+            }
+        }
+        if (input.get(start).timestamp <= target) {
+            return input.get(start).value;
+        }
+        else {
+            return "";
+        }
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
