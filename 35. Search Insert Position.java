@@ -19,7 +19,7 @@ Example 4:
 Input: [1,3,5,6], 0
 Output: 0
     
----------------纯想-------------------------------------------------------------------------------------    
+-----------------------3.25.19最新 自己的solution：mid永远包含在满足条件那边， 然后考虑两个数的corner case--------------------------------------------------------------------------    
 // find the first element that is grater or equal to target.
 //找到target右边第一个大于它的数
     //写完后想corner case，只有两个数的情况
@@ -32,7 +32,7 @@ class Solution {
             if (nums[mid] < target) {
                 start = mid+1;
             }
-        
+   
             if (nums[mid] > target) {
                 end = mid;
             } 
@@ -41,7 +41,7 @@ class Solution {
     }
 }
     
---------------------------binary search 九章模板------------------------------------------------------------------------
+---------------------3.14.19 binary search 九章模板------------------------------------------------------------------------
 // find the first element that is grater or equal to target.
 class Solution {
     public int searchInsert(int[] nums, int target) {
