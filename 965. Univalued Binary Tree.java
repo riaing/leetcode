@@ -8,6 +8,9 @@
  * }
  */
 
+Time Complexity: O(N), where NN is the number of nodes in the given tree.
+
+Space Complexity: O(H), where HH is the height of the given tree. 
 --------------------------concise写法，行数少-----------------------------------------------------------------------
 // A tree is univalued 当root == left/right,并且left/right也是univalued。
 class Solution {
