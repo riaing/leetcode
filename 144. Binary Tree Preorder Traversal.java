@@ -10,6 +10,10 @@ Input: [1,null,2,3]
    3
 
 Output: [1,2,3] 
+
+
+Time complexity : O(n).
+Space complexity : O(n).  
 ----------------------Devide and Conquer-------------------------------------------------------------------------
 /**
  * Definition for a binary tree node.
