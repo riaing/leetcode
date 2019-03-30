@@ -37,7 +37,7 @@ However, in the report "[1,5,6]", the node value of 5 comes first since 5 is sma
 Note:
 
 The tree will have between 1 and 1000 nodes.
-Each node's value will be between 0 and 1000.
+Each node’s value will be between 0 and 1000.
 
 ---------------------------------DFS + Priority queue + comparator-------------------------------------------------
 先创建comparator指定好比较的规则， x ascending -> y descending -> val ascending 
