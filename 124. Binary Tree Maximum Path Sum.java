@@ -38,13 +38,20 @@ Output: 42
 Time: O(n^2),对每个node，都要call findSinglePathMaxSum（），所以是n + n-1 + n-2 +....1 = n^2 
 */
 class Solution {
-    
     public int maxPathSum(TreeNode root) {
+           // 用于判断corner case 
+        if (root == null) {
+            return 0;
+        }
+        return helper(root);
+    }
+
+    private int helper(TreeNode root) {
         if (root == null) {
             return Integer.MIN_VALUE;
         }
         //1, 看不包含root的左右子树的max
-        int val = Math.max(maxPathSum(root.left), maxPathSum(root.right));
+        int val = Math.max(helper(root.left), helper(root.right));
         // 2, 找一条cross root的path，那么root左右两边的path必须是single path，
         
         //先找一定经过left的max single path，如果是负数，则不需要它，设为0即可
@@ -66,7 +73,7 @@ class Solution {
             return 0;
         }
         
-        int max = Math.max(findSinglePath(root.left),  findSinglePath(root.right));
+        int max = Math.max(findSinglePathMaxSum(root.left),  findSinglePathMaxSum(root.right));
         //这里的 Math.max(max, 0)说明如果左右子树的max sum都很小，那么直接返回root。这一步确保了这条single path不用走到底。如果题目改成为求一条root-leave的max single path，就不需要这个max的判断
         return Math.max(max, 0) + root.val;  
     }
@@ -77,6 +84,10 @@ public class Solution {
     int maxValue;
     
     public int maxPathSum(TreeNode root) {
+        if (root == null) {
+               return 0; 
+        }
+           
         maxValue = Integer.MIN_VALUE;
         maxPathDown(root);
         return maxValue;
