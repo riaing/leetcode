@@ -24,7 +24,12 @@ Note: The length of path between two nodes is represented by the number of edges
  */
 
 /**
-helper还是找一个single path，通过一个global value max来判断global最长路径。非常类似Binary Tree Maximum Path Sum的思想
+0, root == null在主程序中单独处理
+辅助程序中，
+1，conquer时 root must be used
+2，updated global answer with using both children 
+3, returen longest path with only one children 给 root
+
 Time Complexity:O(N). We visit every node once.
 
 Space Complexity: O(N), the size of our implicit call stack during our depth-first search.
@@ -32,7 +37,7 @@ Space Complexity: O(N), the size of our implicit call stack during our depth-fir
 class Solution {
     int max = Integer.MIN_VALUE; 
     public int diameterOfBinaryTree(TreeNode root) {
-        // corner case [] 
+        // 0, root == null在主程序中单独处理 ：corner case [] 
         if (root == null) {
             return 0;
         }
@@ -47,14 +52,14 @@ class Solution {
         }
         
         int leftDepth = helper(root.left);
-    
         int rightDepth = helper(root.right);
-            if (root.val == 1) {
-        }
+            
         //通过给出的例子来思考：如果左边返回2，右边返回1，那么整体周长就是2+1.。。
+        // 1，conquer时 root must be used
+        // 2，updated global answer with using both children 
         max = Math.max(leftDepth+rightDepth, max);
         
-        
+        //3. return depth(nodes) :
         return Math.max(leftDepth, rightDepth) + 1;
     }
 }
