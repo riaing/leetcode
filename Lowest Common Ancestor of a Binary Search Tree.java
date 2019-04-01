@@ -26,6 +26,8 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
  
 /* 对于二叉搜索树，公共祖先的值一定大于等于较小的节点，小于等于较大的节点。换言之，在遍历树的时候，如果当前结点大于两个节点，则结果在当前结点的左子树里，如果当前结点小于两个节点，则结果在当前节点的右子树里。
 */
+time o(n)
+space o(n) -tree height 
 
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -49,7 +51,9 @@ class Solution {
     }
 }
 --------------------------------- iteration --------------------------------------------------------------------------------
-/**
+time o(n)
+space o(n) -tree height 
+ /**
  * Definition for a binary tree node.
  * public class TreeNode {
  *     int val;
@@ -89,4 +93,39 @@ public class Solution {
          return root;
     }
    
+}
+-----------------答案提供了iteration不用extra space (but use pointer) --------------------------------------------------------
+TIME: o(N)
+SPCAE: o(1)        
+        class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        // Value of p
+        int pVal = p.val;
+
+        // Value of q;
+        int qVal = q.val;
+
+        // Start from the root node of the tree
+        TreeNode node = root;
+
+        // Traverse the tree
+        while (node != null) {
+
+            // Value of ancestor/parent node.
+            int parentVal = node.val;
+
+            if (pVal > parentVal && qVal > parentVal) {
+                // If both p and q are greater than parent
+                node = node.right;
+            } else if (pVal < parentVal && qVal < parentVal) {
+                // If both p and q are lesser than parent
+                node = node.left;
+            } else {
+                // We have found the split point, i.e. the LCA node.
+                return node;
+            }
+        }
+        return null;
+    }
 }
