@@ -80,6 +80,14 @@ class Solution {
 }
 
 ----------------------------O（n）看看大神的解法-----------------------------------------------------
+/**
+0, root == null在主程序中单独处理
+辅助程序中，
+1，conquer时 root must be used
+2，updated global answer with using both children 
+3, returen longest path with only one children 给 root
+*/       
+       
 public class Solution {
     int maxValue;
     
