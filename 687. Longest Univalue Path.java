@@ -45,6 +45,8 @@ Note: The given binary tree has not more than 10000 nodes. The height of the tre
 2，updated global answer with using both children 
 3, returen longest path with only one children 给 root
 */
+  
+// https://www.youtube.com/watch?v=yX1hVhcHcH8 
 class Solution {
     int max; 
     public int longestUnivaluePath(TreeNode root) {
