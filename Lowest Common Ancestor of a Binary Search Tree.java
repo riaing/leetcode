@@ -13,7 +13,7 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
 
 
 两种方法都是利用BST的性质！ 
-
+-----------------------------------------D & C------------------------------------------------------------
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -27,23 +27,28 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
 /* 对于二叉搜索树，公共祖先的值一定大于等于较小的节点，小于等于较大的节点。换言之，在遍历树的时候，如果当前结点大于两个节点，则结果在当前结点的左子树里，如果当前结点小于两个节点，则结果在当前节点的右子树里。
 */
 
-public class Solution {
+class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if (root == null || p == null || q == null){
+        if (root == null) {
+            return null;
+        }
+        if (p == root || q == root) {
             return root;
         }
-        if(p.val < root.val && q.val < root.val){
+        // 判断是否两点在左子树上
+        if (p.val < root.val && q.val < root.val) {
             return lowestCommonAncestor(root.left, p, q);
         }
-        
-        if(p.val > root.val && q.val > root.val){
+        else if (p.val > root.val && q.val > root.val) {
             return lowestCommonAncestor(root.right, p, q);
         }
-        return root; 
+        // 否则分别在左右子树上，则return root
+        else {
+            return root;
+        }
     }
 }
-
--------------------BFS 遍历
+--------------------------------- iteration --------------------------------------------------------------------------------
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
