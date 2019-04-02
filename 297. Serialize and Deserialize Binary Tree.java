@@ -113,12 +113,11 @@ public class Codec {
     }
     
     // Preorder traversal the tree 
-    private String rSerialize(TreeNode root, String s) {
+       private String rSerialize(TreeNode root) {
          if (root == null) {
-            s += "null";
-            return s;
+            return "null";
         }
-        return root.val + "," + rSerialize(root.left, s) + "," + rSerialize(root.right, s);  
+        return root.val + "," + rSerialize(root.left) + "," + rSerialize(root.right);  
     }
 
     // Decodes your encoded data to tree.
@@ -178,12 +177,11 @@ public class Codec {
     }
     
     // Preorder traversal the tree 
-    private String rSerialize(TreeNode root, String s) {
+       private String rSerialize(TreeNode root) {
          if (root == null) {
-            s += "null";
-            return s;
+            return "null";
         }
-        return root.val + "," + rSerialize(root.left, s) + "," + rSerialize(root.right, s);  
+        return root.val + "," + rSerialize(root.left) + "," + rSerialize(root.right);  
     }
 
     //每次删list的第一个元素，进行d&c. 因为是linked list，所以删第一个元素也是o(1)
