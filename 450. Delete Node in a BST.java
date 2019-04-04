@@ -38,7 +38,7 @@ Another valid answer is [5,2,6,null,4,null,7].
 
 
 解法reference： http://www.cnblogs.com/grandyang/p/6228252.html
---------下面来看一种对于二叉树通用的解法，适用于所有二叉树，所以并没有利用BST的性质，而是遍历了所有的节点，然后删掉和key值相同的节点，--------
+--------下面来看一种对于二叉树通用的解法，适用于所有二叉树，所以并没有利用BST的性质，而是遍历了所有的节点，然后删掉和key值相同的节点，O(n)--------
 delete node from a binary tree:
 1, 判断是否等于root value，
 2，如果是，那么找到右子树的最小值/左子树最小值，把它的value和root的value互换。
@@ -74,6 +74,7 @@ class Solution {
             swapValue(root, cur); 
         }
         
+        // 必须保证其左右子树皆继续保持binary tree的性质。
         root.left = deleteNode(root.left, key);
         root.right = deleteNode(root.right, key);
         return root;
@@ -85,7 +86,7 @@ class Solution {
     }
 }
 
--------------利用了BST性质的解法，快速判断key在哪边。中心思想同样是swap root.val和右子树最大值value---------------------------------
+-------------利用了BST性质的解法，快速判断key在哪边。中心思想同样是swap root.val和右子树最大值value O(h)---------------------------------
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -117,7 +118,7 @@ class Solution {
                 cur = cur.left;
             }
             swapValue(root, cur); 
-            
+            // 必须继续遍历被modified的右子树使其保持BST的性质
             root.right = deleteNode(root.right, key); //  BST与普通树不同的点2: 我们在BST中因为有了快速定位key在哪一边，所以这里直接修整右边子树。而在普通树中，我们需要整理both左右子树，因为delete的点可能在下次递归中，在子树的左边。
         }
         return root; 
