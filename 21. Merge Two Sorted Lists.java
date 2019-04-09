@@ -16,13 +16,12 @@ Output: 1->1->2->3->4->4
  * }
  */
 class Solution {
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode p1 = l1;
-        ListNode p2 = l2;
+    public ListNode mergeTwoLists(ListNode p1, ListNode p2) {
+
         ListNode dummy = new ListNode(0);
         ListNode cur = dummy;
         while (p1 != null && p2 != null) {
-            if (p1.val < p2.val) {
+            if (p1.val <= p2.val) {
                 cur.next = p1;
                 p1 = p1.next;
             }
@@ -32,15 +31,12 @@ class Solution {
             }
             cur = cur.next;
         }
-        while (p1 != null) {
-            cur.next = p1;
-            p1 = p1.next;
-            cur = cur.next;
+        // exactly one of l1 and l2 can be non-null at this point, so connect
+        if (p1 != null) {
+            cur.next = p1; 
         }
-        while (p2 != null) {
+        if (p2 != null) {
             cur.next = p2;
-            p2 = p2.next;
-            cur = cur.next;
         }
         return dummy.next;
     }
