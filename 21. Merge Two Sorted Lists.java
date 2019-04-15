@@ -41,3 +41,23 @@ class Solution {
         return dummy.next;
     }
 }
+----------------------------------recursion 写法----------------------------------------------------------------------------
+    private ListNode mergeTwoSortedList(ListNode part1, ListNode part2) {
+        if (part1 == null) {
+            return part2;
+        }
+        if (part2 == null) {
+            return part1;
+        }
+        
+        ListNode head; 
+        if (part1.val <= part2.val) {
+            head = part1;
+            head.next = mergeTwoSortedList(part1.next, part2); 
+        }
+        else {
+            head = part2;
+            head.next = mergeTwoSortedList(part1, part2.next);
+        }
+        return head;
+    }
