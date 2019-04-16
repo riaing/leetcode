@@ -61,3 +61,36 @@ class Solution {
         }
         return head;
     }
+
+----------------------------Merge two list 解法----------------------------------------------------------------------------
+    普通的两个list（非sort），一个接一个的merge，
+    eg: 1->2, 4->3 会变成 1->4->2->3；  1->2-5, 4->3 会变成 1->4->2->3->5
+        
+         private ListNode mergeTwoList(ListNode p1, ListNode p2) {
+        if (p1 == null) {
+            return p2; 
+        }
+        
+        if (p2 == null) {
+            return p1;
+        }
+        ListNode head = new ListNode(0);
+        ListNode cur = head;
+        while (p1 != null && p2 != null) {
+            cur.next = p1;
+            cur = cur.next; 
+            p1 = p1.next;
+            
+            cur.next = p2;
+            cur = cur.next;
+            p2 = p2.next;
+        }
+        if (p1 != null) {
+            cur.next = p1;
+        }
+        
+        else if (p2 != null) {
+            cur.next = p2;
+        }
+        return head.next;
+    }
