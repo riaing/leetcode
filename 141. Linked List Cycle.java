@@ -60,7 +60,6 @@ public class Solution {
                 return true;
             }
         }
-        //因为有可能还剩下fast，并且fast连成环
-        return fast == slow;
+        return false;
     }
 }
