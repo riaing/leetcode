@@ -87,3 +87,47 @@ public class Solution {
         
     }
 }
+
+---------------------------4.15.19 update --------------------------------------------------------------------
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+/**
+此题的证明口是 slow走的步数 = fast - slow的difference
+假设slow走了k步，fast则走了2k步，则2k-k = nC,C是环的周长
+同时，k = L + x + n2C, L是起点到环起点的长度，x是环起点到相遇点的长度
+两式相连可得 nC = L + x + n2C -> (n-n2)C - x = L
+*/
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                slow = head;
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+       
+        return null;
+
+    }
+}
