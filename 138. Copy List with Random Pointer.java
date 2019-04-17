@@ -63,3 +63,62 @@ class Solution {
         return dummy.next;                                 
     }
 }
+
+
+---------------小trick，将copy的node连在Node后 ---------------------------------------------------------------------------------
+ /*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node next;
+    public Node random;
+
+    public Node(int _val) {val = _val;}
+
+    public Node(int _val,Node _next,Node _random) {
+        val = _val;
+        next = _next;
+        random = _random;
+    }
+};
+*/
+
+/**
+用next来代表映射关系，讲copy的node连在原node后。
+Time: O（N）make one pass over the original linked list.
+Space： O(1) 
+*/
+class Solution {
+    public Node copyRandomList(Node head) {
+        //原list每个node后面添加它的copy
+        // insert copy between node and its next 
+        Node cur = head;
+        
+        while (cur != null) {
+            Node tmp = cur.next;
+            cur.next = new Node(cur.val);
+            cur.next.next = tmp;
+            cur = cur.next.next;
+        }
+         
+        // Link random 
+        cur = head; 
+        while (cur != null) {
+            cur.next.random = cur.random == null ? null : cur.random.next;
+            cur = cur.next.next;
+        }
+        
+        // split into two list 
+        cur = head;
+        Node dummy = new Node(0);
+        Node newListNode = dummy;
+        while (cur != null) {
+            newListNode.next = cur.next;
+            newListNode = newListNode.next;
+            // 删除掉copy的node
+            cur.next = cur.next.next;
+            cur = cur.next; 
+        }
+        return dummy.next;
+    }
+}
