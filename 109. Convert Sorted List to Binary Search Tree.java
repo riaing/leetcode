@@ -50,5 +50,49 @@ public class Solution {
     }
 }
 
-------------优化：like inorder traversal，记录当前node。先
+------------优化：like inorder traversal，记录当前node。先处理左边，再root，再右边。 O（n）-------------------------------
+不同于找中点的思路，这里更像是inorder traversal思路。首先有一个隐形的pointer来记录当前处理到的node。从头开始，先处理size/2个node，形成左子树，
+然后pointer移到下一个node，作为root，然后处理root.next 开头的长度为size - 1 - size/2的list，作为右子树。这样的话每个node只访问了一遍，
+时间是o(n), 空间是O（lgn）stack space。
+
 public class Solution {
+    private ListNode current;
+
+    private int getListLength(ListNode head) {
+        int size = 0;
+
+        while (head != null) {
+            size++;
+            head = head.next;
+        }
+
+        return size;
+    }
+
+    public TreeNode sortedListToBST(ListNode head) {
+        int size;
+
+        current = head;
+        size = getListLength(head);
+
+        return sortedListToBSTHelper(size);
+    }
+
+    public TreeNode sortedListToBSTHelper(int size) {
+        if (size <= 0) {
+            return null;
+        }
+
+        TreeNode left = sortedListToBSTHelper(size / 2);
+        TreeNode root = new TreeNode(current.val);
+        current = current.next;
+        TreeNode right = sortedListToBSTHelper(size - 1 - size / 2);
+
+        root.left = left;
+        root.right = right;
+
+        return root;
+    }
+}
+-------------------同样思路优化，但不用global var，定义一个class来存treeNode和下一个要访问的listNode----------------------------------
+  思路同上
