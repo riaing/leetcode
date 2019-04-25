@@ -22,6 +22,15 @@ What's the definition of Longest Common Subsequence?
 
 https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 http://baike.baidu.com/view/2020307.htm
+------------------DP 公式---------------------------
+	
+m[i][j] : 在a中以第i个字符结尾，在b中以第j个字符结尾的LCS
+m[i][j] = m[i-1][j-1] if i==j ||
+	max{m[i][j-1], m[i-1][j]} if i!=j
+start: m[0][0...length] = 0
+	m[0...length][0] = 0
+end: m[a.length][b.length]
+
 
 -----------------------DP----------------------------------------------------------------------------------------------
 public class Solution {
@@ -48,6 +57,7 @@ public class Solution {
 }
 
 --------------DP with save space ----------------------------------------------------------------------------
+	
 因为只和i-1上一行相关，所以用rotational array的方法
 public class Solution {
     /**
