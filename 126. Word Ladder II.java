@@ -215,7 +215,94 @@ class Solution {
     }
 }
 
-
+------------------------BFS优化------------------------------------------------------------------------------
+BFS+DFS运用; 先用BFS剪枝，核心是DFS
+BFS一般求最短路径，当问道求所有的最短路径时，我们用一个flag，当找到一个解时，flag设为true，并且遍历完当前层，出层后（进入到下一次while前），
+查flag，为true即可return，出while loop"
+  class Solution {
+    List<List<String>> result = new ArrayList<>();
+    Map<String, List<String>> nodeNeighbors = new HashMap<>();
+    Map<String, Integer> distance = new HashMap<>();
+    Set<String> dictionary;
+    
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        dictionary = new HashSet<>(wordList);
+        if(!dictionary.contains(endWord))
+            return result;
+        
+        List<String> solution = new ArrayList<>();
+        
+        dictionary.add(beginWord);
+        bfs(beginWord, endWord);
+        dfs(beginWord, endWord, solution);
+        
+        return result;
+    }
+    
+    public List<String> getNeighbors(String current) {
+        List<String> neighbors = new ArrayList<>();
+        char ch[] = current.toCharArray();
+        for(char c = 'a'; c <= 'z'; c++) {
+            for(int i = 0; i < ch.length; i++) {
+                if(ch[i] == c)
+                    continue;
+                char old_char = ch[i];
+                ch[i] = c;
+                if(dictionary.contains(String.valueOf(ch)))
+                    neighbors.add(String.valueOf(ch));
+                ch[i] = old_char;
+            }
+        }
+        
+        return neighbors;
+    }
+    
+    public void bfs(String start, String end) {
+        for(String str : dictionary)
+            nodeNeighbors.put(str, new ArrayList<String>());
+        
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(start);
+        distance.put(start, 0);
+        
+        while(!queue.isEmpty()) {
+            int count = queue.size();
+            boolean foundEnd = false;
+            for(int i = 0; i < count; i++) {
+                String current = queue.poll();
+                int current_distance = distance.get(current);
+                List<String> neighbors = getNeighbors(current);
+                
+                for(String neighbor : neighbors) {
+                    nodeNeighbors.get(current).add(neighbor);
+                    if(!distance.containsKey(neighbor)) {
+                        distance.put(neighbor, current_distance + 1);
+                        if(end.equals(neighbor))
+                            foundEnd = true;
+                        else
+                            queue.offer(neighbor);
+                    }
+                }
+            }
+            
+            if(foundEnd)
+                break;
+        }
+    }
+    
+    public void dfs(String current, String end, List<String> solution) {
+        solution.add(current);
+        if(end.equals(current))
+            result.add(new ArrayList<String>(solution));
+        else {
+            for(String neighbor : nodeNeighbors.get(current)) {
+                if(distance.get(neighbor) == distance.get(current) + 1)
+                    dfs(neighbor, end, solution);
+            }
+        }
+        solution.remove(solution.size() - 1);
+    }
+}
 
 
 
