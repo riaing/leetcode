@@ -25,7 +25,7 @@ class Solution {
         int sum = 0; // this is the accumulated sum 
         for (int j = 0; j < nums.length; j++) {
             sum += nums[j]; // sum[0,j]
-            if (map.containsKey(sum-k)) { // if sum[0, i-1] exists 
+            if (map.containsKey(sum-k)) { // if sum[0, i-1] exists 注意题目中给了数组中的数都是大于0，否则得判断abs值
                 res += map.get(sum-k);
             }
             map.put(sum, map.getOrDefault(sum, 0) + 1);
