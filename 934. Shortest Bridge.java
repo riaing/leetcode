@@ -80,7 +80,7 @@ class Solution {
         int step = 0;
         // queue will store either 0 or -1, -1 means the node is visited(before is 0) or island(before is 1)
         while(!queue.isEmpty()) {
-            step++;
+          
             int size = queue.size();
             for (int i = 0; i< size; i++) {
                 int[] cur = queue.poll();
@@ -89,8 +89,8 @@ class Solution {
                     int newCol = cur[1] + col[n];
                     if (newRow < A.length && newRow >= 0 && newCol < A[0].length && newCol >= 0 && A[newRow][newCol] != -1) {
                         if (A[newRow][newCol] == 1) {
-                            // now, step is "how many steps to reach the other island, so at this step, we reached the island. so we need back one step "
-                            return step -1;
+                           
+                            return step;
                         }
                         queue.offer(new int[]{newRow, newCol});
                         // so we know this node is visited
@@ -98,6 +98,7 @@ class Solution {
                     }
                 }
             }
+           step++;
         }
         return step; 
     }
