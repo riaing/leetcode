@@ -38,6 +38,8 @@ Note:
 S contains only digits.
 
 -----------------------------------------recursion------------------------------------------------
+    Time： 大概O（N^3），因为确定第一二位是n^2, 然后求三，四。。。位等于一个个数字的比较，那么三，四。。。位大概也就n位数，所以每个确定了的1，2位
+    要O（n) to find the rest. so the total is O(n^3) approx. 
 
 class Solution {
     List<Integer> res;
