@@ -59,30 +59,18 @@ minus the number of nodes in the subtree.
  * }
  */
 class Solution {
-    int times;
+      int res = 0;
     public int distributeCoins(TreeNode root) {
-        times = 0;
-        excessCoinsToParent(root);
-        return times;
+        dfs(root);
+        return res;
     }
     
     // the excess number of coins at this node - 要给上一步的coin数量 
     // excess = Math.abs(numCoins at this node - 1)
-    private int excessCoinsToParent(TreeNode root) {
-        if (root == null) {
-            return 0;
-        }
-        // 这一步可省略
-        if (root.left == null && root.right == null) {
-            times += Math.abs(root.val -1); 
-            return root.val - 1;
-        }
-        
-        int left = excessCoinsToParent(root.left); // receive how many coins from left; 
-        int right = excessCoinsToParent(root.right); 
-        
-        int excessCoins = root.val + left + right - 1;
-        times += Math.abs(excessCoins);
-        return excessCoins;
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = dfs(root.left), right = dfs(root.right);
+        res += Math.abs(left) + Math.abs(right);
+        return root.val + left + right - 1;
     }
 }
