@@ -177,11 +177,11 @@ public class Codec {
     }
     
     // Preorder traversal the tree 
-       private String rSerialize(TreeNode root) {
+       private String rSerialize(TreeNode root, String s) {
          if (root == null) {
             return "null";
         }
-        return root.val + "," + rSerialize(root.left) + "," + rSerialize(root.right);  
+        return root.val + "," + rSerialize(root.left, s) + "," + rSerialize(root.right, s);  
     }
 
     //每次删list的第一个元素，进行d&c. 因为是linked list，所以删第一个元素也是o(1)
