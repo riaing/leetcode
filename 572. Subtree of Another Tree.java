@@ -95,7 +95,7 @@ class Solution {
         if (identical(s, t)) {
             return true;
         }
-        if (s != null) {
+        if (s != null) { 
             return isSubtree(s.left, t) || isSubtree(s.right, t);
         }
         //说明 s == null && t！=null了。
