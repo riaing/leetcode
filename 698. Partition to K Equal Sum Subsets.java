@@ -116,7 +116,7 @@ class Solution {
  /**
 比如先给数组按从大到小的顺序排个序，然后在递归函数中，我们可以直接判断，如果curSum大于target了，直接返回false，因为题目中限定了都是正数，并且我们也给数组排序了，后面的数字只能更大，这个剪枝操作大大的提高了运行速度
 
-time: o(n！)? 
+time: o(k^n) -> k个隔板，每段有n种选择
 **/
 class Solution {
     public boolean canPartitionKSubsets(int[] nums, int k) {
