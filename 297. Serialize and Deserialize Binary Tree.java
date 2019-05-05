@@ -194,7 +194,11 @@ public class Codec {
     }
     
     private TreeNode helper(List<String> list) {
-         if (list.size() == 0 || list.get(0).equals("null")) {
+         if (list.size() == 0) {
+             return null;
+         }
+        
+        if (list.get(0).equals("null")) {
             list.remove(0);
             return null;
         }
