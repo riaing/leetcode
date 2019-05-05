@@ -44,7 +44,8 @@ class Solution {
         helper(root);
         return max;
     }
-    
+         
+    -------------方法一： 这是用depth（node个数）来想 --------------------------------------
     //helper还是找一个single path，通过一个global value max来判断global最长路径。
     private int helper(TreeNode root) {
         if (root == null) {
@@ -61,5 +62,17 @@ class Solution {
         
         //3. return depth(nodes) :
         return Math.max(leftDepth, rightDepth) + 1;
+    }
+   ---------------方法二：用edge的个数来想-------------------------------
+   private int pathDown(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0;
+        }
+        int left = pathDown(root.left);
+        int right = pathDown(root.right);
+        int curLong = (root.left == null ? 0 : (1 + left))  + (root.right == null ? 0 : (1 + right));  
+        value = Math.max(curLong, value);
+        return Math.max(left, right) + 1;
+        
     }
 }
