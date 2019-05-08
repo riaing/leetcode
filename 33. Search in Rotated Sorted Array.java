@@ -18,6 +18,47 @@ Input: nums = [4,5,6,7,0,1,2], target = 3
 Output: -1
 
     
+    --------------------5.8 update也是自己的模板------------------------------------------
+    /*
+1, compare with start 
+2, determine是在哪一小段
+*/
+class Solution {
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int start = 0;
+        int end = nums.length - 1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < nums[start]) {
+                if (target > nums[mid] && target <= nums[end]) {
+                    start = mid + 1;
+                }
+                else {
+                    end = mid;
+                }
+            }
+            // mid > start
+            else {
+                if (target <= nums[mid] && target >= nums[start]) {
+                    end = mid;
+                }
+                else {
+                    start = mid + 1;
+                }
+            }
+        }
+        if (nums[start] == target) {
+            return start;
+        }
+        else {
+            return -1;
+        }
+    }
+}
+    
 --------------3.26.19 update 自己的模板----------------------------------------------------------------------
  反正要不start=mid，要不end=mid。如果start=mid的话，mid要+1，所以就凑足条件即可   
     
