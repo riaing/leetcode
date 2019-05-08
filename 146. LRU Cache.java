@@ -134,3 +134,28 @@ class LRUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+ ------------------------------------5.7 被面后updatey一下思路，方法和上面一样------------------------------------
+ 1，use map to fatch data, linkedlist to remain the order, head is the LRU 
+ 2, 
+for put: 
+    1, when put the exsiting key(update an key) 
+        update the map, find where the node at, extract it from the list, put it to end. 
+    2, when put a new key 
+        a, check capacity: if meet capacity -> remove head of list, remove map entry of the head node, so this means we need to have
+        a relation between node and map so we can know which map entry correspond to the head node of list 
+        b, add to map, add node to end of list 
+for get:
+if has the key in map, we need 
+    1, update list: find where the node at, extract it from the list, put it to end. 
+    2, get it from map, return
+        
+ to simplify:  
+ get{ moveNodeToEnd } 
+ put{
+    if containsKey {
+        moveNodeToEnd
+    }else {
+        if = capacity { removeHead;, remove entry in map}
+        addToEnd;
+    }
+ }
