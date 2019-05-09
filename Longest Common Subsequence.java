@@ -18,7 +18,7 @@ Example 2:
 	Explanation: 
 	LCS is AC
 Clarification
-What's the definition of Longest Common Subsequence?
+What‘s the definition of Longest Common Subsequence?
 
 https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 http://baike.baidu.com/view/2020307.htm
@@ -85,6 +85,7 @@ public class Solution {
     }
 }
 ------------------follow up:记录任意一条最长的sub seq：用track array to record last visited path!-----------------------------------------
+eg: Input: "ABCD" and "EACB", return AB or AC
 public class Solution {
     /**
      * @param A: A string
