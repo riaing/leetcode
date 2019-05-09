@@ -4,19 +4,19 @@ Your code should return the length of LCS.
 
 Example
 Example 1:
-	Input:  "ABCD" and "EDCA"
+	Input:  ABCD and EDCA
 	Output:  1
 	
 	Explanation:
-	LCS is 'A' or  'D' or 'C'
+	LCS is A or D or C
 
 
 Example 2:
-	Input: "ABCD" and "EACB"
+	Input: ABCD and EACB
 	Output:  2
 	
 	Explanation: 
-	LCS is "AC"
+	LCS is AC
 Clarification
 What's the definition of Longest Common Subsequence?
 
@@ -24,7 +24,7 @@ https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 http://baike.baidu.com/view/2020307.htm
 ------------------DP 公式---------------------------
 	
-m[i][j] : 在a中以第i个字符结尾，在b中以第j个字符结尾的LCS
+m[i][j] : 在a中以前i个字符，在b中以前j个字符的LCS
 m[i][j] = m[i-1][j-1] if i==j ||
 	max{m[i][j-1], m[i-1][j]} if i!=j
 start: m[0][0...length] = 0
