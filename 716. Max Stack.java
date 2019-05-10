@@ -66,3 +66,6 @@ class MaxStack {
  * int param_4 = obj.peekMax();
  * int param_5 = obj.popMax();
  */
+
+----------------double LinkedList + TreeMap解法， 看答案吧------------------------------------------
+    https://leetcode.com/problems/max-stack/solution/ 
