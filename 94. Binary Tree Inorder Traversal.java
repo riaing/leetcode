@@ -66,3 +66,43 @@ class Solution {
         return res;
     }
 }
+
+------------------------------------非递归二
+   /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        
+        Deque<TreeNode> stack = new LinkedList<TreeNode>();
+        stack.push(root);
+        TreeNode cur = root; 
+        while(!stack.isEmpty()) {
+            while(cur != null && cur.left != null) {
+                stack.push(cur.left);
+                cur = cur.left;
+            }
+            
+            cur = stack.pop();
+            res.add(cur.val);
+              
+            if (cur.right != null) {
+                  stack.push(cur.right);
+            }
+          
+            cur = cur.right;  //很重要的一步
+        }
+        
+        return res;
+    }
+}
