@@ -9,6 +9,7 @@ Given nums = [2, 7, 11, 15], target = 9,
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 ---------------------------------------------------------------------------------
++tags: Map
 /**
 * Hashmap, 每个数放进去之前，查看target-x是否已在map里
 *  O(n) time, O(n) space 
