@@ -13,6 +13,8 @@ Explanation: Paint house 0 into color 0, paint house 1 into color 2. Minimum cos
              Or paint house 0 into color 2, paint house 1 into color 0. Minimum cost: 3 + 2 = 5. 
 Follow up:
 Could you solve it in O(nk) runtime?
+  
+  ------------思路都来自大神的解法 https://github.com/awangdev/LintCode/blob/master/Java/Paint%20House%20II.java ------
 
 ------------------------普通DP， o(n*k^2), n -> num of houses, k -> number of colors -----------------------------------
 m[i][j] = 第i个房子选j颜色的总min cost
