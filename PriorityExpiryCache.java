@@ -18,6 +18,10 @@ How can we find the list that has the lowest priority nodes? We can use a TreeMa
 List<Node>>. and TreeMap.firstKey() returns us the list that has the lowest priority nodes. 
 In this case, we reduce our time from O(n) -> O(lgn) for every need-to-remove node. 
 
+Some improvement we could do:
+As we discussed, in get method, we need to update the node's occurance by extracting it from the list, and move it to the list end. And single linked list will cause O(n) for finding the node's parent. 
+In this case, we can use doublyLinkedList that reduces O(n) to O(1).
+
 Additional approach to delete node that expires: 
 Instead of going over all nodes, we can save a node's time to itself relation into a TreeMap<time, List<Node>> timeMap. Essentailly the timeMap provides up a soring function so that we don't need to traverse through all nodes. And of course, we need to update our valueMap and priorityMap when deleting expired node. 
 
