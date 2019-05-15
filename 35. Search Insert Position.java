@@ -33,11 +33,12 @@ class Solution {
                 start = mid+1;
             }
    
-            if (nums[mid] > target) {
+            if (nums[mid] >= target) {
                 end = mid;
             } 
         }
-        return nums[start] >= target ? start : start+1;
+        return nums[start] >= target ? start : start+1; //这里是经典binary search的升级，[2,3,4], target是5时，我们要返回3作为要插入的position，
+        //经典binary search都是return[start,end]范围内的数。所以要特殊处理一下
     }
 }
     
