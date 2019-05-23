@@ -65,3 +65,79 @@ m[i][i+1] = s[i][i+1]
         }
         return pal;
     }
+
+----------------------从中间向two sides expend. O(n) on average : special approach for such question ----------------------------------
+        class Solution {
+    int start;
+    int end; 
+    public String longestPalindrome(String s) {
+        start = 0;
+        end = 0;
+        if (s == null || s.length() < 2) {
+            return s;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            findPal(s, i, i);
+            findPal(s, i, i+1);
+        }
+        return s.substring(start, end+1);
+    }
+    
+    private void findPal(String s, int lo, int hi) {
+        while (lo >= 0 && hi < s.length() && s.charAt(lo) == s.charAt(hi)) {
+            if (end - start + 1 < hi - lo + 1) {
+                end = hi;
+                start = lo;
+            }
+            lo--;
+            hi++;
+        }
+    }
+}
+        ----------变种： 只考虑大小写 不考虑空格, 等其他符号的回文数--------------------------------
+class Solution {
+    int start;
+    int end; 
+    int length;
+    public String longestPalindrome(String s) {
+        start = 0;
+        end = 0;
+        length = 0;
+        if (s == null || s.length() < 2) {
+            return s;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            findPal(s, i, i);
+            findPal(s, i, i+1);
+        }
+        System.out.println("length " + length);
+        return s.substring(start, end+1);
+    }
+    
+    private void findPal(String s, int lo, int hi) {
+        int symbol = 0;
+        while (lo >= 0 && hi < s.length()) {
+            if (!Character.isLetterOrDigit(s.charAt(lo))) {  // 就在遇到符号时跳过
+                symbol++;
+                lo--;
+            }
+            if (!Character.isLetterOrDigit(s.charAt(hi))) {
+                symbol++;
+                hi++;
+            }    
+            if (s.charAt(lo) == s.charAt(hi)) {
+                if (end - start + 1 < hi - lo + 1 - symbol) { // 并且记录下符号一共出现了多少次
+                end = hi;
+                start = lo;
+                length = hi - lo + 1 - symbol;
+                }   
+                lo--;
+                hi++;
+            } 
+            else {
+                break;
+            }
+        }
+    
+    }
+}
