@@ -42,7 +42,7 @@ class Solution {
         int end = nums.length - 1;
         
         while (start < end) {
-            int mid = start + (end-start)/2+1;
+            int mid = start + (end-start + 1)/2;
             if (nums[mid] == target) {
                 return true;
             }
