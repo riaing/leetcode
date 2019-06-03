@@ -1,3 +1,5 @@
+类似lt 125，但是找出minimum path sum： 
+https://cloud.githubusercontent.com/assets/9201514/22659169/a0c693b6-ec6a-11e6-8642-2683bc89566c.png 这个eg中应该返回-10
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
