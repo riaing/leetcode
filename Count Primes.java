@@ -20,7 +20,7 @@ http://blog.csdn.net/lisonglisonglisong/article/details/45309651
 从2开始将素数的倍数都标注为不是素数。第一轮将4、6、8等表为非素数，然后遍历到3，发现3没有被标记为非素数，
 则将6、9、12等标记为非素数，一直到N为止，再数一遍素数数组中有多少素数。
 
-// time =  O(NlogN)？ 空间 O(N)
+// time =  O(NloglogN）~ O(N），  空间 O(N)
 
 public class Solution {
     public int countPrimes(int n) {
