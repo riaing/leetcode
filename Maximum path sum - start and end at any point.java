@@ -18,6 +18,11 @@ return 5
  2,    5  
 n, n, 4, 7  
 return 5 + 7
+
+    -1 
+ 2,    -5  
+n, n, 4,  7  
+return  7
 */
 
 
