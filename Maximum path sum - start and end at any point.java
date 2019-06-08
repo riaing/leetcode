@@ -1,4 +1,3 @@
-求 max path sum
 import java.io.*;
 import java.util.*;
 
@@ -8,12 +7,10 @@ Given a tree, return max path sum which path is define as a route start from any
  2,    5  
 n, n, -4, -7  
 return 1+5
-
     -1 
  2,    5  
 n, n, -4, -7  
 return 5
-
     -1 
  2,    5  
 n, n, 4, 7  
@@ -53,22 +50,24 @@ class Solution {
       return maxValue;
   }
   
-  private Node helper(TreeNode root) {
+  private int helper(TreeNode root) {
     if (root == null) {
-      return new Node(0, Integer.MIN_VALUE);
+      return Integer.MIN_VALUE;
     }
+ 
     if (root.left == null && root.right == null) {
-      return new Node(root.val, root.val);
+      maxValue = Math.max(root.val, maxValue); // 记得在这里check
+      return root.val;
     }
-    Node left = helper(root.left);
-    Node right = helper(root.right);
+    int left = helper(root.left);
+    int right = helper(root.right);
     
     /* compare these 3 conditions with global return value： 这一步反应题意，可以是任意点开始任意点结束
     1, just root
     2, root + max(left, right)
     3, max(left, right)
     */
-    int maxSubtreeValue = Math.max(left.max, right.max);
+    int maxSubtreeValue = Math.max(left, right);
     int levelMax = Math.max(root.val + maxSubtreeValue, Math.max(root.val, maxSubtreeValue));
                           
     maxValue = Math.max(levelMax, maxValue);
@@ -76,17 +75,17 @@ class Solution {
 
     // return at this step 
    // maxReturn = max{root.val, root.val + maxSubtreeValue}                 
-    return new Node(root.val, Math.max(root.val, (root.val + maxSubtreeValue)));
+    return Math.max(root.val, (root.val + maxSubtreeValue));
   }
   
   public static void main(String[] args) {
     Solution s = new Solution();
     // test for tree 
-    TreeNode root = new TreeNode(-1);
+    TreeNode root = new TreeNode(1);
     TreeNode left = new TreeNode(2);
     TreeNode right = new TreeNode(5);
-    TreeNode rightLeft = new TreeNode(4);
-    TreeNode rightRight = new TreeNode(7);
+    TreeNode rightLeft = new TreeNode(-4);
+    TreeNode rightRight = new TreeNode(-7);
     root.left = left;
     root.right = right;
     right.left = rightLeft;
