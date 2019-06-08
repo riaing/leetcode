@@ -32,3 +32,44 @@ class Solution {
         return dp[s.length()-1];
     }
 }
+--------------------------follow up: 返回所有的组合，用Map + memorization --------------------------------------------------------------
+        class Solution {
+` // 返回所有组合
+    public int numDecodings(String s) {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        map.put(0, new ArrayList<String>());
+        if (s.charAt(0) != '0') {
+              map.get(0).add(s.charAt(0) + "");
+        }
+        
+        map.put(1, new ArrayList<String>());
+        if (s.charAt(1) != '0') {
+           map.get(1).add(s.charAt(1)+"");
+        }
+        map.get(1).add(s.substring(0,2));
+      
+        helper(String s....);
+        return map.get(s.length()-1); 
+        
+    }
+    private void helper(String s, int index, map) {
+        if (index == s.length()) {
+            num++;
+        }
+        for (int i = index; i < s.length(); i++) {
+            List<String> cur = new ArrayList<String>();
+            String oneDigit = s.substring(i, i+1);
+            if (oneDifit.charAt(0) != '0') {
+                cur.addAll(map.get(i-1));
+                // add oneDigit in 
+            }
+            String twoDigit = s.substring(i-1, i+1);
+            if (Integer.valueOf(twoDigit) >=10 <=26) {
+                // get 
+                map.get(i-2) 依次加上twodigit，再addAll到cur
+            }
+            map.put(i, cur);
+            
+        }
+    }
+}
