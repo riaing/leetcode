@@ -23,6 +23,64 @@ Note:
 
 All of the nodes' values will be unique.
 p and q are different and both values will exist in the binary tree.
+ 
+ ----------------拓展到 N-ary tree， 如果两个子树有返回值，那么LCA就是root，如果只有一个返回值，那么LCA就在那个子树上 ---------------------------------------------------------------------------
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        
+        if (p == root || q == root) {
+            return root;
+        }
+        int count = 0; 
+        List<TreeNode> childrenNode = new ArrayList<TreeNode>(); // 记录有返回值的子树
+      
+        TreeNode left_ancestor = lowestCommonAncestor(root.left, p, q);
+        TreeNode right_ancestor = lowestCommonAncestor(root.right, p, q);
+        
+        // n-tree的话就依次扫child node
+        if (left_ancestor != null) {
+            childrenNode.add(left_ancestor);
+        }
+        if (right_ancestor != null) {
+            childrenNode.add(right_ancestor);
+        }
+        
+        if (childrenNode.size() == 2) {
+            return root;
+        }
+        else if (childrenNode.size() == 1){ 
+            return childrenNode.get(0);
+        }
+        else {
+            return null;
+        }
+       
+        一下是二叉树的解法
+        // if (left_ancestor != null && right_ancestor != null) {
+        //     return root;
+        // } else if (left_ancestor != null) {
+        //     return left_ancestor;
+        // } 
+        // else if (right_ancestor != null) {
+        //     return right_ancestor;
+        //  }
+        //    else {
+        //     return null;
+        // }
+    }
+}
 
 ------------------------------------------- D&C  O(n) -----------------------------------------------------------------------------
 /**
