@@ -24,7 +24,7 @@ Note:
 All keys and values will be in the range of [0, 1000000].
 The number of operations will be in the range of [1, 10000].
 Please do not use the built-in HashMap library.
----------------------------------------------------------------------------
+------------------------------------硬核版，把map也implemented了---------------------------------------------------------------
 class MyHashMap {
     Node[] listNodes;
     List<Integer> keys; // for random retrival 
@@ -147,3 +147,80 @@ class MyHashMap {
  * int param_2 = obj.get(key);
  * obj.remove(key);
  */
+
+------------------------简化版（bolt onsite question）能直接用map，不需要再implement map --------------------------------------------
+ import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {
+  Map<Integer, Integer> valueMap;
+  List<Integer> keyList;
+  // mapping from key -> index in list 
+  Map<Integer, Integer> indexMap;
+  
+  public Solution() {
+    this.valueMap = new HashMap<>();
+    this.keyList = new ArrayList<Integer>();
+    this.indexMap = new HashMap<>();
+  }
+  
+  public int get(int key) {
+    return valueMap.get(key);
+  }
+  
+  public void put(int key, int value) {
+    // add this to list 
+    if (!valueMap.containsKey(key)) {
+      keyList.add(key);
+      indexMap.put(key, keyList.size()-1);
+    }
+    valueMap.put(key, value);  
+  }
+  
+  public void delete(int key) {
+    // 1, delte list 
+    int index = indexMap.get(key);
+    int lastValue = keyList.get(keyList.size()-1);
+    keyList.set(index, lastValue);
+    keyList.remove(keyList.size()-1); // check later for time 
+    
+    // 2, change index map 
+    if (index == keyList.size()+1) {
+        indexMap.remove(key);
+    }
+    else {
+      indexMap.remove(key);
+      indexMap.put(lastValue, keyList.size()-1);
+    }
+    valueMap.remove(key);
+  }
+  
+  public int getRandom() {
+    if (valueMap.isEmpty()) {
+      return -1;
+    }
+    Random r = new Random();
+    int randomIndex = r.nextInt(keyList.size()); 
+    System.out.println("size " + keyList.size());
+    return keyList.get(randomIndex);
+  }
+  
+  
+  public static void main(String[] args) {
+    Solution s = new Solution();
+    s.put(1,1);
+    s.put(2,2);
+    s.put(3,3);
+    s.put(4,4);
+    s.delete(3);
+    System.out.println(s.getRandom());
+  }
+  
+}
