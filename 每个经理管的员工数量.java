@@ -135,23 +135,23 @@ public class 经理管理员工数量 {
     return result;
   }
 
-  private static int dfs(Map<Character, List<Character>> relation,  Map<Character, Integer> result, char cur) {
+  private static void dfs(Map<Character, List<Character>> relation,  Map<Character, Integer> result, char cur) {
     int res = 0;
     if (!relation.containsKey(cur)) { //如果是leaf，那么返回0
       result.put(cur, 0);
-      return 0;
+      return;
     }
     List<Character> children = relation.get(cur);
     for (char c : children) {
       if (result.get(c) == -1) {
-        res = res + 1 + dfs(relation, result, c);
+        dfs(relation, result, c);
       }
-      else {
+
         res = res + 1 + result.get(c);
-      }
+
     }
     result.put(cur, res);
-    return res;
+    
   }
 
   public static void main(String[] args) {
