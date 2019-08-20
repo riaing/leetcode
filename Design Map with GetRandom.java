@@ -191,14 +191,24 @@ class Solution {
     keyList.set(index, lastValue);
     keyList.remove(keyList.size()-1); // check later for time 
     
-    // 2, change index map 
+    --------- 写法一：顺序不能乱 --------
+        // 2, update index map
+    indexMap.put(lastValue, index);
+       // 3, remove index map 
+    indexMap.remove(key); 
+
+    -------写法二 ： first remove than update, must be careful when key is the last element -------------------
+         // 2, remove index map 
     if (index == keyList.size()+1) {
         indexMap.remove(key);
     }
     else {
       indexMap.remove(key);
-      indexMap.put(lastValue, keyList.size()-1);
+        // 3, update index map 
+      indexMap.put(lastValue, index);
     }
+    -------------------------
+    // 4, update value map      
     valueMap.remove(key);
   }
   
