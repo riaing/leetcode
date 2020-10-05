@@ -20,8 +20,8 @@ Output: -1
     
     --------------------5.8 update也是自己的模板------------------------------------------
     /*
-1, compare with start 
-2, determine是在哪一小段
+1, compare mid with start， 来判断array是连续的还是被切开的 
+2, determine target是在哪一小段，move start， end index respective to mid
 */
 class Solution {
     public int search(int[] nums, int target) {
