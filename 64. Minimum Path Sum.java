@@ -13,7 +13,7 @@ Input:
 Output: 7
 Explanation: Because the path 1→3→1→1→1 minimizes the sum.
 
-----------------------------------------
+----------------------写法一，将边界的两条边当初始值处理（推荐) ------------------------------------------------
 class Solution {
     public int minPathSum(int[][] grid) {
         if (grid == null || grid.length == 0) {
@@ -35,3 +35,37 @@ class Solution {
         return m[grid.length-1][grid[0].length-1];
     }
 }
+
+------------------写法二，用if将边界的两条边特殊处理 -------------------------------------------------------- 
+  
+  class Solution {
+    public int minPathSum(int[][] grid) {
+        if (grid.length == 0 || grid[0].length == 0) {
+           return 0;
+        }
+        int[][] dp = new int[grid.length][grid[0].length];
+        
+        dp[0][0] = grid[0][0];
+        
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                dp[i][j] = Integer.MAX_VALUE; 
+            
+                if (i - 1 >= 0) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j]);
+                }
+                if (j-1>= 0) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1]);
+                }
+                dp[i][j] += grid[i][j];
+            }
+        }
+        
+        return dp[grid.length-1][grid[0].length -1];
+        
+    }
+}
+  
