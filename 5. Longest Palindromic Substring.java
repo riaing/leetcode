@@ -1,4 +1,4 @@
------------- 3.23 Memorization --------------------------------
+------------ 3.23.2021 Memorization --------------------------------
     /*
 Thought: 
 1. for i = 0; i < length; i++ 
@@ -77,6 +77,66 @@ class Solution {
     }
 }
 
+----------- 3.21.2021 DP ------------------------------------------
+    /*
+Thought: 
+1. for i = 0; i < length; i++ 
+     for j = length - 1; j >= 0; j--
+        determine if substring i, j is a palindrome 
+2. so need to know for any position i, j -> if string(i, j) is a palindrome => 问题转换成任意两点是否为回文，满足DP条件(false/true question + cannot sort)
+3. DP 定义： DP[i][j] = string(i, j) is palindrome
+      初始化： dp[i][i] = true
+      公式：p[i][j] = dp[i+1][j-1] && char(i) == char(j) -> 如果首尾相同并且中间为回文，则此string为回文
+      return：找到 i, j中最长的回文
+4. 所以先一个function求出任意两点是不是palindrome， 得到result[][]后，再扫一遍找出最长的palindrome      
+5. 难点： DP的for loop，要理解DP的sub question是什么：是由长度为1的string推出长度为2的string
+*/
+class Solution {
+    public String longestPalindrome(String s) {
+        // for each position, log it string(i, j) is palindrome 
+        boolean[][] palindrome = palindrome2(s);
+        
+        // find the longest palindromic substring
+        String result = "";
+        // 优化1： start the longest substring, in this way once find a result, it's always the longest 
+        // eg: babad -> 0, 4 babad -> 0, 3 baba -> 1, 4 abad -> 0, 2 bab -> 1, 3 aba ..... 
+        for (int len = s.length(); len > 0; len--) {
+            for (int start = 0; start <= s.length() - len; start++) {
+                int end = start + len - 1;
+                // this way once find a result, it's always the longest substring 
+                if (palindrome[start][end]) {
+                    result = s.substring(start, start+ len);
+                    return result;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    
+    private boolean[][] palindrome2(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        
+        // initilization : 单个字母必定是回文
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = true;
+        }
+        //这题要注意的就是for循环的设置，因为 dp[i][j] = dp[i+1][j-1] && char(i) == char(j), 走几个例子可知，长度为2的string depend on 长度为1的string，3的depend on 2的， 以此类推。所以for loop实际上是要先知道最短的string，然后慢慢展开。所以我们先找到长度为1的string，再去求长度为2的string。例子：cbbd -> 先求出cb, bb, dd -> cbb, bbd -> cbbd 
+        for (int len = 1; len <= s.length(); len++) {
+            // 起点从0开始
+            for (int i = 0; i + len < s.length(); i++) {
+                int j = i + len;
+                dp[i][j] = s.charAt(i) == s.charAt(j);
+                if (i + 1 < j - 1) {
+                    dp[i][j] = dp[i+1][j-1] && dp[i][j];
+                }   
+            }
+        }
+        return dp;
+    }
+    
+}
 
 -----------------------------------------------------------
 找到任意两点是不是pal。
