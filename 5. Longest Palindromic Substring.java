@@ -1,9 +1,90 @@
+------------ 3.23 Memorization --------------------------------
+    /*
+Thought: 
+1. for i = 0; i < length; i++ 
+     for j = length - 1; j >= 0; j--
+        determine if substring i, j is a palindrome 
+2. so need to know for any position i, j -> if string(i, j) is a palindrome => this is the main problem to solve 
+3. 怎么定义palindrome？ 首尾相同并且中间是palindrome
+4. 自然想到要用memorization来减少重复运算
+5. 所以先一个function求出任意两点是不是palindrome， 得到result[][]后，再扫一遍找出最长的palindrome       
+*/
+class Solution {
+    public String longestPalindrome(String s) {
+        // initialization
+        int[][] palindrome = new int[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j < s.length(); j++) {
+                 palindrome[i][j] = 2; 
+            }
+        }
+          // for each position, log it string(i, j) is palindrome 
+          for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j < s.length(); j++) {
+                 int curResult = palindrome(s, i, j, palindrome);
+            }
+        }
+        
+        
+        // find the longest palindromic substring
+        int maxLen = Integer.MIN_VALUE;
+        String result = "";
+        // 优化1： start the longest substring, in this way once find a result, it's always the longest 
+        // eg: babad -> 0, 4 babad -> 0, 3 baba -> 1, 4 abad -> 0, 2 bab -> 1, 3 aba ..... 
+        for (int len = s.length(); len > 0; len--) {
+            for (int start = 0; start <= s.length() - len; start++) {
+                int end = start + len - 1;
+                // this way once find a result, it's always the longest substring 
+                if (palindrome[start][end] == 1) {
+                    result = s.substring(start, start+ len);
+                    return result;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    // check if i,j is palindrome, result[i][j] = 1 -> true; 0 -> false; 2 -> haven't assigned value
+    private int palindrome(String s, int start, int end, int[][] result) {
+        if (start > end) {
+            return 0; 
+        }
+        // memorization
+        if (result[start][end] != 2) {
+            return result[start][end];
+        }
+        // edge case 1: length = 1 
+        if (start == end) {
+            result[start][end] = 1;
+            return 1; 
+        }
+        // edge case 2: length = 2
+        if (start + 1 == end) {
+            int tmp = s.charAt(start) == s.charAt(end) ? 1 : 0;
+            result[start][end] = tmp;
+            return tmp;
+        }
+        
+        if (s.charAt(start) != s.charAt(end)) {
+            result[start][end] = 0;
+            return 0;
+        }
+        // if start == end, then depends on if inner string is palindrome 
+        int inner = palindrome(s, start + 1, end - 1, result); 
+        result[start][end] = inner;
+        return inner;
+    }
+}
+
+
+-----------------------------------------------------------
 找到任意两点是不是pal。
 m[i][j] = m[i+1][j-1] && a[i] == a[j], where i >= j
 注意：matrix的左上到右下为分界线，所有下面的点（i >= j)都设为true
 i要从后往前
 time: o(n^2）
------------------------------------------------------------
+
 class Solution {
     public String longestPalindrome(String s) {
         if (s == null || s.length() <= 1) {
