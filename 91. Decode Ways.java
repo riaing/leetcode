@@ -9,7 +9,6 @@ Time: o(n)
 
 */
 
----------------- 03.27、2021 ---------------------------
 /**
 巧用sudo的第一位，来处理string length为2的情况
 dp[i]: 从第1位到第i位的最多decode情况
@@ -48,6 +47,66 @@ class Solution {
         }
         return dp[s.length()];
         
+    }
+}
+--------------- 03/27/2021 DP 复杂了两位数的情况，更好方法见上 ------------------------------------
+        /**
+巧用sudo的第一位，来处理string length为2的情况
+dp[i]: 从index 为 0 到 index为i的string 的最多decode方法
+dp[i] = sum {
+            dp[i-1] if string(i) valid (第i位 ！=0)
+            dp[i-2] if string(i-1, i) valida (最后两位是10 - 26)
+        }
+dp[0] = 1 if string(0) valid  => 只有一位的情况
+dp[1] = blahblah 用method处理了。=》只有两位数的情况
+ 
+return dp[i-1]
+
+
+*/
+
+class Solution {
+    public int numDecodings(String s) {
+        if (s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        
+        int[] dp = new int[s.length()];
+        // initialization 
+        dp[0] = 1; 
+        dp[1] = decodeTwoDigit(s.substring(0, 2)); //因为特殊处理了length为1的情况，所以这里不会exception
+        
+        for (int i = 2; i < s.length(); i++) {
+            if (s.charAt(i) != '0') {
+                dp[i] = dp[i-1];
+            }
+            int twoDigits = Integer.parseInt(s.substring(i-1, i+1));
+            if (twoDigits > 9 && twoDigits < 27) {
+                dp[i] = dp[i] + dp[i-2];
+            }
+        }
+        return dp[s.length()-1];
+        
+    }
+    
+    private int decodeTwoDigit(String s) {
+        int num = Integer.parseInt(s);  
+        if (num == 10 || num == 20) {
+            return 1;
+        }
+        // 30. 40....90
+        if (s != "10" && s != "20" && s.charAt(1) == '0') {
+            return 0; 
+        }
+     
+        if (num >10 && num <27) {
+            return 2; 
+        }
+        // 27 ... 99 except 20, 30,40,..90 
+        return 1; 
     }
 }
 ---------------------------------------------------------------------------------
