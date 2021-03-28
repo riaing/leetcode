@@ -20,8 +20,39 @@ Example 3:
 Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
 Output: false
   
-  
-  -------------------- 0327 Memorization ------------------------------------------------------------------
+ ----------------- 03.37.2021 DP ------------------------------------------------------------------------------------------  
+  /*
+dp[i] = 0 -> i 能breakable
+dp[i] = true  if wordDict[i]
+        else 
+            dp[k] && wordDict[k+1, i], 0<= k < i
+            
+time: O(N*2)            
+
+*/
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // i is the index, means 0 - i's substring is breakable 
+        boolean[] dp = new boolean[s.length()]; 
+        for (int i = 0; i <s.length(); i++) {
+            if (wordDict.contains(s.substring(0, i+1))) {
+                dp[i] = true;
+                continue;
+            }
+            for (int k = 0; k < i; k++) {
+                if (dp[k] && wordDict.contains(s.substring(k+1, i+1))) {
+                    dp[i] = true;
+                    System.out.println(i + " " +dp[i]);
+                    break;
+                }
+            }
+            
+        }
+        return dp[s.length()-1];
+    }
+
+}
+  -------------------- 03.27.2021  Memorization ------------------------------------------------------------------
   class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         // 0 to j is brakable 
