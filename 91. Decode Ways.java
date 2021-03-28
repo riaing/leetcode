@@ -10,7 +10,20 @@ Time: o(n)
 */
 
 ---------------- 03.27、2021 ---------------------------
-        class Solution {
+/**
+巧用sudo的第一位，来处理string length为2的情况
+dp[i]: 从第1位到第i位的最多decode情况
+dp[i] = sum {
+            dp[i-1] if string(i) valid (第i位 ！=0)
+            dp[i-2] if string(i-1, i) valida (最后两位是10 - 26)
+        }
+ dp[0] = 1 =》空string时，只有一种decode方法。这里的初始化对于处理 两位数string很重要。如果想不清就带入个例子
+ 
+return dp[i-1]
+
+----------------------- 3/27/2021 优化的DP ----------------------------------------------------
+*/
+class Solution {
     public int numDecodings(String s) {
         if (s.charAt(0) == '0') {
             return 0;
@@ -19,39 +32,22 @@ Time: o(n)
             return 1;
         }
         
-        int[] dp = new int[s.length()];
+        int[] dp = new int[s.length() + 1];
         // initialization 
-        dp[0] = 1; 
-        dp[1] = decodeTwoDigit(s.substring(0, 2)); //因为特殊处理了length为1的情况，所以这里不会exception
-        
-        for (int i = 2; i < s.length(); i++) {
+        dp[0] = 1;         
+        for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) != '0') {
-                dp[i] = dp[i-1];
+                dp[i + 1] = dp[i];
             }
-            int twoDigits = Integer.parseInt(s.substring(i-1, i+1));
-            if (twoDigits > 9 && twoDigits < 27) {
-                dp[i] = dp[i] + dp[i-2];
+            if (i > 0) { //处理两位数
+              int twoDigits = Integer.parseInt(s.substring(i-1, i+1));
+              if (twoDigits > 9 && twoDigits < 27) {
+                  dp[i + 1] = dp[i + 1] + dp[i-1];
+              }
             }
         }
-        return dp[s.length()-1];
+        return dp[s.length()];
         
-    }
-    
-    private int decodeTwoDigit(String s) {
-        int num = Integer.parseInt(s);  
-        if (num == 10 || num == 20) {
-            return 1;
-        }
-        // 30. 40....90
-        if (s != "10" && s != "20" && s.charAt(1) == '0') {
-            return 0; 
-        }
-     
-        if (num >10 && num <27) {
-            return 2; 
-        }
-        // 27 ... 99 except 20, 30,40,..90 
-        return 1; 
     }
 }
 ---------------------------------------------------------------------------------
