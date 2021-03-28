@@ -19,6 +19,32 @@ Example 3:
 
 Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
 Output: false
+  
+  
+  -------------------- 0327 Memorization ------------------------------------------------------------------
+  class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        // 0 to j is brakable 
+        Map<Integer, Boolean> breakable = new HashMap<>();
+        return wordBreakHelper(s, wordDict, s.length() - 1, breakable);
+    }
+    
+    private boolean wordBreakHelper(String s, List<String> wordDict, int end, Map<Integer, Boolean> breakable) {
+        if (breakable.containsKey(end)) {
+            return breakable.get(end);
+        } else if (wordDict.contains(s.substring(0, end + 1))) {
+            return true;
+        }
+        for (int i = 1; i <= end; i++) {
+            if (wordBreakHelper(s, wordDict, i - 1, breakable) && wordDict.contains(s.substring(i, end + 1))) {
+                breakable.put(end, true);
+                return true;
+            }
+        }
+        breakable.put(end, false);
+        return false;
+    }
+}
 -------------------------------------------------------------------------------------------------------------
 /**
 m[i]: 以i 结尾能被break
