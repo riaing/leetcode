@@ -8,6 +8,53 @@ return m[length-1]
 Time: o(n)
 
 */
+
+---------------- 03.27、2021 ---------------------------
+        class Solution {
+    public int numDecodings(String s) {
+        if (s.charAt(0) == '0') {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+        
+        int[] dp = new int[s.length()];
+        // initialization 
+        dp[0] = 1; 
+        dp[1] = decodeTwoDigit(s.substring(0, 2)); //因为特殊处理了length为1的情况，所以这里不会exception
+        
+        for (int i = 2; i < s.length(); i++) {
+            if (s.charAt(i) != '0') {
+                dp[i] = dp[i-1];
+            }
+            int twoDigits = Integer.parseInt(s.substring(i-1, i+1));
+            if (twoDigits > 9 && twoDigits < 27) {
+                dp[i] = dp[i] + dp[i-2];
+            }
+        }
+        return dp[s.length()-1];
+        
+    }
+    
+    private int decodeTwoDigit(String s) {
+        int num = Integer.parseInt(s);  
+        if (num == 10 || num == 20) {
+            return 1;
+        }
+        // 30. 40....90
+        if (s != "10" && s != "20" && s.charAt(1) == '0') {
+            return 0; 
+        }
+     
+        if (num >10 && num <27) {
+            return 2; 
+        }
+        // 27 ... 99 except 20, 30,40,..90 
+        return 1; 
+    }
+}
+---------------------------------------------------------------------------------
 class Solution {
     public int numDecodings(String s) {
         if(s.equals("0") || s.length() == 0) return 0;
