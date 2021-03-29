@@ -29,6 +29,47 @@ Example 2:
 Return false. There is no way to jump to the last stone as 
 the gap between the 5th and 6th stone is too large.
 
+    
+ ------------ 3.28.2021 DP ----------------------------------------------------------------------------------- 
+    /*
+dp[i][j]: 走j步能不能到达第i个石头
+dp[i][j] = dp[i-k][j-1] || dp[i-k][j] || dp[i-k][j+1], 1<=k<=i; j = stones[i] - stones[i-k]. 从前面某个石头，走j/j-1/j+1步能不能到
+dp[0][0] = true;
+return： dp[最后石头][任意j] = true
+
+*/
+class Solution {
+    public boolean canCross(int[] stones) {
+        /*第一块石头最多1步，第二块石头最多2步，第三块石头最多三步。所以第n个石头最多n步。取个min。*/
+        int maxUnit = stones[stones.length-1] -stones[0]; // 最多多少步到最后
+        int size = stones.length; 
+        int maxStep = Math.min(maxUnit, size);
+
+        boolean[][] dp = new boolean[stones.length][maxStep+2];//如果首尾差17步，那么最后可以走18步。
+        
+        
+        dp[0][0] = true;
+        for (int i = 1; i < stones.length; i++) {
+            for (int k = 1; k <= i; k++) {
+                int unit = stones[i] - stones[i-k]; //从k到i需要多少步
+                // 优化：ex1中的最后一个石头(17)，最多走8步到，所以当unit = 17时不可能
+                if (unit > i) {
+                    break; // 到达第i石头做多可以跳i步。这里break而不是continue，因为如果i个和第i-1个之间距离已经过大得不到了，那么i-2肯定到达不了i了。因为i-2时最多可以走i-2步。
+                }
+                if (dp[i-k][unit] || (unit-1>=0 && dp[i-k][unit-1]) || dp[i-k][unit+1]) {
+                    dp[i][unit] = true;
+                }
+            }
+        }
+        
+        for (int j = 0; j < maxStep+2; j++) {
+            if (dp[stones.length-1][j]) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 --------------------Memorization ----------------------------------------------------------------------------------- 
 class Solution {
