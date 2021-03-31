@@ -34,7 +34,82 @@ s = "catsandog"
 wordDict = ["cats", "dog", "sand", "and", "cat"]
 Output:
 []
-------------------------DFS + Memo -------------------------------------------------------------------------------------
+
+--------------03.30.2021 DPF + Memo。这里要特别注意map<list<list>>的问题，见下面优化解 -----------------------------------------------------
+  class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        // from index i to end, return all combo
+        Map<Integer, List<List<String>>> map = new HashMap<>();
+        // 其实可以直接 List<String>,就避免了list<list<>> referece type的问题，可见下优化接
+        List<List<String>> tmp = helper(s, wordDict, 0, map);
+        return returnFormat(tmp);
+    }
+    
+    private List<List<String>> helper(String s, List<String> wordDict, int index, Map<Integer, List<List<String>>> map) {
+        List<List<String>> results = new ArrayList<List<String>>();
+        if (index == s.length()) {
+            return results;
+        }
+        
+        if (map.containsKey(index)) {
+             return map.get(index);
+        }
+        // corner case: if the entire string is in dictionary, add it into result 
+        if (wordDict.contains(s.substring(index))) {
+            List<String> cur = new ArrayList<String>();
+            cur.add(s.substring(index));
+            results.add(cur);
+        }
+           
+        for (int i = index; i < s.length(); i++) {
+                String word = s.substring(index, i+1);
+                if (wordDict.contains(word)) { 
+                    List<List<String>> followingComb = helper(s, wordDict, i+1, map);
+                    List<List<String>> copy = deepCopy(followingComb); //memorization常见错误，没deep copy会影响接下来的调用
+                    // if the rest string can be breakable
+                    if (copy.size() != 0) {
+                        addWord(word, copy);
+                        results.addAll(copy);
+                    }
+                }
+        }
+        map.put(index, results);
+        return results; 
+        
+    }
+    
+    private void addWord(String word, List<List<String>> toAddList) {
+        for (List<String> list : toAddList) {
+            list.add(0, word);
+        }
+        return; 
+    }
+    
+    private List<String> returnFormat(List<List<String>> tmp) {
+       List<String> res = new ArrayList<>();
+        for (List<String> list : tmp) {
+            String curResult = "";
+            for (String word : list) {
+                curResult = curResult + " " + word;
+            }
+            res.add(curResult.trim());
+        }
+        return res;
+    }
+    
+    private List<List<String>> deepCopy(List<List<String>> input) {
+         List<List<String>> output = new ArrayList<List<String>>();
+         for (List<String> list : input) {
+            List<String> tmp = new ArrayList<String>();
+            for (String word : list) {
+                tmp.add(word);
+            }
+            output.add(tmp);
+        }
+        return output;
+    }
+}
+------------------------优化解：map直接存 list<string>, 省去reference type的问题。 DFS + Memo -------------------------------------------------------------------------------------
   
   /*
 brute force是o(2^n); 放隔板，n长的string可以放n-1个隔板，
@@ -74,7 +149,7 @@ class Solution {
                
                 List<String> rest = helper(s, wordDicts, end+1, map);
                 for (String r : rest) {
-                    res.add(cur + (r.equals("") ? "" : " " + r)); //如果是最后一层返回上来，直接把当前的值加上
+                    res.add(cur + (r.equals("") ? "" : " " + r)); //如果是最后一层返回上来，直接把当前的值加上。这里直接加了个新的string到res里面
                 }
             }
         }
