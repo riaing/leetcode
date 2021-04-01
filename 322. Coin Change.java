@@ -12,6 +12,55 @@ Output: -1
 Note:
 You may assume that you have an infinite number of each kind of coin.
 
+    
+    -----------------03/31/2021 DP with thougths, 最优化的解还是见下一个--------------------------------------------------------
+    /**
+
+dp[i] -> amount为i时最少硬币数量
+dp[0] = 0
+dp[i] = min{dp[i-k] + 1}, k belongs to coins[]
+
+优化1： 因为amount <= 10*4, 所以初始化时不需要为MAX_VALUE, 可以为amount+1（因为最多就需要amount个1块钱硬币）
+*/
+
+
+class Solution {
+    public int coinChange(int[] coins, int amount) { 
+        // if (amount == 0) { // 优化2：0可以合进来
+        //     return 0;
+        // }
+        
+        int[] dp = new int[amount+1];
+        // initialization 
+        for (int i = 0; i <= amount; i++) {
+            // dp[i] = Integer.MAX_VALUE;
+            dp[i] = amount+1;
+        }
+        for (int i = 0; i <coins.length; i++) { //这段其实可以不要
+            if (coins[i] <= amount) {
+                  dp[coins[i]] = 1;
+            }
+        }
+        dp[0] = 0; // 优化2：0可以合进来 
+        
+        for (int i = 1; i <= amount; i++) {
+            // if (dp[i] != Integer.MAX_VALUE) { //优化3：不需要特殊处理硬币本身的amount
+            //     continue;
+            // }
+            
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] < 0){
+                    continue; // the coin array is not sort! 
+                }
+                dp[i] = Math.min(dp[i], dp[i-coins[j]]+1); //优化1 
+            }
+             
+            // dp[i] = dp[i] == Integer.MAX_VALUE ? Integer.MAX_VALUE : dp[i] + 1; // 优化1
+         
+        }
+        return dp[amount] == amount+1 ? -1 : dp[amount];
+    }
+}
 --------------------------------------------------DP ---------------------------------------------------------------------------
 /**
 dp[i]表示钱数为i时的最小硬币数的找零
