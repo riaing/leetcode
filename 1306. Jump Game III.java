@@ -60,3 +60,26 @@ Constraints:
         }
     }
 }
+
+------------------------ 4.3.2021 DFS O(n) ------------------------------------------------------------------------------------------------------
+ 
+ class Solution {
+    public boolean canReach(int[] arr, int start) {
+        Set<Integer> visited = new HashSet<Integer>();
+        return helper(arr, start, visited);
+    }
+    
+    private boolean helper(int[] arr, int index, Set<Integer> visited) {
+        if (index < 0 || index >= arr.length || visited.contains(index)) {
+            return false;
+        }
+        if (arr[index] == 0) {
+            return true;
+        }
+        visited.add(index);
+            
+        int nextIndex1 = index + arr[index];
+        int nextIndex2 = index - arr[index];
+        return helper(arr, nextIndex1, visited) || helper(arr, nextIndex2, visited);
+    }
+}
