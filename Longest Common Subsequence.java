@@ -1,6 +1,6 @@
 Given two strings, find the longest common subsequence (LCS).
 
-Your code should return the length of LCS.
+Your code should return the length of LCS 
 
 Example
 Example 1:
@@ -31,6 +31,42 @@ start: m[0][0...length] = 0
 	m[0...length][0] = 0
 end: m[a.length][b.length]
 
+------------------------------  4.3.2021 DP + print具体值 ---------------------------------------------------------------------
+class Solution {
+    public int longestCommonSubsequence(String A, String B) {
+        int[][] m = new int[A.length()+1][B.length()+1];
+        
+        List<Integer> indexInA = new ArrayList<Integer>();
+        int lcsLength = 0; 
+        for (int i = 1; i <= A.length(); i++) {
+            for (int j = 1; j <= B.length(); j++) {
+                if (A.charAt(i-1) == B.charAt(j-1)) {
+                    m[i][j] = m[i-1][j-1] + 1;
+                }
+                else {
+                     m[i][j] = Math.max(m[i][j-1], m[i-1][j]);
+                }
+                // 更新最长值和记录index以便之后print结果
+                if (lcsLength < m[i][j]) {
+                    lcsLength = m[i][j];
+                    // 如果这时候A == B了，说明lcs中会包括目前的char
+                    if (A.charAt(i-1) == B.charAt(j-1)) {
+                        indexInA.add(i-1);
+                    }
+                }
+            }
+        }
+        
+        // backtrack 来print lcs的value
+        String value = "";
+        for (int i : indexInA) {
+            value = value + A.charAt(i);
+        }
+        // System.out.println(value);
+        return lcsLength;
+        // return m[A.length()][B.length()]; //两种return方法都行
+    }
+}	
 
 -----------------------DP----------------------------------------------------------------------------------------------
 public class Solution {
