@@ -19,6 +19,40 @@ Constraints:
 
 1 <= word1.length, word2.length <= 500
 word1 and word2 consist of only lowercase English letters.
+ 
+ 
+-------------- 4.4.2021 DP with rotation array --------------------------------------------------------
+ /*
+dp[i][j] 以i j个char结尾的string的min steps =>注意这里初始化用了【length+1】，来使得初始值简单。
+
+dp[i][j] = min{dp[i-1][j], dp[i][j-1]} + 1 => 删stringA 还是删StringB，删除操作就得加1 
+          && then = min(dp[i][j], dp[i-1][j-1]) if char i == char j =>如果i,j相同，还得和i-1 j-1比一比
+*/
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int[][] dp = new int[2][word2.length()+1];
+        for (int i = 0; i <= word2.length(); i++) {
+            dp[0][i] = i;
+        }
+        int new_index = 1; //rotation array 
+        for (int i = 1; i <= word1.length(); i++) {
+            dp[new_index][0] = i;                            //rotation array  
+            for (int j = 1; j <= word2.length(); j++) {
+                if (word1.charAt(i-1) == word2.charAt(j-1)) {
+                    dp[new_index][j] = dp[1 - new_index][j-1];
+                }
+                else {
+                      dp[new_index][j] = Math.min(dp[1 - new_index][j], dp[new_index][j-1]) + 1;
+                }
+            }
+            // new_index = 1 - new_index;    // //rotation array  
+            new_index = (new_index + 1) % 2; 
+        }
+        
+        //注意这里因为Line24更改了new_index, 所以最终要变回来
+        return dp[1 - new_index][word2.length()];
+    }
+}
 
 -------                         4.4.2021 DP --------------------------------------------------------------
 /*
