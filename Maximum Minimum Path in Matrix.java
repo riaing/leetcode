@@ -15,6 +15,62 @@ eg:
 
 Result = Math.max(3,3,5,5,) = 5
   
+------------- 4.4.2020 没做出来. Learning：正面想想不通时就倒着想  -----------------------------------------------------
+/**
+反过来构建的DP
+DP[i][j]： 从i,j走到右下角需要多少血量。https://www.youtube.com/watch?v=pt-xIS6huIg&ab_channel=HuaHua 
+
+错误的想法：运用min max 
+DP1： 
+1. 先求个每个店的maxSum, 得到一个DP matrix => 到达每个点最多能有多少滴血（求每个点最多的血，才能保证最后一个点求出最少需要多少血）。
+maxSum[i][j] = max{maxSum[i][j-1], maxSum[i-1][j]} + m[i][j] 
+初始
+maxSum[0][0] = m[0][j]
+maxSum[0][j] = maxSum[0][j-1] + m[0][j]
+maxSum[i][0] = maxSum[i-1][0] + m[i][0]
+
+DP2： 
+2. 在上面的dp matrix中找到每条path中的最小值 => 走这条path的话最少需要多少血（A路需要-1， B路需要-10）
+3. 在所有path最小值中取个最大的（因为A路最少需要2滴血就能活，所以走A路）
+转成 max minimum path的题
+
+公式解析见：
+https://github.com/riaing/leetcode/blob/master/Maximum%20Minimum%20Path%20in%20Matrix.java
+*/
+class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        int row = dungeon.length;
+        int col = dungeon[0].length;
+        int[][] maxSum = new int[row][col];
+        int[][] minMaxDP = new int[row][col]; 
+        
+        // initialization 
+        maxSum[0][0] = dungeon[0][0];
+        minMaxDP[0][0] = dungeon[0][0];
+        for (int i = 1; i < row; i++) {
+            maxSum[i][0] = maxSum[i-1][0] + dungeon[i][0];
+            minMaxDP[i][0] = Math.min(maxSum[i][0], minMaxDP[i-1][0]); //第二个DP用的是第一个DP当matrix
+        }
+        for (int j = 1; j < col; j++) {
+            maxSum[0][j] = maxSum[0][j-1] + dungeon[0][j];
+            minMaxDP[0][j] = Math.min(maxSum[0][j], minMaxDP[0][j-1]);
+        }
+        
+         for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                maxSum[i][j] = Math.max(maxSum[i][j-1], maxSum[i-1][j]) + dungeon[i][j];
+                minMaxDP[i][j] = Math.min(minMaxDP[i][j-1], maxSum[i][j-1] + dungeon[i][j]);
+                minMaxDP[i][j] = Math.max(minMaxDP[i][j], Math.min(minMaxDP[i-1][j], maxSum[i-1][j] + dungeon[i][j]));             
+            }
+         }
+        
+        //return处理下，如果最后值为正，return 0；为负，绝对值加1
+        // System.out.println("return " + Math.abs(minMaxDP[row-1][col-1]));
+        return minMaxDP[row-1][col-1] < 0 ? Math.abs(minMaxDP[row-1][col-1]) + 1 : 1;
+        
+    }
+}
+
 ---------------- DP ------------------------------------------------------
 DP[i][j]:到达i,j这个点时所有path最小值中的最大值
 
