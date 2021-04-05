@@ -18,7 +18,8 @@ Example 2:
 Challenge
 O(n x m) time and O(m) memory. 
 		
--------- 4.4.2021 DP ------------------------------------------------------------------
+		
+-------- 4.4.2021 DP 1 ------------------------------------------------------------------
 		public class Solution {
     /**
      * @param m: An integer m denotes the size of a backpack
@@ -44,6 +45,41 @@ O(n x m) time and O(m) memory.
             }
         }
         return dp[A.length-1][m];
+    }
+}
+------------------ 4.4.2021 DP2 另一种思路，减少unnecessary赋值 ----------------------------------- 
+	public class Solution {
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @return: The maximum size
+
+    DP[i][j] : 前i个元素中能否组成value为j的背包， j <= size 
+    dp[i][j] = true if dp[i-1][j], or j + A[i] <= m; 0<= j <= m : 对于i来说，j = A[i] 肯定为true； j = dp[i-1][j] + A[i]也为true（前i-1能放的值加本身); 如果dp[i-1][j]为true，则dp[i][j]也为true
+     */
+    public int backPack(int m, int[] A) {
+        boolean[][] dp = new boolean[A.length][m+1]; 
+        // 初始化
+        dp[0][0] = true; //这里不为true后面就错了
+        if (A[0] <= m) {
+            dp[0][A[0]] = true;
+        }
+
+        int maxVal = 0; 
+        for (int i = 1; i < A.length; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (!dp[i-1][j]) {
+                    continue;
+                }
+                dp[i][j] = true;
+                maxVal = Math.max(maxVal, j);
+                if (j + A[i] <= m) {
+                    dp[i][j + A[i]] = true;
+                    maxVal = Math.max(maxVal, j + A[i]);
+                }
+            }
+        }
+        return maxVal;
     }
 }
 
