@@ -17,6 +17,35 @@ Example 2:
 	
 Challenge
 O(n x m) time and O(m) memory. 
+		
+-------- 4.4.2021 DP ------------------------------------------------------------------
+		public class Solution {
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @return: The maximum size
+
+    DP[i][j] : 前i个元素中size为j的背包，最大能装多少。这个做法其实有很多没必要的。比如例子中的dp[1][7/8/9/10] => 存的value都是7,但我们其实不关心 7.8.9.10的值
+
+     */
+    public int backPack(int m, int[] A) {
+        int[][] dp = new int[A.length][m+1]; 
+        // 初始化麻烦一点
+        for (int j = 0; j <= m; j++) {
+            dp[0][j] = A[0] > j ? 0 : A[0];
+        }
+
+        for (int i = 1; i < A.length; i++) {
+            for (int j = 1; j <= m; j++) {
+                dp[i][j] = dp[i-1][j];
+                if (j - A[i] >= 0) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i-1][j-A[i]] + A[i]);
+                }
+            }
+        }
+        return dp[A.length-1][m];
+    }
+}
 
 ----------------------------o(m*n) memory ---------------
 
