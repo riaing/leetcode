@@ -87,3 +87,48 @@ class Solution {
         return root;
     }
 }
+------------------ constant space -----------------------------------------------------------------------------
+  /*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        // 因为每层是处理其左右子树，所以要有 null 判断
+        // 1. assign value to left tree 
+        if (root.left != null) {
+             root.left.next = root.right; 
+        }
+      
+        // 2. assign valut to the right tree 
+        if (root.right != null && root.next != null) {
+            root.right.next = root.next.left;
+        }
+        connect(root.left);
+        connect(root.right);
+        
+        return root;
+    }
+}
