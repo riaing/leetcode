@@ -27,3 +27,7 @@ class Solution {
         return max;
     }
 }
+
+---------------- 05/11 训练下 D&C 的思维-- O（nlgN）-----------------------------------------
+    
+    https://www.geeksforgeeks.org/maximum-subarray-sum-using-divide-and-conquer-algorithm/ 
