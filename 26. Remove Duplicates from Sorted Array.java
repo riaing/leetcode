@@ -49,3 +49,26 @@ class Solution {
         return placeToreplaceDup;
         }
 }
+--------- for loop 版本 -----------------------------
+  
+/*
+2 pointer 
+通过placeToreplaceDup来 maintain 一个non-dup 的 array,
+   i 来扫整个 array。
+   每当发现 dup 时，把下一个 non-dup 的 element 放到 dup 的位置上
+   time O(n)
+*/
+class Solution {
+    public int removeDuplicates(int[] arr) {
+        int placeToreplaceDup = 1; //arr[placeToreplaceDup-1]就是 non-dup array 里的最后一个
+        
+        for(int i = 1; i < arr.length; i++) {
+          if (arr[placeToreplaceDup-1] != arr[i]) {
+            //这时说明找到了 next non-dup element，把它移到目前通过placeToreplaceDup来的位置上
+             arr[placeToreplaceDup] =  arr[i];
+             placeToreplaceDup++; 
+          }
+        }
+        return placeToreplaceDup;
+        }
+}
