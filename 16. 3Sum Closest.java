@@ -37,3 +37,33 @@ class Solution {
         return res;
     }
 }
+------------------------------- 2021.1.20 同样解法不同 varianle ------------------------
+    class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int smallestDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length - 2; i++) {
+            int start = i + 1;
+            int end = nums.length - 1; 
+            while (start < end) {
+                int curDiff = target - nums[i] - nums[start] - nums[end];
+                // 这步可以省，因为下个 if 会 handle
+                if (curDiff == 0) {
+                    return target;
+                }
+                // now find the closest value 
+                if (Math.abs(curDiff) < Math.abs(smallestDiff)) {
+                    
+                    smallestDiff = curDiff;
+                }
+                if (curDiff > 0) {
+                    start++; 
+                }
+                else {
+                    end--;
+                }
+            }   
+        }
+        return target - smallestDiff;
+    }
+}
