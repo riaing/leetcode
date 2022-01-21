@@ -69,3 +69,55 @@ class Solution {
         return results; 
     }
 }
+
+------------------- 20221.20 -------------------------------------------------
+  /**
+3 Sum 问题，先 fix 一个数，然后变成 two sum 找和。要注意去重的关键是：对比当前数于之前的数是否一样，一样则跳过
+O(nlgn) sort; 固定每个数是 o(n-2),其中每次 path O(n) two sum. 所以整体是 o(nlgn + n*n) -> O(n^2)
+Space: O(n) for sorting 
+
+*/
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if (nums.length < 3) {
+            return results;
+        }
+        Arrays.sort(nums);
+        //fix certain number 
+        for (int i = 0; i < nums.length - 2; i++) {
+            // skip dup 
+            if (i != 0 && nums[i] == nums[i-1]) {
+                continue;
+            }
+            int target = 0 - nums[i];
+            int start = i + 1;
+            int end = nums.length - 1;
+            while (start < end) {
+                if (nums[start] + nums[end] == target) {
+                    List<Integer> oneResult =  Arrays.asList(nums[i], nums[start], nums[end]);
+                    results.add(oneResult);
+                    start++;
+                    end--;
+                    // remove dup 
+                    while (start < end && nums[start] == nums[start-1]) {
+                        start++;
+                    }
+                    while (start < end && nums[end] == nums[end+1]) {
+                        end--;
+                    }
+                }
+                else if (nums[start] + nums[end] < target) {
+                    start++;
+                }
+                else {
+                    end--;
+                }
+            }
+            
+            
+        }
+        return results;
+    }
+    
+}
