@@ -63,3 +63,49 @@ public class Solution {
         return false;
     }
 }
+
+---------------- 2022,1.20 提高版 ------------------------------------------------------------
+ /**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+/*
+1. find if has a cycle 
+2. if cycle, find cycle length 
+*/
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode quick = head; 
+        while (quick != null && quick.next != null) {
+          slow = slow.next;
+          quick = quick.next.next;
+          if (slow == quick) {
+              // 衍生：find cycle length 
+              int len = findCycleLength(slow);
+              System.out.println("cycle len: " + len);
+              return true;
+          }
+        }
+        return false;
+    }
+    
+    // 衍生：find cycle length 
+    // 解：当 slow 和 fast 相遇时，他们必定在 cycle 里。于是记录下相遇点，用另一个 poiter 往前走，直到再次碰到相遇点则可得 cycle length
+    private int findCycleLength(ListNode meetPoint) {
+        int len = 1;
+        ListNode cur = meetPoint.next;
+        while (cur != meetPoint) {
+            len++;
+            cur = cur.next;
+        }
+        return len;
+    }
+}
