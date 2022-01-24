@@ -131,3 +131,75 @@ public class Solution {
 
     }
 }
+----------------- 2022.1.23 更好方法----------------------------------------------------------
+    /**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+
+/*
+之前的常规做法：当指针相遇后，把其中一指针移到head，接着两者都每次各走一格，再次相遇处为环起点
+可通过证明： 设 head 到起点为 L，起点到相遇点为 k，环长为 c
+slow 走的步数: L +n1*c + k 
+quick 走的步数：L + n2*c + k
+因为 quick 是 slow 走的两倍，可得公式： 2（ L +n1*c + k ） = L + n2*c + k 
+-> L + K = (2n1 - n2)c, n是圈数可忽略，简化得  L + k = c 
+-> c-k (相遇点到环起点得长度) = L 
+
+方法二：更 intuit
+先求出环长,将second指针移到环长位置，然后两指针同样速度 move。那么 两指针之差就constantly 是环长。当指针相遇时就是环得起点
+
+*/
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode quick = head; 
+        while (quick != null && quick.next != null) {
+          slow = slow.next;
+          quick = quick.next.next;
+          if (slow == quick) {
+              // 衍生：find cycle length 
+              int len = findCycleLength(slow);
+              System.out.println("cycle len: " + len);
+              // 
+              return findCycleStarting(len, head);
+          }
+        }
+        return null;
+    }
+    
+    // 衍生：find cycle length 
+    // 解：当 slow 和 fast 相遇时，他们必定在 cycle 里。于是记录下相遇点，用另一个 poiter 往前走，直到再次碰到相遇点则可得 cycle length
+    private int findCycleLength(ListNode meetPoint) {
+        int len = 1;
+        ListNode cur = meetPoint.next;
+        while (cur != meetPoint) {
+            len++;
+            cur = cur.next;
+        }
+        return len;
+    }
+    
+    // 这是方法二
+    private ListNode findCycleStarting(int cycleLen, ListNode head) {
+        ListNode second = head;
+        ListNode first = head;
+        //先将second 移动 cycle 的长度
+        for (int i = 1; i <= cycleLen; i++) {
+            second = second.next; 
+        }
+        while (second != first) {
+            first = first.next;
+            second = second.next;
+        }
+        return first; //or second 
+        
+    }
+}
