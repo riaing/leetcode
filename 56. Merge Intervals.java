@@ -43,3 +43,46 @@ class Solution {
         return res;
     }
 }
+
+----------------- 2022.2.24 ----------------------
+    /*
+思路是每次只要和 result 中的最后一个比。
+1.每次比较 start大小
+ - 如果没有 overlap，则加到结果里
+ - 如果有 overlap，则更新 end
+ 
+ Time  O(N * logN) -> O (N) for interating the array, but nlgn for sorting
+ Space: O(N) -> to print the result 
+*/
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        // sort intervals by starting 
+        // Collections.sort(intervals,  (a,b) -> Integer.compare(a,get(0), b.get(0))); // operates on a list 
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0])); // operates on an array 
+        
+        List<int[]> result = new ArrayList<int[]>();
+        for (int i = 0; i < intervals.length; i++) {
+            if (result.size() == 0) {
+                result.add(intervals[i]);
+                continue;
+            }
+            int[] lastArrayInResult = result.get(result.size() -1);
+            if (lastArrayInResult[1] < intervals[i][0]) { // 如果没有 overlap，把当前 array 加到结果里。
+                 result.add(intervals[i]);
+            }
+            else {
+               lastArrayInResult[1] = Math.max(lastArrayInResult[1], intervals[i][1]); // 如果 overlap，则更新
+            }
+            
+            
+        }
+        
+        // print to final result 
+        int[][] finalRes = new int[result.size()][2];
+        for (int i = 0; i < result.size(); i++) {
+            finalRes[i] = result.get(i);
+        }
+        
+        return finalRes;
+    }
+}
