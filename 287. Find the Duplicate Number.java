@@ -47,3 +47,34 @@ class Solution {
         return count;
     }
 }
+
+----------------- 2-22.1.26 Cyclis sort ----------------------------------
+    /*
+运用 cyclic sort。还完后repeate num可能在两个地方：1）正确的 index 上 2） 在最后一位
+O（n）， O（1）space 
+*/
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int i = 0;
+        while (i < nums.length) {
+            int curNum = nums[i];
+            if (curNum != i+1) { // 说明需要交换
+                if (nums[curNum-1] == curNum) {  // 1） repeated num 在正确的 index 上 
+                    return curNum;
+                }
+                else{
+                    //swap;
+                    int tmp = nums[curNum-1];
+                    nums[curNum-1] = curNum;
+                    nums[i] = tmp;
+                    
+                }
+            }
+            else {
+                i++;
+            }
+        }
+        return nums[nums.length -1]; // 2） 换完后最后一位就是 repeated num
+        
+    }
+}
