@@ -88,3 +88,62 @@ class Solution {
         
     }
 }
+------------- 2022.1.25 update ---------------------
+    class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        //1. find the place to insert the interval, will be after the interval i where  interval[i].end < newInterval.start. so interval 0...i is sorted and non-overlap 
+        int i = 0;
+        List<int[]> result = new ArrayList<int[]>();
+        while (i < intervals.length && intervals[i][1] < newInterval[0]) {
+            result.add(intervals[i]);
+            i++;
+        }
+        // 2. i is the place to insert the interval. 
+        result.add(newInterval);
+        merge(result, intervals, i);
+        
+        //3. put result together 
+        int[][] results = new int[result.size()][2];
+        for(int n = 0; n < result.size(); n++) {
+            results[n] = result.get(n);
+        }
+        return results;
+        
+    }
+    
+    private void merge(List<int[]> result, int[][] intervals, int position) {
+        for (int i = position; i < intervals.length; i++) {
+            int[] lastOne = result.get(result.size()-1);
+            // way 1: 分别判断 new interval 和 interval[i]的 start 的大小
+            // if (lastOne[0] <= intervals[i][0]) {
+            //     if (lastOne[1] < intervals[i][0]) {
+            //         result.add(intervals[i]);
+            //     }
+            //     else{
+            //         lastOne[1] = Math.max(lastOne[1], intervals[i][1]);
+            //     }
+            // }
+            // else {
+            //     if (intervals[i][1] < lastOne[0]) {
+            //         result.add(result.size()-1, intervals[i]);
+            //     }
+            //     else {
+            //         lastOne[0] = intervals[i][0];
+            //         lastOne[1] = Math.max(intervals[i][1], lastOne[1]);
+            //     }
+            // }
+
+            // way 2: 当按照 start sort 好后，判断overlap 的条件是 newInterval.end > interval[i].start 
+            if (intervals[i][0] <= lastOne[1]) { // has overlap 
+                int[] tmp = new int[]{Math.min(lastOne[0], intervals[i][0]), Math.max(lastOne[1], intervals[i][1])};
+                result.set(result.size()-1, tmp);
+                
+            }
+            else{
+                result.add(intervals[i]);
+                
+            }
+        }
+        return;
+    }
+}
