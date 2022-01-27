@@ -62,3 +62,62 @@ class Solution {
         return dummy.next;
     }
 }
+------------ 2022.1.26 more intuitive ------------------------------------------------------
+  /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int leftIndex, int rightIndex) {
+        // 因为不知道最后 head 会是谁，决定用个 sudo
+        int i = 0;
+        ListNode sudo = new ListNode(0);
+        sudo.next = head; 
+        ListNode cur = sudo;
+        // 想办法找到 四个 node：left 之前的， left， right，和 right 之后的
+        ListNode start = head; // left 之前的
+        ListNode left = head; 
+        ListNode end = head;
+        ListNode right = head;  // right 之后的
+        while (cur != null) {
+            if (i == leftIndex - 1) {
+                start = cur;
+                left = cur.next;
+            }
+            if (i == rightIndex) {
+                right = cur;
+                end = cur.next;
+            }
+            cur = cur.next;
+            i++;
+        }
+        
+        // 单拎出要 reverse 的一段
+        start.next = null;
+        right.next = null; 
+        reverse(left); 
+        
+        // 接上头尾即可
+        start.next = right;
+        left.next = end;
+        return sudo.next; 
+    }
+    
+    public void reverse(ListNode head) {
+       ListNode pre = null;
+       ListNode cur = head; 
+        while(cur != null) {
+           ListNode tmp = cur.next;
+            cur.next = pre;
+            pre = cur; 
+            cur = tmp; 
+        }
+        return;
+    }
+}
