@@ -121,3 +121,54 @@ class Solution {
         return;
     }
 }
+------------------- 简化以上，更加清晰 ----------------------
+  /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+/*
+翻转完后，current 就是要连的第二段的开头: which is the first node after right
+这题主要是记住 left -1 和 left， 翻转，完后将 left -1 连到翻转 后的头，left（就是翻转后的尾）连到 current
+*/
+class Solution {
+    public ListNode reverseBetween(ListNode head, int leftIndex, int rightIndex) {
+        // 因为不知道最后 head 会是谁，决定用个 sudo
+        ListNode sudo = new ListNode(0);
+        sudo.next = head; 
+        // 1. 想办法找到left之前和 left
+        ListNode nodeBeforeLeft = null; 
+        ListNode left = sudo; 
+        for (int i = 0; i <= leftIndex - 1; i++) {
+            nodeBeforeLeft = left;
+            left = left.next;
+        }
+        
+        // 2.翻转
+        ListNode[] reverseTheList = reverse(left, leftIndex, rightIndex);
+        
+        //3. 拼接上
+        nodeBeforeLeft.next = reverseTheList[0];
+        left.next =  reverseTheList[1];
+        return sudo.next; 
+    }
+    
+    // 重点是想清楚换几次！总共要换 right - left + 1 次. 翻完后 pre 是新的头，current 是原 list 中右边第一个不要翻的 node
+    public ListNode[] reverse(ListNode head, int left, int right) {
+       ListNode pre = null;
+       ListNode cur = head; 
+       for (int i = 1; i <= right - left + 1 && cur != null; i++) {
+            ListNode tmp = cur.next;
+            cur.next = pre;
+            pre = cur; 
+            cur = tmp;
+       }
+        return new ListNode[]{pre, cur};
+    }
+}
