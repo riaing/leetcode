@@ -48,3 +48,18 @@ class Solution {
         return pre;
     }
 }
+--------- 模板： reverse in a certain range ----------------
+
+    这是 reverse in certain range 的写法。重点是想清楚要 reverse 多少次
+    private ListNode reverseForCertainRange(ListNode head, int left, int right) {
+        ListNode pre = null;
+       ListNode cur = head; 
+       for (int i = 1; i <= right - left + 1 && cur != null; i++) {
+            ListNode tmp = cur.next;
+            cur.next = pre;
+            pre = cur; 
+            cur = tmp;
+       }
+        return pre;
+    }  
+
