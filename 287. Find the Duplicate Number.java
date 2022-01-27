@@ -78,3 +78,31 @@ class Solution {
         
     }
 }
+
+----------- 更巧的方法 (nums[i] != nums[nums[i] - 1]) -----------------
+    // 这是 find all duplicates 的解但思路一样
+    class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        int i = 0;
+    while (i < nums.length) {
+      if (nums[i] != nums[nums[i] - 1]) // 如果这个数不等于它 expect 的值
+        swap(nums, i, nums[i] - 1);
+      else
+        i++;
+    }
+
+    List<Integer> duplicateNumbers = new ArrayList<>();
+    for (i = 0; i < nums.length; i++) {
+      if (nums[i] != i + 1)
+        duplicateNumbers.add(nums[i]);
+    }
+
+    return duplicateNumbers;
+    }
+    
+     private void swap(int[] arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+}
