@@ -55,6 +55,27 @@ class Solution {
     }
 }
 
+----------- 基础，educative 模板 ---------------------------------------------------------
+ class Solution {
+    public int search(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] > target) {
+                end = mid - 1;
+            }
+            else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+}
+
 -------------进阶一，array with duplicates, find the left most target------------------------
 class Solution {
     public int search(int[] nums, int target) {
