@@ -30,7 +30,7 @@ word consists of only lowercase English letters.
 ------------------------------
 /*
 每层的选择：不 abbrev，abbrev 一个，两个，，，，所有
-时间：每个字母可以 abbrev 或者不 abbrev。总共2*n ，加每次 create String n -》 O(N 2^N)
+时间：每个字母可以 abbrev 或者不 abbrev。总共2*n ，加每次 create String n -》 O(N 2^N)。或者想：第一层 N， 第二层 N-1。。。 -> N！
 */
 class Solution {
     public List<String> generateAbbreviations(String word) {
