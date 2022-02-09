@@ -126,7 +126,228 @@ class Solution {
         else {
             return -1;
         }
+    }   
+}
+========== 2021 [练习，不用记】通过找第一个小于k的数 ===================================
+    class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int left = firstElementSmallerThenK(nums, target); // 找到第一个小于 target 的数
+        if (left >= nums.length - 1 || nums[left+1] != target) { // corner case 以及 target 不存在
+            left = -1;
+        }
+        else {
+            left = left+1; //包括了 left == -1
+        }
+        
+        int right = firstElementSmallerThenK(nums, target+1); // 找第一个小于 target+1的数
+        if (right < 0 || (right > nums.length - 1) || nums[right] != target) { // corner case 以及 target 不存在
+            right = -1;
+        }
+        
+        return new int[]{left, right};  
     }
     
     
+    // find first element < k in dup array
+    private int firstElementSmallerThenK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < target) {
+                start = mid + 1;
+            }
+            if (nums[mid] >= target) {
+                end = mid - 1;
+            }
+        }
+        return end;
+        
+    }
+}
+
+============= 【纯练习】找到第一个大于 k 的元素 =====================================
+    class Solution {
+    public int[] searchRange(int[] nums, int target) {
+
+        int left = firstElementLargerThenK(nums, target-1); // 找到第一个大于 target-1 的数
+        if (left < 0 || left > nums.length - 1 || nums[left] != target) { // corner case 以及 target 不存在
+            left = -1;
+        }
+        else {
+            left = left; //包括了 left == -1
+        }
+        
+        int right = firstElementLargerThenK(nums, target); // 找第一个大于 target的数
+        if (right <= 0 || nums[right-1] != target) { // corner case 以及 target 不存在
+            right = -1;
+        }
+        else {
+            right = right - 1; 
+        }
+        return new int[]{left, right};  
+    }
+    
+    
+    // find first element > k in dup array 
+    private int firstElementLargerThenK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] <= target) {
+                start = mid + 1;
+            }
+            if (nums[mid] > target) {
+                end = mid - 1;
+            }
+        }
+        return start; 
+        
+    }
+}
+
+=========== 【纯练习】 找到第一个大于等于 k 的元素 ================================== 
+
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+
+        int left = firstElementLargerOrEqualToK(nums, target-1); // 找到第一个大于等于 target-1 的数
+        if (left >= 0 && left < nums.length && nums[left] == target) { //left本身已经大于target-1时
+            left = left;
+        }
+        else if (left < nums.length -1 && nums[left+1] == target) { // left刚好等于 target-1时 
+            left++;
+        }
+        else {
+            left = -1; 
+        }
+        
+        int right = firstElementLargerOrEqualToK(nums, target); // 找第一个大于等于 target的数
+        if (right < 0 || right > nums.length - 1 || nums[right] != target) {
+            right = -1; 
+        }
+       
+        return new int[]{left, right};  
+    }
+    
+    
+    // find first element >= k in dup array 
+    private int firstElementLargerOrEqualToK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] <= target) { // 这里有可能已经丢掉 最后一个 target 了，所以最后判断
+                start = mid + 1; 
+            }
+            if (nums[mid] > target) {
+                end = mid - 1;
+            }
+        }
+        if (start > 0 && nums[start-1] == target) { // 和 找第一个>k 的区别
+            return start - 1;
+        }
+        return start; 
+    }
+}
+===========[纯练习】  找到第一个小于等于 k 的元素 =============================================== 
+
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int left = firstElementSmallerOrEqualToK(nums, target); // 找到第一个小于等于 target 的数
+        if (left < 0 || left > nums.length - 1 || nums[left] != target) {
+            left = -1; 
+        }
+      
+        
+        int right = firstElementSmallerOrEqualToK(nums, target+1); // 找第一个小于等于 target+1的数
+        if (right >= 0 && right < nums.length && nums[right] == target) { //right本身已经小于target+1时，就有可能是 target
+            right = right;
+        }
+        else if (right > 0 && nums[right-1] == target) { // right刚好等于target+1时，它的前一个可能是 target 
+            right--;
+        }
+        else {
+            right = -1; 
+        }
+       
+        return new int[]{left, right};  
+    }
+    
+    
+    // find first element <= k in dup array 
+    private int firstElementSmallerOrEqualToK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < target) { 
+                start = mid + 1; 
+            }
+            if (nums[mid] >= target) { // 这里有可能已经丢掉 最后一个 target 了，所以最后判断
+                end = mid - 1;
+            }
+        }
+        if (end < nums.length - 1 && nums[end+1] == target) { // 和 找第一个<k 的区别
+            return end + 1;
+        }
+        return end; 
+    }
+}
+======= 最终解法（educative 模板），找左边界和右边界 =======================
+            class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int left = firstElementSmallerOrEqualToK(nums, target); // 找到第一个小于等于 target 的数
+        if (left < 0 || left > nums.length - 1 || nums[left] != target) {
+            left = -1; 
+        }
+      
+        
+        int right = firstElementLargerOrEqualToK(nums, target); // 找第一个大于等于 target 的数
+        if (right < 0 || right > nums.length - 1 || nums[right] != target) {
+            right = -1; 
+        }
+       
+        return new int[]{left, right};  
+    }
+    
+    
+    // find first element <= k in dup array 
+    private int firstElementSmallerOrEqualToK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < target) { 
+                start = mid + 1; 
+            }
+            if (nums[mid] >= target) { // 这里有可能已经丢掉 最后一个 target 了，所以最后判断
+                end = mid - 1;
+            }
+        }
+        if (end < nums.length - 1 && nums[end+1] == target) { // 和 找第一个<k 的区别
+            return end + 1;
+        }
+        return end; 
+    }
+    
+    // find first element >= k 
+     private int firstElementLargerOrEqualToK(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] <= target) { // 这里有可能已经丢掉 最后一个 target 了，所以最后判断
+                start = mid + 1; 
+            }
+            if (nums[mid] > target) {
+                end = mid - 1;
+            }
+        }
+        if (start > 0 && nums[start-1] == target) { // 和 找第一个>k 的区别
+            return start - 1;
+        }
+        return start; 
+    }
 }
