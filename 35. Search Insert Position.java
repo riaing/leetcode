@@ -20,8 +20,14 @@ Input: [1,3,5,6], 0
 Output: 0
  
 -------------------------2.8.2022 educative 模板 ------------------------------------------------------------------
+ 
+ ========= 找 ceiling ==========================
   /*
-Find the first num >= target 
+Find the first num >= target : ceiling 
+
+Given an array of numbers sorted in an ascending order, find the ceiling of a given number ‘key’. The ceiling of the ‘key’ will be the smallest element in the given array greater than or equal to the ‘key’.
+
+Write a function to return the index of the ceiling of the ‘key’. If there isn’t any ceiling return -1.
 */
 class Solution {
     public int searchInsert(int[] nums, int target) {
@@ -43,9 +49,35 @@ class Solution {
         return start;  
     }
 }  
+ ========================== 找 floor ===================
+  /*
+Given an array of numbers sorted in ascending order, find the floor of a given number ‘key’. The floor of the ‘key’ will be the biggest element in the given array smaller than or equal to the ‘key’
+
+Write a function to return the index of the floor of the ‘key’. If there isn’t a floor, return -1. 
+*/
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            else if (nums[mid] < target) {
+                start = mid + 1;
+            }
+            else {
+                end = mid - 1;
+            }
+        }
+        //  when we exit the loop, the end of our range will point to the smallest number greater than the ‘target’.
+        return end;  
+    }
+}
     
 -----------------------3.25.19最新 自己的solution：mid永远包含在满足条件那边， 然后考虑两个数的corner case--------------------------------------------------------------------------    
-// find the first element that is grater or equal to target.
+// find the smallest element that is grater or equal to target.
 //找到target右边第一个大于它的数
     //写完后想corner case，只有两个数的情况
 class Solution {
