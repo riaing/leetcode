@@ -1,5 +1,5 @@
 https://www.educative.io/courses/grokking-the-coding-interview/gx6oKY8PGYY 
-
+姊妹题： https://leetcode.com/problems/least-number-of-unique-integers-after-k-removals/ 
 
 Given an array of numbers and a number ‘K’, we need to remove ‘K’ numbers from the array such that we are left with maximum distinct numbers.
 
