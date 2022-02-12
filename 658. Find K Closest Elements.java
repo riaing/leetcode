@@ -22,6 +22,83 @@ Constraints:
 1 <= arr.length <= 104
 arr is sorted in ascending order.
 -104 <= arr[i], x <= 104
+ 
+ ----------- binary search + 2 pointers ------------------------
+ /*
+Maintain 2 pointers, 从 cloeset 往左右两边扫。哪边小就算上哪边
+binary search o(lgn)
+2 pointers: o(k) 
+
+Space: The space complexity will be O（1）
+*/
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        // 1. binary search to find the cloeset num 
+       int closest = findCloesetToK(arr, x);
+        
+        List<Integer> res = new ArrayList<Integer>();
+        res.add(arr[closest]);
+        
+        int left = closest - 1;
+        int right = closest + 1;
+        while (left >= 0 && right < arr.length && res.size() < k) {
+            if (Math.abs(arr[left] - x) <= Math.abs(arr[right] - x)) {
+                res.add(arr[left]);
+                left--;
+            }
+            else {
+                res.add(arr[right]);
+                right++;
+            }
+        }
+        
+        while (left >= 0 && res.size() < k) {
+            res.add(arr[left]);
+            left--;
+        }
+        
+        while (right < arr.length && res.size() < k) {
+            res.add(arr[right]);
+            right++;
+        }
+        
+        // 4. print 结果 
+        Collections.sort(res);
+        return res; 
+    }
+    
+    
+    private int findCloesetToK(int[] arr, int target) {
+        int start = 0;
+        int end = arr.length - 1;
+        int closest = 0; 
+        while (start <= end) {
+            int mid = start + (end - start) / 2; 
+            if (arr[mid] - target == 0) {
+                closest = mid;
+                return closest;
+            }
+            else if (arr[mid] - target > 0) {
+                end = mid - 1;
+            }
+            else {
+                start = mid + 1; 
+            }
+        }
+        // 出来时如果用 start，那 start 可能超范围了，所以判断一下
+        if (start >= arr.length) {
+            start--;
+        }
+        // 这时候有可能 start 前一个或者 start 是最 close 的。所以判断一下. eg: [1,2,3,4,8] target=5
+        if (start > 0) {
+            closest = Math.abs(arr[start] - target) < Math.abs(arr[start-1] - target) ? start : start - 1; 
+        }
+        
+        return closest;
+    }
+    
+    
+}
   
   -------- binary search + heap ------------------------
   /*
