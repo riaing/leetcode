@@ -14,6 +14,30 @@ k = 8,
 return 13.
 Note: 
 You may assume k is always valid, 1 ≤ k ≤ n2.
+   
+-------------------- 2022 heap solution, 比以下稍微减少一点，不会到nlgk, 而是最坏 nlgk --------------------------
+   
+
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        // max heap 
+        PriorityQueue<Integer> q = new PriorityQueue<Integer>((n1, n2) -> n2 - n1);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (q.size() < k) {
+                    q.offer(matrix[i][j]);
+                }
+                // 维持一个 K size 的 max heap，只存 top K smallest num,.所以当 cur num
+                //小于 heap 头时，需要拿出头，放入 cur
+                else if (q.peek() > matrix[i][j]) {
+                    q.poll();
+                    q.offer(matrix[i][j]);
+                }
+            }
+        }
+        return q.peek();
+    }
+}
 
 ------------------------Priority Queue---------------------------------------
 我们使用一个最大堆，然后遍历数组每一个元素，将其加入堆，根据最大堆的性质，大的元素会排到最前面，然后我们看当前堆中的元素个数是否大于k，
