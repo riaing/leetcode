@@ -28,6 +28,43 @@ Constraints:
 
 1 <= s.length <= 5 * 105
 s consists of uppercase and lowercase English letters and digits.
+ 
+ ---------- 解析 ----------------------------------
+ Remember, Strings are Immutable!
+The input type for this question is a String. When dealing with Strings, we need to be careful to not inadvertently convert what should have been an O(n)O(n) algorithm into an O(n^2)O(n 
+2
+ ) one.
+
+Strings in most programming languages are immutable. This means that once a String is created, we cannot modify it. We can only create a new String. Consider the following Java code.
+
+String a = "Hello ";
+a += "Leetcode";
+This code creates a String called a with the value "Hello ". It then sets a to be a new String, made with the letters from the old a and the additional letters "Leetcode". It then assigns this new String to the variable a, throwing away the reference to the old one. It does NOT actually "modify" a.
+
+For the most part, we don't run into problems with Strings being treated like this. But consider this code for reversing a String.
+
+String s = "Hello There";
+String reversedString = "";
+for (int i = s.length() - 1; i >= 0; i--) {
+    reversedString += s.charAt(i);
+}
+System.out.println(reversedString);
+Each time a character is added to reverseString, a new String is created. Creating a new String has a cost of nn, where nn is the length of the String. The result? Simply reversing a String has a cost of O(n^2)O(n 
+2
+ ) using the above algorithm.
+
+The solution is to use a StringBuilder. A StringBuilder collects up the characters that will be converted into a String so that only one String needs to be created—once all the characters are ready to go. Recall that inserting an item at the end of an Array has a cost of O(1)O(1), and so the total cost of inserting the nn characters into the StringBuilder is O(n)O(n), and it is also O(n)O(n) to then convert that StringBuilder into a String, giving a total of O(n)O(n).
+
+String s = "Hello There";
+StringBuilder sb = new StringBuilder();
+for (int i = s.length() - 1; i >= 0; i--) {
+    sb.append(s.charAt(i));
+}
+String reversedString = sb.toString();
+System.out.println(reversedString);
+If you're unsure what to do for your particular programming language, it shouldn't be too difficult to find using a web search. The algorithms provided in the solutions here all do string building efficiently.
+
+
   
   ------------------- heap ----------------------------------------------------
   class Solution {
