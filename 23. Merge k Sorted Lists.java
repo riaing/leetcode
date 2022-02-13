@@ -47,7 +47,6 @@ class Solution {
             if (smallest.next != null) {
                 q.offer(smallest.next);
             }
-            smallest = smallest.next;
         }
         return head.next;   
     }
