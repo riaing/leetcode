@@ -164,3 +164,57 @@ class Solution {
         return false;
     }
 }
+
+---------------- 2022.2.15 自己直接写的结果 没用 memorization ------------------------------------------
+ /*
+time: O(k^n *k) 有 k 个选择（放哪个 bucket），然后每个选择假设都可以，那么退出时有 O（k）
+*/
+class Solution {
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+       int sum = 0;
+        for (int n : nums) {
+            sum += n;
+        }
+        int target = sum / k; 
+        if (sum % k != 0) {
+            return false; 
+        }
+        return helper(nums, k, 0, new ArrayList<Integer>(), target);
+    }
+    
+    private boolean helper(int[] nums, int k, int index, List<Integer> bucketSum, int target) {
+        if (index == nums.length) { //O(k)
+            for (int sum : bucketSum) {
+                if (sum != target) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        boolean res = false;
+        if (bucketSum.size() < k) {
+            bucketSum.add(nums[index]); // 新开一bucket
+            res = helper(nums, k, index+1, bucketSum, target); 
+            if (res) {
+                return true; 
+            }
+            bucketSum.remove(bucketSum.size() - 1);
+        }
+        
+        // 不新开的话，可以加到前面任意 bucket 中
+        for (int i = 0; i < bucketSum.size(); i++) {
+            int curSum = bucketSum.get(i);
+            if (curSum + nums[index] <= target) { // 一定要是正数才需要这个条件
+                bucketSum.set(i, curSum + nums[index]);
+                res = res || helper(nums, k, index+1, bucketSum, target);
+                if (res) {
+                    return true;
+                }
+                bucketSum.set(i, curSum);
+            }
+        }
+        return res; 
+    } 
+}
+ 
