@@ -22,7 +22,49 @@ Input: [1, 2, 3, 5]
 Output: false
 
 Explanation: The array cannot be partitioned into equal sum subsets.
- 
+ -------------- 2.15.2022 1D array -------------------------------------
+ /*
+dp[i][j] : 前 i 个，能否组成 sum为 j
+dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i]] 取当前元素，或者不取
+dp[0...i][0] = true; 不取任何元素
+dp[0][0...j] = true if nums[0] == j 
+
+*/
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = 0; 
+        for (int n : nums) {
+            sum += n;
+        }
+        int mid = sum / 2; 
+        if ( sum % 2 != 0) { // corner case,
+            return false;
+        }
+        boolean[][] dp = new boolean[2][mid+1]; // 前 i 个元素中，能否组成 sum 为 j
+        
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j <= mid; j++) {
+                if (j == 0) {
+                    dp[i%2][j] = true; // sum 为0时不取    
+                }
+                
+                else if (i == 0) {
+                    if (nums[i] == j) {
+                        dp[i][j] = true;
+                    } 
+                }
+                else {
+                    dp[i%2][j] = dp[(i-1)%2][j]; //不取，则看前 i-1能否组成 sum；
+                    if (j - nums[i] >= 0) {
+                        dp[i%2][j] = dp[i%2][j] || dp[(i-1)%2][j - nums[i]]; // 取，着看前 i-1能否组成 j-当前 i 的值
+                    }
+                }
+            }
+        }
+        return dp[(nums.length-1)%2][mid];
+        
+    }
+}
  
  -------- 4.5.2021 DP 优化的代码 -----------------------------------------------------------------------------
  /* dp[i][j] 前i个元素能否组成和为j
