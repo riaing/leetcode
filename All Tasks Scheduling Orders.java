@@ -32,6 +32,12 @@ Output:
 13) [1, 3, 2, 0, 4, 5]
 
 ----------------------- Topological sort + DFS  ---------------------------
+  
+  Time and Space Complexity#
+If we don’t have any prerequisites, all combinations of the tasks can represent a topological ordering. As we know, that there can be N!N! combination
+s for ‘N’ numbers, therefore the time and space complexity of our algorithm will be O(V! * E)O where ‘V’ is the total number of tasks and ‘E’ is the
+total prerequisites. We need the ‘E’ part because in each recursive call, at max, we remove (and add back) all the edges.
+  
   class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         List<Integer> res = new ArrayList<Integer>();
