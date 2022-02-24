@@ -50,7 +50,7 @@ class PartitionSet {
                     dp[i%2][j] = true; // sum 为0时不取    
                 }
                 
-                else if (i == 0) {
+                else if (i == 0) { // 所以 dp[0][nums[0] = true;
                     if (nums[i] == j) {
                         dp[i][j] = true;
                     } 
