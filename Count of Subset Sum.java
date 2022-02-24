@@ -17,11 +17,13 @@ class SubsetSum {
     for (int i = 0; i < nums.length; i++) {
       dp[i][0] = 1; //empty set is also a solution 
     }
-    for (int j = 0; j <= sum; j++) {
-      if (nums[0] == j) {
-        dp[0][j] = 1; 
-      }
-    }
+    
+    dp[0][nums[0] = 1; //下面一段就是这个意思
+//     for (int j = 0; j <= sum; j++) {
+//       if (nums[0] == j) {
+//         dp[0][j] = 1; 
+//       }
+//     }
 
     for (int i = 1; i < nums.length; i++) {
        for (int j = 1; j <= sum; j++) {
