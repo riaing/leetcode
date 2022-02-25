@@ -18,6 +18,26 @@ Example 2:
 Input: A = [1, 2, 3], V = [1, 2, 3], m = 5
 Output: 5
 Explanation: Strategy is not unique. For example, put five item 0 (A[0] = 1, V[0] = 1) into backpack.
+    
+----------- 马甲 rod cutting ---------------------------------
+    Given a rod of length ‘n’, we are asked to cut the rod and sell the pieces in a way that will maximize the profit. We are also given the price of every piece of length ‘i’ where ‘1 <= i <= n’.
+
+Example:
+
+Lengths: [1, 2, 3, 4, 5]
+Prices: [2, 6, 7, 10, 13]
+Rod Length: 5
+
+Let’s try different combinations of cutting the rod:
+
+Five pieces of length 1 => 10 price
+Two pieces of length 2 and one piece of length 1 => 14 price
+One piece of length 3 and two pieces of length 1 => 11 price
+One piece of length 3 and one piece of length 2 => 13 price
+One piece of length 4 and one piece of length 1 => 12 price
+One piece of length 5 => 13 price
+
+This shows that we get the maximum price (14) by cutting the rod into two pieces of length ‘2’ and one piece of length ‘1’.
 
 ------------------------------------------------- 
 public class Solution {
