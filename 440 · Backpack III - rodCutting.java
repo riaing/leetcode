@@ -40,6 +40,12 @@ One piece of length 5 => 13 price
 This shows that we get the maximum price (14) by cutting the rod into two pieces of length ‘2’ and one piece of length ‘1’.
 
 ------------------------------------------------- 
+    思路： Let’s try to populate our dp[][] array from the above solution, working in a bottom-up fashion. Essentially, what we want to achieve is: “Find the maximum profit for every sub-array and for every possible capacity”.
+
+So for every possible capacity ‘c’ (0 <= c <= capacity), we have two options:
+
+Exclude the item. In this case, we will take whatever profit we get from the sub-array excluding this item: dp[index-1][c]
+Include the item if its weight is not more than the ‘c’. In this case, we include its profit plus whatever profit we get from the remaining capacity: profit[index] + dp[index][c-weight[index]]
 public class Solution {
     /**
      * @param A: an integer array
