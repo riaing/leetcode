@@ -128,3 +128,107 @@ class Solution {
     }
 }
 }
+
+-------------------- 2022.2.26 + track path sol 1: curTake 记录 i，j 取几个。----------------------------------------------------------- 
+ class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[2][amount+1];
+        int[][] curTake = new int[coins.length][amount+1]; // 当前 i,j 时硬币取几个。
+        
+        for (int j = 0; j <= amount; j++) {
+            if (j % coins[0] != 0) {
+                dp[0][j] = -1;
+            }
+            else {
+                dp[0][j] = j /coins[0];
+                curTake[0][j] = j / coins[0]; //就第一行可能是>1的数
+            }
+        }
+        // 注意，因为是求 min，所以要考虑取和不取时，是否为-1的情况
+        for (int i = 1; i < coins.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                dp[i%2][j] = dp[(i-1)%2][j]; 
+                if ( j - coins[i] >= 0 && dp[i%2][j-coins[i]] != -1) {  //当前元素能取时
+                    if (dp[(i-1)%2][j] == -1) {
+                        dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
+                        curTake[i][j] = curTake[i][j-coins[i]] + 1; 
+                    }
+                    else {
+                        // dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i]] + 1);
+                        if (dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
+                            curTake[i][j] = curTake[i][j-coins[i]] + 1; 
+                            dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
+                        }
+                    }
+                }
+            }
+        }
+             
+        int j = amount; 
+        for (int i = coins.length - 1; i >= 0; i--) {
+            if (curTake[i][j] == 0) {
+                continue; 
+            }
+            else {
+                int cnt = curTake[i][j];
+                while (cnt > 0) {
+                    System.out.println(coins[i]);
+                    cnt--;
+                    j -= coins[i];
+                }
+            }
+        }
+        return dp[(coins.length - 1)%2][amount];
+    }
+}    
+    
+-------------------------   2022.2.26 + track path sol 2: curTake 记录当前
+   class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[2][amount+1];
+        boolean[][] curTake = new boolean[coins.length][amount+1]; // 当前 i,j 时取
+        
+        for (int j = 0; j <= amount; j++) {
+            if (j % coins[0] != 0) {
+                dp[0][j] = -1;
+            }
+            else {
+                dp[0][j] = j /coins[0];
+                curTake[0][j] = true; 
+            }
+        }
+        // 注意，因为是求 min，所以要考虑取和不取时，是否为-1的情况
+        for (int i = 1; i < coins.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                dp[i%2][j] = dp[(i-1)%2][j]; 
+                if ( j - coins[i] >= 0 && dp[i%2][j-coins[i]] != -1) {  //当前元素能取时
+                    if (dp[(i-1)%2][j] == -1) {
+                        dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
+                        curTake[i][j] = true;
+                    }
+                    else {
+                        // dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i]] + 1);
+                        if (dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
+                            curTake[i][j] = true; 
+                            dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
+                        }
+                    }
+                }
+            }
+        }
+             
+        int j = amount; 
+        int i = coins.length - 1; 
+        while (i >= 0 && j >= 0) {
+            if (!curTake[i][j]) {
+                i--; 
+            }
+            else {
+                System.out.println(coins[i]);
+                j -= coins[i];
+            }
+        }
+        
+        return dp[(coins.length - 1)%2][amount];
+    }
+} 
