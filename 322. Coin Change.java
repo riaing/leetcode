@@ -149,16 +149,9 @@ class Solution {
             for (int j = 1; j <= amount; j++) {
                 dp[i%2][j] = dp[(i-1)%2][j]; 
                 if ( j - coins[i] >= 0 && dp[i%2][j-coins[i]] != -1) {  //当前元素能取时
-                    if (dp[(i-1)%2][j] == -1) {
+                    if (dp[(i-1)%2][j] == -1 || dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
                         dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
-                        curTake[i][j] = curTake[i][j-coins[i]] + 1; 
-                    }
-                    else {
-                        // dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i]] + 1);
-                        if (dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
-                            curTake[i][j] = curTake[i][j-coins[i]] + 1; 
-                            dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
-                        }
+                        curTake[i][j] = true;
                     }
                 }
             }
@@ -197,21 +190,14 @@ class Solution {
                 curTake[0][j] = true; 
             }
         }
-        // 注意，因为是求 min，所以要考虑取和不取时，是否为-1的情况
+         // 注意，因为是求 min，所以要考虑取和不取时，是否为-1的情况
         for (int i = 1; i < coins.length; i++) {
             for (int j = 1; j <= amount; j++) {
                 dp[i%2][j] = dp[(i-1)%2][j]; 
                 if ( j - coins[i] >= 0 && dp[i%2][j-coins[i]] != -1) {  //当前元素能取时
-                    if (dp[(i-1)%2][j] == -1) {
+                    if (dp[(i-1)%2][j] == -1 || dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
                         dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
                         curTake[i][j] = true;
-                    }
-                    else {
-                        // dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i]] + 1);
-                        if (dp[(i-1)%2][j] > dp[i%2][j-coins[i]] + 1) {
-                            curTake[i][j] = true; 
-                            dp[i%2][j] = dp[i%2][j-coins[i]] + 1;
-                        }
                     }
                 }
             }
