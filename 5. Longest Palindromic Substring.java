@@ -282,3 +282,90 @@ class Solution {
     
     }
 }
+
+--------------------- 2022 Brute force --------------------------------------
+        
+This problem follows the Longest Palindromic Subsequence pattern. The only difference is that in a palindromic subsequence characters can be non-adjacent, whereas in a substring all characters should form a palindrome. We will follow a similar approach though.
+
+The brute-force solution will be to try all the substrings of the given string. We can start processing from the beginning and the end of the string. So at any step, we will have two options:
+
+If the element at the beginning and the end are the same, we make a recursive call to check if the remaining substring is also a palindrome. If so, the substring is a palindrome from beginning to end.
+We will skip either the element from the beginning or the end to make two recursive calls for the remaining substring. The length of LPS would be the maximum of these two recursive calls.
+        
+ class LPS {
+
+  public int findLPSLength(String st) {
+    return findLPSLengthRecursive(st, 0, st.length() - 1);
+  }
+
+  private int findLPSLengthRecursive(String st, int startIndex, int endIndex) {
+    if (startIndex > endIndex)
+      return 0;
+
+    // every string with one character is a palindrome
+    if (startIndex == endIndex)
+      return 1;
+
+    // case 1: elements at the beginning and the end are the same
+    if (st.charAt(startIndex) == st.charAt(endIndex)) {
+      int remainingLength = endIndex - startIndex - 1;
+      // check if the remaining string is also a palindrome
+      if (remainingLength == findLPSLengthRecursive(st, startIndex + 1, endIndex - 1))
+        return remainingLength + 2;
+    }
+
+    // case 2: skip one character either from the beginning or the end
+    int c1 = findLPSLengthRecursive(st, startIndex + 1, endIndex);
+    int c2 = findLPSLengthRecursive(st, startIndex, endIndex - 1);
+    return Math.max(c1, c2);
+  }
+
+  public static void main(String[] args) {
+    LPS lps = new LPS();
+    System.out.println(lps.findLPSLength("abdbca"));
+    System.out.println(lps.findLPSLength("cddpd"));
+    System.out.println(lps.findLPSLength("pqr"));
+  }
+}
+       
+        
+------------------------ 2022 DP -----------------------------------------------------
+        
+ /*
+Since we want to try all the substrings of the given string, we can use a two-dimensional array to store the subproblems’ results. So dp[i][j] will be ‘true’ if the substring from index ‘i’ to index ‘j’ is a palindrome.
+
+We can start from the beginning of the string and keep adding one element at a time. At every step, we will try all of its substrings. So for every endIndex and startIndex in the given string, we need to check the following thing:
+
+If the element at the startIndex matches the element at the endIndex, we will further check if the remaining substring (from startIndex+1 to endIndex-1) is a substring too.
+
+if st[startIndex] == st[endIndex], and 
+        if the remaing string is of zero length or dp[startIndex+1][endIndex-1] is a palindrome then
+   dp[startIndex][endIndex] = true
+   
+Time: O(n)   
+
+*/
+class Solution {
+    public String longestPalindrome(String s) {
+        // dp[i][j] will be 'true' if the string from index 'i' to index 'j' is a palindrome
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = true;
+        }
+        
+        int[] index = new int[2]; //记录 max len 的 首尾 index
+        for (int i = s.length() - 2; i >= 0; i--) {
+            for (int j = i+1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j) && (dp[i+1][j-1] || j-i == 1))  { //j-i == 1是为了保证 i+1. j-1永远 valid， 否则会出现 j 在 i 前
+                    dp[i][j] = true;
+                    if (j-i > index[1] - index[0]) { //更新 max len
+                        index[0] = i;
+                        index[1] = j;
+                    }
+                }
+            }
+        }
+        return s.substring(index[0], index[1]+1);
+    }
+}       
+        
