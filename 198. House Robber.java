@@ -23,7 +23,7 @@ Constraints:
 1 <= nums.length <= 100
 0 <= nums[i] <= 400
 
------------- DP， 定义为前 i 的 min  ------------------------------------------------
+------------ DP， 定义为前 i 的 min， 找 path  ------------------------------------------------
 /*
 定义时不一定包括当前 i、
 另一种定义方法是定要包括当前 i/ends at i. 那个需要两个 loop 
@@ -69,3 +69,28 @@ class Solution {
 }
 
 -------------- 稍微差的解法， dp[i]定义为以 i 结尾的 min -------------------------- 
+ /*
+if rob house i, the max profit 
+*/
+class Solution {
+    public int rob(int[] nums) {
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        dp[1] = nums[1];
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Integer.MIN_VALUE;
+            for (int j = i-2; j >= 0; j--) {
+                dp[i] = Math.max(dp[i], dp[j] + nums[i]);
+            }
+            // System.out.println("i " + i + " " + dp[i]);
+        }
+        int max = 0;
+        for (int i = 0; i < nums.length; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+}
