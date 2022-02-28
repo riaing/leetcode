@@ -18,7 +18,8 @@ Explanation: Starting from index '0', we can reach the top through: 0->1->top
 The total fee we have to pay will be (2+3).
 
 -------------- sequence dp  ----------------------------
-
+Time & space : O(n) 
+  
 class Staircase {
 
   public int findMinFee(int[] fee) {
