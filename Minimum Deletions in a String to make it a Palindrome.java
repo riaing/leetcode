@@ -1,3 +1,4 @@
+问法1： 
 Given a string, find the minimum number of characters that we can remove to make it a palindrome.
 
 Example 1:
@@ -16,6 +17,17 @@ Input: = "pqr"
 Output: 2
 Explanation: We have to remove any two characters to get a palindrome, e.g. if we 
 remove "pq", we get palindrome "r".
+
+问法二：insertion
+Given a string s. In one step you can insert any character at any index of the string.
+Return the minimum number of steps to make s palindrome.
+https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+
+问法三： 2. Find if a string is K-Palindromic#
+Any string will be called K-palindromic if it can be transformed into a palindrome by removing at most ‘K’ characters from it.
+
+This problem can easily be converted to our base problem of finding the minimum deletions in a string to make it a palindrome. If the “minimum deletion count” is 
+not more than ‘K’, the string will be K-Palindromic.
   
  
  想法一：适合作为 lPS的followup
