@@ -108,6 +108,48 @@ public class Solution {
         return max;
     }
 }
+
+-----------2022 不用dp = length+1 的写法，也行 ------------------------
+class LCS {
+
+  public int findLCSLength(String s1, String s2) {
+    //dp[i][j]: 已 i 结尾的 s1，和已 j 结尾的 s2的 LCS 
+    // dp[0][j] = 1 if s1(0) == s2(j),  dp[i][0] = 1 if s1(i) == s2(0)
+    // return maxNum among dp[i][j]
+    int[][] dp = new int[2][s2.length()];
+
+    for (int j = 0; j < s2.length(); j++) {
+      if (s2.charAt(j) == s1.charAt(0)) {
+        dp[0][j] = 1; 
+      }
+    }
+
+    int lsc = 0;
+    for (int i = 1; i < s1.length(); i++) {
+      if (s1.charAt(i) == s2.charAt(0)) {
+        dp[i%2][0] = 1; 
+      }
+      for (int j = 1; j < s2.length(); j++) {
+        dp[i%2][j] = 0; //清空上一行！！
+        if (s1.charAt(i) == s2.charAt(j)) {
+          int curLen = 1 + dp[(i-1)%2][j-1];
+          dp[i%2][j] = curLen;
+          lsc = Math.max(lsc, curLen);
+        }
+      }
+    }
+
+    return lsc;
+  }
+
+  public static void main(String[] args) {
+    LCS lcs = new LCS();
+    System.out.println(lcs.findLCSLength("abdca", "cbda"));
+    System.out.println(lcs.findLCSLength("passport", "ppsspt"));
+  }
+}
+
+	
 ------------------------ DP + rotational array 优化space--------------------------------------------------------------
 public class Solution {
     /**
