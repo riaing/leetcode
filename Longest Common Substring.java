@@ -23,6 +23,80 @@ O(n x m) time and memory.
 Notice
 The characters in substring should occur continuously in original string. This is different with subsequence.
 		
+-------- basic solution -------------------------
+
+A basic brute-force solution could be to try all substrings of ‘s1’ and ‘s2’ to find the longest common one. We can start matching both the strings one character at a time, so we have two options at any step:
+
+If the strings have a matching character, we can recursively match for the remaining lengths and keep a track of the current matching length.
+If the strings don’t match, we start two new recursive calls by skipping one character separately from each string and reset the matching length.
+The length of the Longest Common Substring (LCS) will be the maximum number returned by the three recurse calls in the above two options.
+		
+class LCS {
+
+  public int findLCSLength(String s1, String s2) {
+      return findLCSLengthRecursive(s1, s2, 0, 0, 0);
+  }
+
+  private int findLCSLengthRecursive(String s1, String s2, int i1, int i2, int count) {
+    if(i1 == s1.length() || i2 == s2.length())
+      return count;
+
+    if(s1.charAt(i1) == s2.charAt(i2))
+      count = findLCSLengthRecursive(s1, s2, i1+1, i2+1, count+1);
+
+    int c1 = findLCSLengthRecursive(s1, s2, i1, i2+1, 0);
+    int c2 = findLCSLengthRecursive(s1, s2, i1+1, i2, 0);
+
+    return Math.max(count, Math.max(c1, c2));
+  }
+
+  public static void main(String[] args) {
+    LCS lcs = new LCS();
+    System.out.println(lcs.findLCSLength("abdca", "cbda"));
+    System.out.println(lcs.findLCSLength("passport", "ppsspt"));
+  }
+}
+
+-------------------3.5.2022 rotation array ---------------------------------------------------------------------------
+class LCS {
+
+  public int findLCSLength(String s1, String s2) {
+    //dp[i][j]: 已 i 结尾的 s1，和已 j 结尾的 s2的 LCS 
+    // dp[0][j] = 1 if s1(0) == s2(j),  dp[i][0] = 1 if s1(i) == s2(0)
+    // return maxNum among dp[i][j]
+    int[][] dp = new int[2][s2.length()];
+
+    for (int j = 0; j < s2.length(); j++) {
+      if (s2.charAt(j) == s1.charAt(0)) {
+        dp[0][j] = 1; 
+      }
+    }
+
+    int lsc = 0;
+    for (int i = 1; i < s1.length(); i++) {
+      if (s1.charAt(i) == s2.charAt(0)) {
+        dp[i%2][0] = 1; 
+      }
+      for (int j = 1; j < s2.length(); j++) {
+        dp[i%2][j] = 0; //清空上一行！！
+        if (s1.charAt(i) == s2.charAt(j)) {
+          int curLen = 1 + dp[(i-1)%2][j-1];
+          dp[i%2][j] = curLen;
+          lsc = Math.max(lsc, curLen);
+        }
+      }
+    }
+
+    return lsc;
+  }
+
+  public static void main(String[] args) {
+    LCS lcs = new LCS();
+    System.out.println(lcs.findLCSLength("abdca", "cbda"));
+    System.out.println(lcs.findLCSLength("passport", "ppsspt"));
+  }
+}
+	
 ----------- 4.3.2021 DP思路一样，learning是print结果时，用一个变量记录lcs的index，在dp过程中更新此值--------------------------------------
 	
 
@@ -108,47 +182,6 @@ public class Solution {
         return max;
     }
 }
-
------------2022 不用dp = length+1 的写法，也行 ------------------------
-class LCS {
-
-  public int findLCSLength(String s1, String s2) {
-    //dp[i][j]: 已 i 结尾的 s1，和已 j 结尾的 s2的 LCS 
-    // dp[0][j] = 1 if s1(0) == s2(j),  dp[i][0] = 1 if s1(i) == s2(0)
-    // return maxNum among dp[i][j]
-    int[][] dp = new int[2][s2.length()];
-
-    for (int j = 0; j < s2.length(); j++) {
-      if (s2.charAt(j) == s1.charAt(0)) {
-        dp[0][j] = 1; 
-      }
-    }
-
-    int lsc = 0;
-    for (int i = 1; i < s1.length(); i++) {
-      if (s1.charAt(i) == s2.charAt(0)) {
-        dp[i%2][0] = 1; 
-      }
-      for (int j = 1; j < s2.length(); j++) {
-        dp[i%2][j] = 0; //清空上一行！！
-        if (s1.charAt(i) == s2.charAt(j)) {
-          int curLen = 1 + dp[(i-1)%2][j-1];
-          dp[i%2][j] = curLen;
-          lsc = Math.max(lsc, curLen);
-        }
-      }
-    }
-
-    return lsc;
-  }
-
-  public static void main(String[] args) {
-    LCS lcs = new LCS();
-    System.out.println(lcs.findLCSLength("abdca", "cbda"));
-    System.out.println(lcs.findLCSLength("passport", "ppsspt"));
-  }
-}
-
 	
 ------------------------ DP + rotational array 优化space--------------------------------------------------------------
 public class Solution {
