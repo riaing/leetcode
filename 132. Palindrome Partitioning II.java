@@ -137,3 +137,83 @@ class Solution {
         return pal;
     }
 }
+
+--------------------- 2022.3.01 超时 -----------------------
+    class Solution {
+    public int minCut(String s) {
+        boolean[][] isPalidrome = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            isPalidrome[i][i] = true;
+        }
+        
+        for (int i = s.length() - 2; i >= 0; i--) {
+            for (int j = i+1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    isPalidrome[i][j] = isPalidrome[i+1][j-1] || (j - i == 1);
+                }
+                // System.out.println(i + " " + j + " " + isPalidrome[i][j]);
+            }
+        }
+        
+        // 超时,计算每个 i到 j 的刀法 
+        int[][] minCut = new int[s.length()][s.length()];
+       for (int i = s.length() - 2; i >= 0; i--) {
+           for (int j = i+1; j < s.length(); j++) {
+                minCut[i][j] = s.length();
+                if (isPalidrome[i][j]) {
+                    minCut[i][j] = 0;
+                }
+                else {
+                    for (int cutLine = i; cutLine < j; cutLine++) {
+                        int curMin = minCut[i][cutLine] + minCut[cutLine+1][j] + 1;
+                        minCut[i][j] = Math.min(minCut[i][j], curMin);
+                    }
+                }
+           }
+        }   
+        return minCut[0][s.length()-1]; 
+    }
+}
+
+------------------------ 2022.3.01 最好的写法，不超时。
+第二个 dp[] : 从i 到 end 的最少 cut
+class Solution {
+    public int minCut(String s) {
+        boolean[][] isPalidrome = new boolean[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            isPalidrome[i][i] = true;
+        }
+        
+        for (int i = s.length() - 2; i >= 0; i--) {
+            for (int j = i+1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    isPalidrome[i][j] = isPalidrome[i+1][j-1] || (j - i == 1);
+                }
+            }
+        }
+        
+        // j 定死在尾部，少一层循环
+        //     // now lets populate the second table, every index in 'cuts' stores the minimum cuts needed 
+    // for the substring from that index till the end 
+       int[] minCut = new int[s.length()]; // 从 i 到尾部最少多少刀
+       for (int i = s.length() - 1; i >= 0; i--) {
+                int curMinCut = s.length();
+           for (int j = s.length() - 1; j >= i; j--) { // 从 i 到尾部，可以有 i。。。j 种方法
+                if (isPalidrome[i][j]) { //  we dont need any cut if the whole substring is a palindrome
+                    if (j == s.length() - 1) {
+                        curMinCut = 0;
+                    }
+                    else {
+                        curMinCut = Math.min(curMinCut, 1 + minCut[j+1]);
+                    }
+                }
+           }
+           minCut[i] = curMinCut; 
+        }   
+        return minCut[0]; 
+    }
+}
+
+
+} I
+}
