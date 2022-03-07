@@ -31,6 +31,77 @@ start: m[0][0...length] = 0
 	m[0...length][0] = 0
 end: m[a.length][b.length]
 
+---------------------- 2022.3.6 滚动数组 + backtrack print 结果 ---------------------------------
+/*
+if s1[i] == s2[j] 
+  dp[i][j] = 1 + dp[i-1][j-1]
+else 
+  dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+*/
+class Solution {
+    public int longestCommonSubsequence(String s1, String s2) {
+        int[][] dp = new int[2][s2.length()];
+        // 1 -> i-1,j-1; 2 -> i-1, j; 3 -> i, j-1; 0 ->没有路径
+        int[][] from = new int[s1.length()][s2.length()]; 
+
+        for (int j = 0; j < s2.length(); j++) {
+              if (s2.charAt(j) == s1.charAt(0)) {
+                  dp[0][j] = 1; 
+                  from[0][j] = 1;
+              }
+              else if (j> 0 && dp[0][j-1] == 1) {
+                  dp[0][j] = 1; 
+                  from[0][j] = 3;
+              }
+        }
+
+        for (int i = 1; i < s1.length(); i++) {
+           if (s1.charAt(i) == s2.charAt(0)) {
+                 dp[i%2][0] = 1;
+              from[i][0] = 1;
+           }
+            else if (dp[(i-1)%2][0] == 1) {
+                dp[i%2][0] = 1;
+                from[i][0] = 2;
+            }
+        
+          for (int j = 1; j < s2.length(); j++) {
+            dp[i%2][j] = Math.max(dp[(i-1)%2][j], dp[i%2][j-1]); //清空上一行！！
+            from[i][j] = dp[(i-1)%2][j] > dp[i%2][j-1] ? 2 : 3;
+            if (s1.charAt(i) == s2.charAt(j)) { 
+              dp[i%2][j] = 1 + dp[(i-1)%2][j-1];
+              from[i][j] = 1; 
+                
+            }
+          }
+        }
+        
+        String lsc = "";
+        int s1Index = s1.length() - 1;
+        int s2Index = s2.length() - 1; 
+        while (s1Index >= 0 && s2Index >=0 && (from[s1Index][s2Index] != 0)) {
+            if (from[s1Index][s2Index] == 1) {
+                lsc = s1.charAt(s1Index) + lsc; 
+                s1Index--;
+                s2Index--;
+            }
+            else if (from[s1Index][s2Index] == 2) {
+                s1Index--;
+            }
+            else if (from[s1Index][s2Index] == 3) {
+                s2Index--;
+            }
+        }
+            
+        System.out.println(lsc);
+        return dp[(s1.length()-1)%2][s2.length()-1];
+
+    }
+}
+	
+	
+
 ------------------------------  这方法不对！删除这段。
 "abdca"
 "cbda" 会 print ada 
