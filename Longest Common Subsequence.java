@@ -31,7 +31,10 @@ start: m[0][0...length] = 0
 	m[0...length][0] = 0
 end: m[a.length][b.length]
 
-------------------------------  4.3.2021 DP + print具体值 ---------------------------------------------------------------------
+------------------------------  这方法不对！删除这段。
+"abdca"
+"cbda" 会 print ada 
+	--------------4.3.2021 DP + print具体值 ---------------------------------------------------------------------
 class Solution {
     public int longestCommonSubsequence(String A, String B) {
         int[][] m = new int[A.length()+1][B.length()+1];
