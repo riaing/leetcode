@@ -48,3 +48,77 @@ class Solution {
     }
 }
 
+--------------- 2022.3.9 ---------------------------
+    /*
+dp[i] 前 i 个元素的 LIS. 
+dp[i] = Max{dp[j] +1 }, 0 <= j <= i-1, if nums[i] > nums[j]
+
+Time: loop is n, 第一次 1， 第二次2， 第 n 次 n-1 -> 1+2+、、、n-1 = n^2
+*/
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        int max = 1;
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = 1; // if no prev element smaller than i, the LIS just include itself 
+            for (int j = i-1; j>=0; j--) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+                    max = Math.max(max, dp[i]);
+                }
+            }
+        }
+        return max;
+    }
+}
+-------------- 2022.3.9 求 path ----------------------------------
+    /*
+dp[i] 前 i 个元素的 LIS. 
+dp[i] = Max{dp[j] +1 }, 0 <= j <= i-1, if nums[i] > nums[j]
+
+Time: loop is n, 第一次 1， 第二次2， 第 n 次 n-1 -> 1+2+、、、n-1 = n^2
+*/
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        int max = 1;
+        int maxIndex = 0; 
+        // 求 PATH
+        int[] from = new int[nums.length]; //记录到达 i 点的之前的那个位置
+        from[0] = -1; // 初始化
+        
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = 1; // if no prev element smaller than i, the LIS just include itself 
+            from[i] = -1; // 为了之后找 path 方便
+            for (int j = i-1; j>=0; j--) {
+                if (nums[j] < nums[i]) {
+                    // if 求 path
+                    if (dp[i] < 1 + dp[j]) {
+                        dp[i] = 1 + dp[j];
+                        from[i] = j; 
+                    }
+                    if (max < dp[i]) {
+                        max = dp[i];
+                        maxIndex = i; 
+                    }
+                    
+                    /* if not to get path, simple code 
+                    dp[i] = Math.max(dp[i], 1 + dp[j]);
+                    max = Math.max(max, dp[i]); 
+                    */
+                }
+            }
+        }
+
+        // 求 path
+        int index = maxIndex;
+        while (index >=0) {
+            System.out.println(nums[index]);
+            index = from[index];
+        }
+        
+        return max;
+    }
+}
