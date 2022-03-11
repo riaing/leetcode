@@ -23,6 +23,48 @@ Constraints:
 1 <= str1.length, str2.length <= 1000
 str1 and str2 consist of lowercase English letters.
 
+ 
+ -----------Brute Force -------------------------------------------
+ The problem is quite similar to the Longest Common Subsequence.
+
+A basic brute-force solution could be to try all the super-sequences of the given sequences. We can process both of the sequences one character at a time, so at any step, 
+we must choose between:
+
+If the sequences have a matching character, we can skip one character from both the sequences and make a recursive call for the remaining lengths to get SCS.
+If the strings don’t match, we start two new recursive calls by skipping one character separately from each string. The minimum of these two recursive calls will have our answer.
+ 
+The time complexity of the above algorithm is exponential O(2^{n+m}), where ‘n’ and ‘m’ are the lengths of the input sequences. The space complexity is O(n+m)
+which is used to store the recursion stack. 
+ class SCS {
+
+  public int findSCSLength(String s1, String s2) {
+      return findSCSLengthRecursive(s1, s2, 0, 0);
+  }
+
+  private int findSCSLengthRecursive(String s1, String s2, int i1, int i2) {
+    // if we have reached the end of a string, return the remaining length of the other string, 
+    // as in this case we have to take all of the remaining other string
+    if(i1 == s1.length())
+      return s2.length()-i2;
+    if(i2 == s2.length())
+      return s1.length()-i1;
+
+    if(s1.charAt(i1) == s2.charAt(i2))
+      return 1 + findSCSLengthRecursive(s1, s2, i1+1, i2+1);
+
+    int length1 = 1 + findSCSLengthRecursive(s1, s2, i1, i2+1);
+    int length2 = 1 + findSCSLengthRecursive(s1, s2, i1+1, i2);
+
+    return Math.min(length1, length2);
+  }
+
+  public static void main(String[] args) {
+    SCS scs = new SCS();
+    System.out.println(scs.findSCSLength("abcf", "bdcf"));
+    System.out.println(scs.findSCSLength("dynamic", "programming"));
+  }
+}
+ 
 -----------------------------------------------—DP + find path ---------------------------
 
 class Solution {
