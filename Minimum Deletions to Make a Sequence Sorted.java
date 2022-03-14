@@ -1,4 +1,4 @@
-Given a number sequence, find the minimum number of elements that should be deleted to make the remaining sequence sorted .
+Given a number sequence, find the minimum number of elements that should be deleted to make the remaining sequence sorted as increasing 
 
 Example 1:
 
@@ -24,7 +24,7 @@ dp[i] 已 i 结尾的increaing sequece, 最少 delete 多少元素
 dp[i] = min {
             i : 说明 i 前的元素全删掉
             if i > j， min{dp[j] + (i-j-1). 1 <= j <= i-1}  -> 表示选 j 做为 i immediate前面的数，之间的都删掉 
-            
+扩展：如果题目改成 to make the remining sequence sorted, either increasing or decreasing. 那就再来个dp记录decrease的结果，最后从两dp中取最优解             
 */             
 public class Main {
     public int findMinimumDeletions(int[] nums){
