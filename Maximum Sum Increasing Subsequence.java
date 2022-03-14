@@ -14,7 +14,7 @@ Explanation: The increaseing sequences are {10, 15} and {3,7,15}.
 
 ------------- similar to https://leetcode.com/problems/longest-increasing-subsequence/ ------------
 /*
-dp[i] 前 i 个元素的 max. 
+dp[i] 以i 结尾的 max. 
 dp[i] = Max{dp[j] + nums[i] }, 0 <= j <= i-1, if nums[i] > nums[j]
 
 Time: loop is n, 第一次 1， 第二次2， 第 n 次 n-1 -> 1+2+、、、n-1 = n^2
