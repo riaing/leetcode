@@ -1,3 +1,16 @@
+Given a string and a pattern, write a method to count the number of times the pattern appears in the string as a subsequence.
+
+Example 1: Input: string: “baxmx”, pattern: “ax”
+Output: 2
+Explanation: {baxmx, baxmx}.
+
+Example 2:
+
+Input: string: “tomorrow”, pattern: “tor”
+Output: 4
+Explanation: Following are the four occurences: {tomorrow, tomorrow, tomorrow, tomorrow}.
+ 
+ 
 --------------BF --------------------------------
 This problem follows the Longest Common Subsequence (LCS) pattern and is quite similar to the Longest Repeating Subsequence; the difference is that
  we need to count the total occurrences of the subsequence.
