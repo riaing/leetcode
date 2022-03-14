@@ -1,4 +1,4 @@
-Given a number sequence, find the minimum number of elements that should be deleted to make the remaining sequence sorted.
+Given a number sequence, find the minimum number of elements that should be deleted to make the remaining sequence sorted .
 
 Example 1:
 
