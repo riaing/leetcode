@@ -117,4 +117,55 @@ class Solution {
     }
 }
 
----------------------------------------------------------------------------------
+-----------------------------------------------------------3.13.2022 DP ---------------------------------------
+    /**
+m[i,j]: 以 s1 i 结尾和以s2 j结尾是否可以构成S3以 i+j 结尾的interleaving string
+
+m[i,j] = (m[i-1, j] && s1[i] == s3[i+j]) || (m[i, j-1] && s2[j] == s3[i+j]),
+corner case 为 m[0,1...j]第一行以及m[0...i, j]第一列
+
+m[0, j] = (m[0, j-1] && s2[j] == s3[i+j]
+m[i, 0] = (m[i, 0] && s1[i] == s3[i+j]
+*/
+
+
+class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        // corner case 
+        if (s1.length() + s2.length() != s3.length()) {
+            return false; 
+        }
+        
+        boolean[][] dp = new boolean[s1.length() + 1][s2.length() + 1]; 
+        dp[0][0] = true; //用不到
+        for (int i = 1; i <= s1.length(); i++) {
+            if (s3.substring(0, i).equals(s1.substring(0, i))) { // Java string 不能==比较！ 
+                dp[i][0] = true;
+            }
+            
+            // if (s3.charAt(i-1) == s1.charAt(i-1)) { //正确
+            //     dp[i][0] = dp[i-1][0];
+            // }
+        }
+        for (int j = 1; j <= s2.length(); j++) {
+            if (s3.charAt(j-1) == s2.charAt(j-1)) {
+                dp[0][j] = dp[0][j-1];
+            }
+        }
+        
+        for (int i = 1; i <= s1.length(); i++) { 
+            for (int j = 1; j <= s2.length(); j++) {
+                if (s1.charAt(i-1) == s3.charAt(i+j-1) && dp[i-1][j]) {
+                    dp[i][j] = true;
+                }
+                if (s2.charAt(j-1) == s3.charAt(i+j-1) && dp[i][j-1]) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+}
+    
+    
+    
