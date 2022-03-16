@@ -71,3 +71,64 @@ public class Solution {
         return results; 
     }
 }
+
+------------------------------------ 3.16.2022--------------------------------------------------------------------------
+  /*
+3 SUM 外多加一层for loop。 因为要sort，所以2 sum采用两指针的形式。 
+time: O(n^3) 
+space: O(n) for sort
+*/
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>(); 
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 3; i++) {
+            if (i > 0 && nums[i] == nums[i-1]) { // remove dup at 4 sum 
+                continue;
+            }
+            for (int j = i+1; j < nums.length - 2; j++) {
+                if (j > i+1 && nums[j] == nums[j-1]) { // remove dup at 3 sum 
+                    continue;
+                }
+                int twoSumTarget = target - nums[i] - nums[j];
+                List<List<Integer>> twoSumRes = twoSum(nums, j+1, twoSumTarget); 
+                // add 1st and 2nd numbers 
+                for (List<Integer> oneRes : twoSumRes) {
+                    oneRes.add(nums[i]);
+                    oneRes.add(nums[j]);
+                    res.add(oneRes); 
+                }
+             }
+        }
+        return res; 
+    }
+    
+    private List<List<Integer>> twoSum(int[] nums, int start, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+        int end = nums.length - 1; 
+        while (end > start) {
+            if (nums[start] + nums[end] == target) {
+                List<Integer> cur = new ArrayList<Integer>();
+                cur.add(nums[start]);
+                cur.add(nums[end]);
+                res.add(cur);
+                // 更新指针 & remove dup at 2 sum 
+                do {
+                    start++; 
+                } while (end > start && nums[start] == nums[start-1]);
+                do {
+                    end--;
+                } while (end > start && nums[end] == nums[end+1]); 
+            }
+            else if (nums[start] + nums[end] < target) {
+                start++;
+            }
+            else {
+                end--;
+            }
+        }
+        return res; 
+    }
+}
+  
