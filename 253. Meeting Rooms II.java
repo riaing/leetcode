@@ -59,6 +59,13 @@ at any time which will be the minimum number of rooms needed.
  Time：最坏所有会议都重叠，nlgn 把会议放进堆 + n扫所有会议  + nlgn sorting -> nlgn 
  Space: O(n) of constructing the hip 
 */
+/*
+1. 如果两meeting overlap： a.end > b.start 
+2. 用一个q来存正在进行的会议，sort by end time。 如果当前会议和最早结束的会议没overlap，则可与堆顶共享会议室：拿出堆顶会议，放入当前会议
+                                            如果当前会议与最早结束会议有overlap，则会议室++， 把当前会议放入堆
+ Time：最坏所有会议都重叠，nlgn 把会议放进堆 + n扫所有会议  + nlgn sorting -> nlgn 
+ Space: O(n) of constructing the hip 
+*/
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
         // 1. sort array by start time 
@@ -69,7 +76,6 @@ class Solution {
             }
         };
         Arrays.sort(intervals, com);
-
         
         int count = 1; // the first meeting in intervals  
         PriorityQueue<int[]> q = new PriorityQueue<int[]>((a, b) -> a[1] - b[1]); // q 存所有正在进行的meeting，sort by end time
@@ -77,20 +83,18 @@ class Solution {
         for (int i = 1; i < intervals.length; i++) {
             // check if have overlap by comparing the heap top. end > interval.start 
             int[] curMeeting = intervals[i];
-            if (q.size() != 0) {
-                int[] firstEndMeeting = q.poll(); 
-                if (firstEndMeeting[1] > curMeeting[0]) { // find an overlap 
-                    count++;
-                    q.offer(firstEndMeeting);
-                }
-                // put the current meeting into q for 1) if non overlap, curMeeting must end after firstEndMeeting, so put it into q. 2) if overlap, then 2 meetins must be in q, so also needs to put it into queue 
-                q.offer(curMeeting);
+            while (q.size() != 0 && q.peek()[1] <= curMeeting[0]) { // remove all meetings that have ended
+                q.poll();
             }
+            // put the current meeting into q for 1) if non overlap, curMeeting must end after firstEndMeeting, so put it into q. 2) if overlap, then 2 meetins must be in q, so also needs to put it into queue 
+            q.offer(curMeeting);
+            // all active meeting are in the minHeap, so we need rooms for all of them.
+            count = Math.max(count, q.size());
         }
         return count; 
         
     }
-}    
+}   
 ------------------------------------------------------------------------------------------------------------
 
 PriorityQueue: insertion: O(logN), deletion(logN). buid a PQ: O(N) other: O(1） 
