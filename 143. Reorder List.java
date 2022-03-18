@@ -1,7 +1,7 @@
 Given a singly linked list L: L0→L1→…→Ln-1→Ln,
 reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
 
-You may not modify the values in the list's nodes, only nodes itself may be changed.
+You may not modify the values in the list''s nodes, only nodes itself may be changed.
 
 Example 1:
 
@@ -82,5 +82,77 @@ class Solution {
             cur.next = p2;
         }
         //return head.next;
+    }
+}
+ ------------------------- 2022.3.17 ----------------------------------------------
+     /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        // 1. find middle 
+        ListNode mid = middleNode(head);
+        ListNode midNext = mid.next;
+        mid.next = null;
+        // 2. reverse the second half 
+        ListNode secondHead = reverse(midNext); 
+        // 3. combine into one。方法一：用个sudo，简单明了 
+        ListNode firstHead = head;
+        ListNode sudo = new ListNode(0);
+        ListNode cur = sudo;
+        while (secondHead != null) { // secondHead.length = firstHead.length, or = firstHead.length - 1
+            cur.next = firstHead;
+            firstHead = firstHead.next; 
+            cur = cur.next; 
+            cur.next = secondHead;
+            secondHead = secondHead.next;
+            cur = cur.next; 
+        }
+        if (firstHead != null) { // 说明原linklist是奇数，cur1多一个
+            cur.next = firstHead;
+        }
+        sudo.next = null; // 删掉多于的helper node
+     
+        // 3. 方法二
+        // ListNode firstHead = head;
+//      while (firstHead != null && secondHead != null) {
+//           ListNode temp = firstHead.next;
+//           firstHead.next = secondHead;
+//           firstHead = temp;
+
+//           temp = secondHead.next;
+//           secondHead.next = firstHead;
+//           secondHead = temp;
+//         }
+    }
+    
+    private ListNode middleNode(ListNode head) {
+        ListNode slow = head; 
+        ListNode fast = head.next; // 求第一个时，fast = head.next即可
+        while(fast != null && fast.next != null) {
+            slow = slow.next; 
+            fast = fast.next.next; 
+        }
+        
+        return slow; 
+    }
+    
+    private ListNode reverse(ListNode head) {
+        ListNode pre = null;
+        ListNode cur = head; 
+        while (cur != null) {
+            ListNode tmp = cur.next;
+            cur.next = pre;
+            pre = cur; 
+            cur = tmp;
+        }
+        return pre; 
     }
 }
