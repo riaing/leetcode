@@ -135,3 +135,76 @@ class Solution {
         return new Node(root, diameter, longestPath); 
     }
 }
+
+------------- 题目定义改一改 The diameter of a tree is the number of nodes on the longest path between any two leaf nodes --------------------------
+          
+  Diameter 由node 数而不是 path 决定。 code只要小改
+  
+  
+  class TreeNode {
+  int val;
+  TreeNode left;
+  TreeNode right;
+
+  TreeNode(int x) {
+    val = x;
+  }
+};
+
+class Node {
+    TreeNode treeNode;
+    int diameter;
+    int longestPath; 
+    public Node (TreeNode treeNode, int diameter, int longestPath) {
+        this.treeNode = treeNode;
+        this.diameter = diameter;
+        this.longestPath = longestPath;
+    }
+}
+
+class TreeDiameter {
+
+  public static int findDiameter(TreeNode root) {
+    Node res = helper(root);
+        return res.diameter;
+  }
+  
+  private static Node helper(TreeNode root) {
+        if (root == null) {
+             return new Node(root, 0, 0);
+        }
+        
+        if (root.left == null && root.right == null) {
+            return new Node(root, 1, 1);
+        }
+        
+        Node leftRes = helper(root.left);
+        Node rightRes = helper(root.right);
+        
+        // int possibleDiameter = (leftRes.longestPath == -1 ? 0 : (leftRes.longestPath + 1)) + (rightRes.longestPath == -1 ? 0 : (rightRes.longestPath + 1)); 
+        int possibleDiameter = leftRes.longestPath + rightRes.longestPath + 1; 
+        int diameter = Math.max(possibleDiameter, Math.max(leftRes.diameter, rightRes.diameter));
+        
+        int longestPath = Math.max(leftRes.longestPath, rightRes.longestPath) + 1;
+        return new Node(root, diameter, longestPath); 
+    }
+
+
+
+  public static void main(String[] args) {
+    TreeNode root = new TreeNode(1);
+    root.left = new TreeNode(2);
+    root.right = new TreeNode(3);
+    root.left.left = new TreeNode(4);
+    root.right.left = new TreeNode(5);
+    root.right.right = new TreeNode(6);
+    System.out.println("Tree Diameter: " + TreeDiameter.findDiameter(root));
+    root.left.left = null;
+    root.right.left.left = new TreeNode(7);
+    root.right.left.right = new TreeNode(8);
+    root.right.right.left = new TreeNode(9);
+    root.right.left.right.left = new TreeNode(10);
+    root.right.right.left.left = new TreeNode(11);
+    System.out.println("Tree Diameter: " + TreeDiameter.findDiameter(root));
+  }
+}
