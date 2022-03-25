@@ -109,3 +109,64 @@ public class Solution {
         return Math.max(left, right) + node.val; //注意这里的return 
     }
 }
+
+------------------ 2022.3.24 DC ----------------------------------
+       
+       /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+       Time/space O(n)
+class Node {
+    TreeNode treeNode;
+    int maximumPathSum;
+    int pathSum;
+    public Node(TreeNode treeNode, int maximumPathSum, int pathSum) {
+        this.treeNode = treeNode;
+        this.maximumPathSum = maximumPathSum;
+        this.pathSum = pathSum;
+    }
+}
+
+
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        Node res = helper(root);
+        return res.maximumPathSum;
+    }
+    
+    private Node helper(TreeNode root) {
+        if (root == null) {
+            return new Node(null, Integer.MIN_VALUE, Integer.MIN_VALUE);
+        }
+        
+        if (root.left == null && root.right == null) {
+            return new Node(root, root.val, root.val);
+        }
+        
+        Node left = helper(root.left);
+        Node right = helper(root.right);
+        
+        int crossRootMaxSum = root.val + (left.pathSum > 0 ? left.pathSum : 0) + (right.pathSum > 0 ? right.pathSum : 0);  
+        int curMaxPathSum = Math.max(Math.max(left.maximumPathSum, right.maximumPathSum), crossRootMaxSum);
+        
+        // 计算cur path sum：可包括左右子树，或者不包只取root 
+        int childrenLargerPathSum = Math.max(left.pathSum, right.pathSum);
+        int curPathSum = root.val + (childrenLargerPathSum > 0 ? childrenLargerPathSum : 0); 
+        
+        return new Node(root, curMaxPathSum, curPathSum);
+        
+    }
+}
