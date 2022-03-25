@@ -76,3 +76,62 @@ class Solution {
         
     }
 }
+
+---------------------------- 3.24.2022, 用新DS来存longest path + diameter ---------------------------------------------------------------------------
+          /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/*
+Space: o(n), Time: O(n)
+*/
+
+class Node {
+    TreeNode treeNode;
+    int diameter;
+    int longestPath; 
+    public Node (TreeNode treeNode, int diameter, int longestPath) {
+        this.treeNode = treeNode;
+        this.diameter = diameter;
+        this.longestPath = longestPath;
+    }
+}
+
+
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        Node res = helper(root);
+        return res.diameter;
+    }
+    
+    public Node helper(TreeNode root) {
+        if (root == null) {
+             return new Node(root, -1, -1);
+        }
+        
+        if (root.left == null && root.right == null) {
+            return new Node(root, 0, 0);
+        }
+        
+        Node leftRes = helper(root.left);
+        Node rightRes = helper(root.right);
+        
+        int possibleDiameter = (leftRes.longestPath == -1 ? 0 : (leftRes.longestPath + 1)) + (rightRes.longestPath == -1 ? 0 : (rightRes.longestPath + 1)); 
+        int diameter = Math.max(possibleDiameter, Math.max(leftRes.diameter, rightRes.diameter));
+        
+        int longestPath = Math.max(leftRes.longestPath, rightRes.longestPath) + 1;
+        return new Node(root, diameter, longestPath); 
+    }
+}
