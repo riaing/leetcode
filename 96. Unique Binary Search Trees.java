@@ -1,7 +1,7 @@
 https://leetcode.com/problems/unique-binary-search-trees/ 
 
 题目1： 
-Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+Given an integer n, return the number of structurally unique BST''s (binary search trees) which has exactly n nodes of unique values from 1 to n.
 
 Input: n = 3
 Output: 5
@@ -15,7 +15,6 @@ Output: 1
 
 ---------------------------------- recursion + memo -----------------------------
 O(n^2) 
-
 class Solution {
     Map<Integer, Integer> choiceMap = new HashMap<Integer, Integer>();
     
@@ -24,9 +23,9 @@ class Solution {
             return choiceMap.get(n);
         }
         
-        if (n == 0 || n == 1) {
-            choiceMap.put(n, n);
-            return n;
+        if (n == 0 || n == 1) { // 把n=0时返回1，那么后面 left*right时才不会错
+            choiceMap.put(n, 1);
+            return 1;
         }
         
         int res = 0;
@@ -34,21 +33,21 @@ class Solution {
         for (int i = 0; i <= n - 1; i++) { // root ocupied 1 
             int leftChoices = numTrees(i);
             int rightChoices = numTrees(n-1-i);
-            if (leftChoices == 0) {
-                res += rightChoices;
-            }
-            if (rightChoices == 0) {
-                res += leftChoices;
-            }
-            else {
+            // if (leftChoices == 0) { //如果把n=0返回0则需要这个特殊判断
+            //     res += rightChoices;
+            // }
+            // if (rightChoices == 0) {
+            //     res += leftChoices;
+            // }
+
                 res = res + leftChoices*rightChoices;
-            }  
+            
+            
         }
         choiceMap.put(n, res);
         return res; 
     }
-} 
-
+}
 -------------------------- DP ------------------------------------------------
 class Solution {
 /*
