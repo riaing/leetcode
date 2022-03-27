@@ -75,3 +75,17 @@ Explanation: The array has been not been rotated.
     System.out.println(RotationCountOfRotatedArray.countRotations(new int[] { 1, 3, 8, 10 }));
   }
 }
+
+================== follow up。如果array中有重复元素
+[3,3,7,3] -> return 3. since original array is [3,3,3,7]
+[3,7,3,3] -> return 2 
+[3,3,7,8] -> return 0    
+    
+解法：还是先求min in duplicated array （用 https://github.com/riaing/leetcode/blob/master/154.%20Find%20Minimum%20in%20Rotated%20Sorted%20Array%20II.java） 
+求出后往前推，如果i-1也等于min就继续i--，如果推到 i=0了就rotate到最后一个元素，直到min前的元素大于min，返回这个min的index
+eg:
+[3,3,7,3] -> 如果求出min的index等于1， 往前走到0，发现还是3，再往前rotate到index=3，发现还是val还是3，再往前到index=2，发现是7了，那么index=3的min(3）就是rotate的开头
+
+
+    System.out.println(RotationCountOfRotatedArray.countRotations(new int[] { 1, 3, 8, 10 }));m
+    System.out.println(RotationCountOfRotatedArray.countRotations(new int[] { 1, 3, 8, 10 }));
