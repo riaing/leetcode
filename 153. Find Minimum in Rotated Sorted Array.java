@@ -1,3 +1,4 @@
+
 Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
 
 [4,5,6,7,0,1,2] if it was rotated 4 times.
@@ -36,6 +37,7 @@ All the integers of nums are unique.
 nums is sorted and rotated between 1 and n times.
 
 
+ 这题的应用题：求rotation count: https://www.educative.io/courses/grokking-the-coding-interview/7nPmB8mZ6vj 
 --------------------------------------3.6.3022 ---------------------------------
 /*
 rotation array 两种情况，1， rotate了，2， 没rotate
