@@ -11,6 +11,21 @@ Output: 3
 The given set has '3' subsets whose sum is '9': {2, 7}, {1, 7, 1}, {1, 2, 1, 5}
 
 ---------------------------------
+  
+  
+  We will try to find if we can make all possible sums with every subset to populate the array db[TotalNumbers][S+1].
+
+So, at every step we have two options:
+
+Exclude the number. Count all the subsets without the given number up to the given sum => dp[index-1][sum]
+Include the number if its value is not more than the ‘sum’. In this case, we will count all the subsets to get the remaining sum => dp[index-1][sum-num[index]]
+To find the total sets, we will add both of the above two values:
+
+dp[index][sum] = dp[index-1][sum] + dp[index-1][sum-num[index]])
+ 初始：sum=0时取空subset为1
+      dp[0][num[0]时为1 
+  
+  
 class SubsetSum {
   static int countSubsets(int[] nums, int sum) {
     int[][] dp = new int[nums.length][sum+1];
