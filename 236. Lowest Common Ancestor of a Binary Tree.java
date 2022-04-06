@@ -92,28 +92,41 @@ class Solution {
  *     TreeNode(int x) { val = x; }
  * }
  */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ 
+ 三种情况：
+ 1. 在root 上
+ 2. 在root 左或者右
+ 3. 在root两边
+ */
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if (root == null) {
+        if (root == null) { // 题目说了p,q一定存在
             return null;
         }
-        
-        if (p == root || q == root) {
+        // 在root上
+        if (root.val == p.val || root.val == q.val) { 
             return root;
         }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
         
-        TreeNode left_ancestor = lowestCommonAncestor(root.left, p, q);
-        TreeNode right_ancestor = lowestCommonAncestor(root.right, p, q);
-        if (left_ancestor != null && right_ancestor != null) {
+        // 后序位置，在root两边
+        if (left != null && right != null) {
             return root;
-        } else if (left_ancestor != null) {
-            return left_ancestor;
-        } else if (right_ancestor != null) {
-            return right_ancestor;
-        } else {
-            return null;
         }
+        // 在左边或者右边
+        return left == null ? right : left;
+        
     }
+}
 }
 
 ------------------------------------ brute force  o(n^2)--------------------------------------------------------------------------------------
