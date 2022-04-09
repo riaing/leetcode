@@ -1,6 +1,5 @@
 Lc原题: https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/  
 
-
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -10,7 +9,34 @@ Lc原题: https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
  *     TreeNode(int x) { val = x; }
  * }
  
-改题：求某个node的path
+  三种情况：
+ 1. 在root 上: left == null and right == null
+ 2. 在root 左或者右:
+ 3. 在root两边: left != null && right != null
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) { // 题目说了p,q一定存在
+            return null;
+        }
+        // 前序遍历
+        if (root.val == p.val || root.val == q.val) { 
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        
+        // 后序位置，已经知道左右子树是否存在目标值
+        if (left != null && right != null) {
+            return root;
+        }
+        
+        return left == null ? right : left;
+        
+    }
+}
+ 
+------------------------------- 改题：求某个node的path
  */
 class Solution {
     public TreeNode findPath(TreeNode root, TreeNode p, TreeNode q) {
