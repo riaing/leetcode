@@ -103,6 +103,74 @@ class Solution {
         return differLetter == 1; 
     }
 }
+}
 
+--------------------- 2022 BFS 比上面复杂一写的解法，但时间一样- ----------------------------------------
+    /*
+n - list length。 k - string length
+Q最长为n，对Q的每个元素，call transferWord 找它的neibor：26*K 或者N 取小（这里假设26*k）小
+所以总共N*26*k
+*/
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+       // 0. wordList to set for easier check 
+        Set<String> wordListSet = new HashSet<String>(wordList);
+       // 1. Map of index -> possible letters 
+        Map<Integer, Set<Character>> map = new HashMap<Integer, Set<Character>>();
+        for (int i = 0; i < beginWord.length(); i++) {
+            map.put(i, new HashSet<Character>());
+            for (String word : wordList) {
+                char cur = word.charAt(i);
+                Set<Character> curSet = map.get(i);
+                curSet.add(cur);
+            }
+        }
+        
+        Set<String> visited = new HashSet<String>(); 
+        visited.add(beginWord);
+        Queue<String> q = new LinkedList<String>();
+        q.offer(beginWord);
+        int transferCnt = 1;// 最开始包括自己 
+        while (q.size() != 0) {
+            int size = q.size();
+            transferCnt++; 
+            for (int i = 0; i < size; i++) {
+                String cur = q.poll(); 
+                // transfer to possible words 
+                List<String> transfered = transferWord(cur, wordListSet, map); 
 
+                // 判断，并加进q
+                for (String transfer : transfered) {
+                    if (visited.contains(transfer)) {
+                        continue;
+                    }
+                    if (transfer.equals(endWord)) {
+                        return transferCnt; 
+                    }
+                    // 加进q
+                    visited.add(transfer);
+                    q.offer(transfer);
+                }
+            }
+        }
+        return 0; 
+    }
+    
+    // O(26*k) k - string length 
+    private List<String> transferWord(String cur, Set<String> wordListSet, Map<Integer, Set<Character>> map) {
+        List<String> res = new ArrayList<String>();
+        // transfer 每一位数,如果在wordList里，则是个成功的transfer
+        for (int i = 0; i < cur.length(); i++) {
+            char curChar = cur.charAt(i);
+            for (Character potential : map.get(i)) {
+                if (potential != curChar) {
+                    String candidate = cur.substring(0, i) + potential + cur.substring(i+1);
+                    if (wordListSet.contains(candidate)) {
+                        res.add(candidate);   
+                    }
+                }
+            }
+        }
+        return res; 
+    }
 }
