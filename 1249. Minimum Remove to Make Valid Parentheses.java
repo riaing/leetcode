@@ -30,9 +30,6 @@ class Solution {
         
         for (int i = 0; i < s.length(); i++) {
             char cur = s.charAt(i);
-            if (Character.isLetter(cur)) {
-                continue; 
-            }
             if (cur == '(') {
                 stack.push(i);
             }
@@ -62,5 +59,102 @@ class Solution {
         }
         
         return builder.toString();
+    }
+}
+
+------------------------ 2 path 直白的写法 ------------------------------
+    /*
+这题的本质是要保证左右括号相等，所以可以扫两遍来分别移出多于的左右括号
+1. remove 多余的(： 从左到右扫，遇到(加一，遇到)时，如果balance已经等于0了，说明是多于的。记录下来之后移除
+2. remove 多余的) -> 反过来扫，反之
+
+Time: 
+*/
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        int balance = 0; 
+        Set<Integer> toRemove = new HashSet<Integer>();
+        
+        // scan 左到右，remove invlid ）
+        for (int i = 0; i < s.length(); i++) {
+            char cur = s.charAt(i);
+            if (cur == '(') {
+                balance++;
+            }
+            if (cur == ')') {
+                if (balance == 0) {
+                    toRemove.add(i);
+                }
+                else {
+                    balance--;
+                }
+            }
+        }
+        // scan 右到左，remove invalid （ 
+        balance = 0; 
+        for (int i = s.length()-1; i >= 0; i--) {
+            char cur = s.charAt(i);
+            if (cur == ')') {
+                balance++;
+            }
+            if (cur == '(') {
+                if (balance == 0) {
+                    toRemove.add(i);
+                }
+                else {
+                    balance--;
+                }
+            }
+        }
+        
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (!toRemove.contains(i)) {
+                builder.append(s.charAt(i));
+            }
+        }
+        
+        return builder.toString();
+    }
+}
+
+---------------------- 2 path 精炼 --------------------------------------------
+    
+    /*
+这题的本质是要保证左右括号相等，所以可以扫两遍来分别移出多于的左右括号
+1. remove 多余的(： 从左到右扫，遇到(加一，遇到)时，如果balance已经等于0了，说明是多于的。记录下来之后移除
+2. remove 多余的) -> 反过来扫，反之
+
+Time: 
+*/
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        StringBuilder pass1 = buildValidString(s, '(', ')'); // remove 右括号
+        StringBuilder pass2 = buildValidString(pass1.reverse(), ')', '('); // remove 左括号。 注意 string这时候要reverse一下，因为要从尾往头扫
+        
+        // 还要reverse 回来。 reverse 是O（n）
+        return pass2.reverse().toString();
+    }
+    
+    
+    private StringBuilder buildValidString(CharSequence s, char open, char close) {
+        int balance = 0; 
+          StringBuilder builder = new StringBuilder();
+          for (int i = 0; i < s.length(); i++) {
+                char cur = s.charAt(i);
+                if (cur == open) {
+                    balance++;
+                }
+                if (cur == close) {
+                    if (balance == 0) {
+                       continue; // 这是要移出的括号
+                    }
+                    else {
+                        balance--;
+                    }
+                }
+                builder.append(cur); // 同时 build string
+            }
+        return builder; 
     }
 }
