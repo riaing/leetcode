@@ -40,3 +40,37 @@ class Solution {
         
     }
 }
+
+------------------- 2022 --------------------------------------
+    /*
+Monotonic stack 解法：
+维持一个单调递减stack
+当前元素比peek 小时，入栈
+当前元素比peek大时，计算面积：左边界为peek的后一个，右边界为cur。宽就是左右边界 - peek
+  注意计算完后，当前元素如果小于peek 仍然要入栈
+*/
+class Solution {
+    public int trap(int[] height) {
+        Deque<Integer> stack = new LinkedList<Integer>(); // store index 
+        int area = 0; 
+        for (int i = 0; i < height.length; i++) {
+            int cur = height[i];
+            while(!stack.isEmpty() && height[stack.peek()] < cur) { // 找到一个高的，算积水面积：= （cur - stack中的第二个）
+                int bottonHeight = height[stack.pop()];
+                if (stack.isEmpty()) { // edge case: stack为[0], cur 为1，此时没有面积可算
+                    break; 
+                }
+                int width = Math.min(height[stack.peek()], cur) - bottonHeight; 
+                int length = i - stack.peek() - 1;
+                area += length * width;
+                // 计算完后如果当前还是小于栈顶，还得加入，走下面if block 
+            }
+            
+            // 维持单调递减stack
+            if (stack.isEmpty() || height[stack.peek()] >= cur) {
+                stack.push(i);
+            }
+        }
+        return area; 
+    }
+}
