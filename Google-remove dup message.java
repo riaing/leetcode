@@ -1,5 +1,13 @@
 https://leetcode.com/playground/koYwNWmD 
 
+/*
+Follow up 1: 定期清理map：比如过了10s后，把map中<10s的entry 清理掉 1）根据seenDup决定写不写 2）删掉
+follow up 2：QPS很高，但msg能取的value很少：解决按key shard。
+Follow up 3: map存database，或者做replication
+follow up 4： input无序：牺牲latnecy，提高correctness,比如假设skew是20s，就每20s排个序，然后处理。这样latency就高一些
+coreectness和lantency成反比
+*/
+
 
 class Message {
     int time; 
