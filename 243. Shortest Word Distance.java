@@ -10,32 +10,31 @@ Output: 1
 Note:
 You may assume that word1 does not equal to word2, and word1 and word2 are both in the list.
 -------------------------------------------------
-/**
-Two pointer, O(n)
+/*
+对于word1，和出现在它之前的最近的word2算距离：需要记录lastSeen word2
+同理对word2，需要记录lastSeen word1. 
+所以两者combine，对于w1/w2, 与lastSeen w2/w1算距离，同时跟新itself。扫一遍即可
 */
 class Solution {
-    public int shortestDistance(String[] words, String word1, String word2) {
-        if (words == null || words.length == 0 || word1.length() == 0 || word2.length() == 0) {
-            return 0;
-        }
-        int p1 = -1;
-        int p2 = -1;
-        int res = words.length;
-        for (int i = 0; i < words.length; i++) {
-            // branching to save time 
-            if (!words[i].equals(word1) && !words[i].equals(word2)) {
-                continue; 
+    public int shortestDistance(String[] wordsDict, String word1, String word2) {
+        int lastSeenW1 = -1; 
+        int lastSeenW2 = -1; 
+        int minDis = wordsDict.length; 
+        for (int i = 0; i < wordsDict.length; i++) {
+            if (wordsDict[i].equals(word1)) {
+                if (lastSeenW2 != -1) {
+                    minDis = Math.min(minDis, i - lastSeenW2); // 和最后见到的2相比
+                }
+                lastSeenW1 = i; // 更新他自己的lastSeen
             }
-            if (words[i].equals(word1)) {
-                p1 = i;
-            }
-            else if (words[i].equals(word2)) {
-                p2 = i;
-            }
-            if (p1 != -1 && p2 != -1) {
-                res = Math.min(res, Math.abs(p2 - p1));
+            if (wordsDict[i].equals(word2)) {
+                if (lastSeenW1 != -1) {
+                    minDis = Math.min(minDis, i - lastSeenW1);
+                }
+                 lastSeenW2 = i;
             }
         }
-        return res; 
+        return minDis;
     }
+    
 }
