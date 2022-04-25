@@ -12,43 +12,51 @@ You may assume that word1 does not equal to word2, and word1 and word2 are both 
 
 
 -----------------------------------------------------------
+/*
+两sorted list，求min distance： 2 pointer 基础题
+Time: build Map O（n）， shortest最差O（n） -> O（n）
+space: build Map O(n)
+*/
 class WordDistance {
-    Map<String, List<Integer>> map;
-    public WordDistance(String[] words) { // o(k) k is the length of words 
-        map = new HashMap<String, List<Integer>>();
-        for (int i = 0; i < words.length; i++) {
-            if (!map.containsKey(words[i])) { // list保证了加入的顺序是asc
-                map.put(words[i], new ArrayList<Integer>()); 
-            }
-            map.get(words[i]).add(i);
+    Map<String, List<Integer>> map; // map to word, index positions 
+    int maxLen;
+
+    public WordDistance(String[] wordsDict) {
+        this.map = new HashMap<String, List<Integer>>();
+        this.maxLen = wordsDict.length;
+        for (int i = 0; i < wordsDict.length; i++) {
+            map.putIfAbsent(wordsDict[i], new ArrayList<Integer>());
+            List<Integer> indexes = map.get(wordsDict[i]);
+            indexes.add(i);
         }
     }
     
-    // two pointer, 当前哪个小，就把他的指针往后移一位，去找最小值
-    public int shortest(String word1, String word2) { //O(m+n), m -> how many indexes of word1, and n -> number of indexes of word2
-        List<Integer> w1Indexes = map.get(word1);
-        List<Integer> w2Indexes = map.get(word2);
-        int i1 = 0;
-        int i2 = 0;
-        int res = Integer.MAX_VALUE; 
-        while (i1 < w1Indexes.size() && i2 < w2Indexes.size()) {
-            int w1Index = w1Indexes.get(i1);
-            int w2Index =  w2Indexes.get(i2);
-            res = Math.min(res, Math.abs(w1Index - w2Index));
-            if (w1Index < w2Index) {
-                i1++;
+    public int shortest(String word1, String word2) {
+        // 因为index array是sorted的，所以 2 pointer找min distance
+        List<Integer> word1Index = map.get(word1);
+        List<Integer> word2Index = map.get(word2);
+        
+        int p1 = 0;
+        int p2 = 0;
+        int min = maxLen; 
+        while (p1 < word1Index.size() && p2 < word2Index.size()) {
+            int index2 = word2Index.get(p2);
+            int index1 = word1Index.get(p1);
+            min = Math.min(min, Math.abs(index1 - index2));
+            if (index1 < index2) {
+                p1++;
             }
             else {
-                i2++;
-            } 
+                p2++;
+            }
         }
-        return res;
-        
+        return min; 
     }
 }
 
 /**
  * Your WordDistance object will be instantiated and called as such:
- * WordDistance obj = new WordDistance(words);
+ * WordDistance obj = new WordDistance(wordsDict);
  * int param_1 = obj.shortest(word1,word2);
  */
+
