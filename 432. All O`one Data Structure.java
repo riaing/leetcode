@@ -117,8 +117,104 @@ class AllOne {
  * String param_4 = obj.getMinKey();
  */
  
- -----------------------------------优化---------
+ -----------------------------------优化 用double Linked LIST ---------
  类似于LRU， 我们也可以创造出一个类{value，set(strings)}作为node，从而取消以上做法中map value与list index的关联：我们将map mapping到key ->node。
  这样做的好处是，list的index不再敏感，当set为empty, could directly delete that node 
  
+ https://blog.csdn.net/qq_46105170/article/details/118673273 
+ 
  https://leetcode.com/problems/all-oone-data-structure/discuss/287496/My-All-O(1)-Java-Solution-(HashMap-%2B-Double-Linked-List) 
+
+
+------------ 2022.4 treeMap ---------------------------------
+/*
+TreeMap易错点。
+1、 因为treeMap如果sorted field有dup的话，会override
+TreeMap<Node> sorted by Node.int;  if PUT Node(1, a), Node(1,B), Node(1,a) 会被override，尽管是不同的obj。-> 这时候应该按另一个field来sort以防止override
+
+2，更改了Node的值后，应该拿出node再加回treeMap来trigger 红黑树rebalance
+*/
+class Node {
+    String key;
+    int count;
+    public Node(String key, int count) {
+        this.key = key;
+        this.count = count;
+    }
+}
+
+class AllOne {
+    TreeMap<Node, String> treeMap;
+    HashMap<String, Node> map;
+    public AllOne() {
+        Comparator<Node> comparator = new Comparator<Node>(){
+            @Override 
+            public int compare(Node a, Node b) {
+                if (a.count == b.count) {
+                    return a.key.compareTo(b.key);
+                }
+                return a.count - b.count;
+            }
+        };
+        
+        this.treeMap = new TreeMap<Node, String>(comparator);
+        this.map = new HashMap<String, Node>();
+    }
+    
+    public void inc(String key) {
+        // 1. find the node from map
+        if (map.containsKey(key)) {
+            Node cur = map.get(key);
+            // update treeMap.这里要拿出node再丢回去，来trigger红黑树的更新
+            treeMap.remove(cur);
+            cur.count++; 
+            treeMap.put(cur, key);
+        }
+        else {
+            Node cur = new Node(key, 1);
+            map.put(key, cur);
+            treeMap.put(cur, key);
+
+        }
+        // System.out.println("key " + key);
+        // treeMap.keySet().forEach(o -> System.out.println(o.key + " " + o.count));
+        // System.out.println("------- maxKey " + treeMap.lastKey().key + treeMap.lastKey().count);
+        
+    }
+    
+    public void dec(String key) {
+        
+        Node cur = map.get(key);
+        treeMap.remove(cur); // 拿出来再重新加回去以trigger 红黑树
+        cur.count--;
+        treeMap.put(cur, key);
+        if (cur.count == 0) {
+            map.remove(key);
+            treeMap.remove(cur);
+        }
+        // treeMap.keySet().forEach(o -> System.out.println(o.key + " " + o.count));
+    }
+    
+    public String getMaxKey() {
+        if (map.isEmpty()) {
+            return "";
+        }
+        return treeMap.lastKey().key;
+    }
+    
+    public String getMinKey() {
+        if (map.isEmpty()) {
+            return "";
+        }
+        return treeMap.firstKey().key;
+    }
+}
+
+/**
+ * Your AllOne object will be instantiated and called as such:
+ * AllOne obj = new AllOne();
+ * obj.inc(key);
+ * obj.dec(key);
+ * String param_3 = obj.getMaxKey();
+ * String param_4 = obj.getMinKey();
+ */
