@@ -1,3 +1,4 @@
+/*
 https://www.notion.so/Noom-06333938bc8c43cca4e70a9800267a48 
 
 global baseline responsibility allocation: (A: a%, B: b%, C: c%)
@@ -6,8 +7,21 @@ global baseline responsibility allocation: (A: a%, B: b%, C: c%)
 - 有override的date 按照override 计算， 没有override的date 按照baseline 计算。override 不会 overlap。
 - 给定时间段 start date, end date. 计算这个时间段内的average responsibility allocation: (A: a%, B: b%, C: c%)
 算法很简单，就是把list of overrides 过一遍，计算sum of percentages 再 average 就可以了。
+*/
 
------------------------------------------------------------------- 
+/*
+ ----------------         Java Date:  ----------------------------------
+ https://beginnersbook.com/2017/10/java-8-calculate-days-between-two-dates/#:~:text=To%20calculate%20the%20days%20between,temporal. 
+ 
+import java.util.*;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+
+LocalDate d1 = LocalDate.of(2022, 4,16);
+LocalDate d2 = LocalDate.of(2022, 4, 20); 
+long noOfDaysBetween = ChronoUnit.DAYS.between(d1, d2) + 1; // exclusive 
+*/
+
 enum Work {
     GROUP,
     PERSONAL,
@@ -17,7 +31,7 @@ enum Work {
 class Overlap { // 100% overlap
     int startDate;
     int endDate;
-    List<Responsibility> overlapBreakDown; // 
+    List<Responsibility> overlapBreakDown; 
     public Overlap(int startDate, int endDate, List<Responsibility> overlapBreakDown) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -35,16 +49,21 @@ class Responsibility {
     }
 }
 
+// validation: 1. overlap的时间和report的时间：看#0. 2. Responsibility中percentage必须在[0,1]之间  3. 
 public class Main {
     // get a coach's work allocation in a certain period 
     public static List<Responsibility> report(List<Responsibility> base, int start, int end, List<Overlap> overlaps) {
-        int overlapDates = 0;
-         // initialize the starting time for each work 
+        // 0. validation and pre-processin 
+        // 0.a - overlap和report time period 部分重合 -> 取重合部分
+        // 0.b - overlap和report time 完全不相交 -> 扔掉
+        
+         // 1. initialize the starting time for each work 
         Map<Work, Double> timeMap = new HashMap<Work, Double>();
         for (Work w : Work.values()) {
             timeMap.put(w, 0.0);
         }
-        // sum up overlap time 
+        // 2. sum up overlap time 
+        int overlapDates = 0;
         for (Overlap o : overlaps) {
             // get overlap range 
             int overlapRange = o.endDate - o.startDate + 1;
@@ -54,15 +73,16 @@ public class Main {
             }
         }
         
-        // base responsibility for the rest times 
+        // 3. base responsibility for the rest times 
         int restTime = end - start + 1 - overlapDates;
         System.out.println("rest time" + restTime);
         for (Responsibility r : base) {
              timeMap.put(r.work, timeMap.get(r.work) + r.percentage * restTime);
         }
      
+        // 4. calculate 
         List<Responsibility> finalReport = new ArrayList<Responsibility>();
-        int timeRange = end - start + 1;
+        long timeRange = end - start + 1;
         for (Work w : timeMap.keySet()) {
             double finalPercentage = timeMap.get(w) / (double) timeRange; 
             // if need to round to 2 decimals 
