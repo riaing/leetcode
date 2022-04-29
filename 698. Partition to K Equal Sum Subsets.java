@@ -165,7 +165,7 @@ class Solution {
     }
 }
 
----------------- 2022.2.15 自己直接写的结果 没用 memorization ------------------------------------------
+---------------- 2022.2.15 自己直接写的，对桶进行循环 没用 memorization ------------------------------------------
  /*
 time: O(k^n *k) 有 k 个选择（放哪个 bucket），然后每个选择假设都可以，那么退出时有 O（k）
 */
@@ -218,3 +218,58 @@ class Solution {
     } 
 }
  
+------------------- 2022.4.29 对数字循环，没用memo超时 ---------------------------------------------
+ 
+// Java program to illustrate copyof method
+import java.util.Arrays;
+
+class Solution {
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        Arrays.sort(nums);
+        int sum = 0;
+        for (int n : nums) {
+            sum += n;
+        }
+        //System.out.println(sum);
+        int target = sum / k; 
+        if (sum % k != 0 || nums[nums.length-1] > target) {
+            return false;
+        }
+        
+        boolean[] visited = new boolean[nums.length];
+        
+        return helper(0, 0, nums, 0, visited, target, k);
+        
+    }
+    
+    private boolean helper(int bucketVal, int fullNumBucket, int[] nums,  int index, boolean[] visited, int target, int k) {
+        if (fullNumBucket == k) { // 所有桶装完
+            return true;
+        }
+   
+        for (int i = index; i < nums.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            
+            int curVal = nums[i];
+            if (curVal > target) {
+                return false;
+            }
+            
+            if (bucketVal + curVal <= target) {
+                int newFullNumBucket = bucketVal + curVal == target ? fullNumBucket + 1 : fullNumBucket;
+               
+                int newbucketVal =  bucketVal + curVal == target  ? 0 :  bucketVal + curVal; 
+                int newIndex = bucketVal + curVal == target  ? 0 : index+1;
+                visited[i] = true; 
+                if (helper(newbucketVal, newFullNumBucket, nums, newIndex, visited, target, k)) {
+                    return true;
+                }
+                visited[i] = false;
+            }
+        }
+        return false; 
+    }
+  
+}
