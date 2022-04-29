@@ -46,3 +46,35 @@ class Solution {
         return result;
     }
 }
+
+-------------------------- 2022 ---------------------------------------------------------------
+ /*
+dp[i][0/1] : 以i结尾的前i个元素，0 - 的最大值， 1 -的最小值
+本题重点：
+1. 要求contituous array，所以必须包括n
+2. 计算会和前一个的min，max有关。所以array需要记住min，max
+                                             
+*/
+class Solution {
+    public int maxProduct(int[] nums) {
+        int[][] dp = new int[nums.length][2]; // 0 - max， 1- min
+        dp[0][0] = nums[0];
+        dp[0][1] = nums[0];
+        int max = dp[0][0];
+        for (int i = 1; i < nums.length; i++) {
+            int n = nums[i];
+            if (n >= 0) {
+                dp[i][0] = Math.max(n, dp[i-1][0] * n);
+                dp[i][1] = Math.min(n, dp[i-1][1] * n);
+            }
+            else {
+                dp[i][0] = Math.max(dp[i-1][1] * n, n);
+                dp[i][1] = Math.min(dp[i-1][0] * n, n);
+            }
+            max = Math.max(dp[i][0], max);
+            // System.out.println(i + " max "  + " : " + dp[i][0] + " - min: " + dp[i][1]);
+        }
+        
+        return max;
+    }
+}
