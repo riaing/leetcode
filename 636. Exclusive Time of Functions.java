@@ -65,3 +65,47 @@ class Solution {
         return time;
     }
 }
+
+----------------------------- 2022 ------------------------------------------------------------------
+ 
+ 
+ /*
+https://www.youtube.com/watch?v=Oi68_8xkxI4 
+
+stack存function Id, 遇到start时 push，遇到end时pop
+1. 每次运行新fun时，实际是把pre func suspend了，所以要算一段pre func的运行时间
+2. 用variable preTime来表示前一个程序的时间
+
+Time O(n) n - # of logs 
+Space O(n/2) - 每个程序的运行有两条log ：start end
+*/
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        Deque<Integer> stack = new LinkedList<Integer>(); // store function id
+        int[] res = new int[n]; 
+        int preTime = 0; 
+        
+        for (String s : logs) {
+            // parse log 
+            String[] log = s.split(":");
+            int funId = Integer.parseInt(log[0]);
+            int curTime = Integer.parseInt(log[2]);
+            
+            if (log[1].equals("start")) {
+                // suspend previous function if any 
+                if (!stack.isEmpty()) {
+                    res[stack.peek()] += curTime - preTime; 
+                }
+                preTime = curTime; 
+                stack.push(funId);
+            }
+            else {
+                res[funId] += curTime - preTime + 1; 
+                preTime = curTime + 1;
+                stack.pop();
+            }
+        }
+        return res; 
+        
+    }
+}
