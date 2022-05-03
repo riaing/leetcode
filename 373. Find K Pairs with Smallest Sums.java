@@ -30,7 +30,7 @@ Constraints:
 nums1 and nums2 both are sorted in ascending order.
 1 <= k <= 104 
 
-------------------- heap top k ------------------------------------------------------------
+------------------- heap top k 有点brute force + pruning。 不算本题考察点 ------------------------------------------------------------
 // 用heap记录max。 每次和堆顶相比
 // O（m*n*lgk)
 // space o(k) 
@@ -68,6 +68,58 @@ class Solution {
         
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         res.addAll(q);
+        return res; 
+        
+    }
+}
+
+------------------------- 运用two sorted array 性质 ----------------------------------------------------
+ /*  min heap存 pair index. 
+扫k次两个array。规则：
+- 每次栈顶为当前最小的sum，加入result中
+- 如果栈顶是(i,j)， 那么下一个比他小的只可能是 (i+1, j) or (i, j+1)，把这两个入栈. 
+- corner case: 如果 i,j 超边界了，则把另一个pair 入栈
+- 注意排重：用visited array
+
+Time O（k*lgk) 
+
+*/
+
+
+// space o(k) 
+class Solution {
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        // heap 存index pair，sorted by sum's ascending order
+        PriorityQueue<List<Integer>> q = new PriorityQueue<List<Integer>>((a,b) -> (nums1[a.get(0)] + nums2[a.get(1)]) - (nums1[b.get(0)] + nums2[b.get(1)])); // 维持个min heap
+        
+        int i = 0; 
+        int j = 0; 
+        q.offer(Arrays.asList(i, j)); // 这就是global最小sum
+        boolean[][] visited = new boolean[nums1.length][nums2.length]; //注意这里会memory out of limit. 因为array可能会很大。可以换成set存string"i+j" 
+        visited[i][j] = true;
+        
+        for (int n = 0; n < k; n++) { // 最多走k次
+            if (q.size() == 0) {
+                break; 
+            }
+            
+            List<Integer> top = q.poll();
+            i = top.get(0);
+            j = top.get(1);
+            res.add(Arrays.asList(nums1[i], nums2[j])); // 栈顶（当前最小）加入结果
+            int topSum = top.get(0) + top.get(1);
+  
+            // 如果index都valid
+            if (i+1 < nums1.length && !visited[i+1][j]) {
+                q.offer(Arrays.asList(i+1, j));
+                visited[i+1][j] = true; 
+            }
+            if (j+1 < nums2.length && !visited[i][j+1]) {
+                q.offer(Arrays.asList(i, j+1));
+                visited[i][j+1] = true; 
+            }
+        }
         return res; 
         
     }
