@@ -109,3 +109,48 @@ public class Solution extends Relation {
         
     }
 }
+
+-------------------- 2022 标准答案 ------------------------------------------------
+ /* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+/*
+重点分析出所有情况(4)
+a know      b          |  a dont know b   |  a dont know b  | a know b              
+b dont know a          |  b know     a    |  b dont know a  | b know a
+-> a not, b might      |-> b not, a might |-> b, a not      |-> a, b not 
+
+发现not情况更多，所以可以先走一遍排除掉所有的not node by kknows(a,b) = false. -> 可通过queue记录剩余node，直到只剩一个
+
+剩下一个时，判断是否是名人 by 其他所有人都认识他 & 他不认识其他人： !knows(potential, other) && knows(other, potential)
+
+*/
+
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        // 1. filter 掉不是名人的人
+        int potential = 0; 
+        for (int other = 1; other < n; other++) {
+            // 如果不是名人，排除
+            if (knows(potential, other)) {
+                potential = other; //根据上面4中情况，此时 other might
+            }
+            else {
+                //这时候 other 肯定不是名人， 所以保持potential， other往后移一个
+            }
+        }
+        // 只剩下一个，判断是不是名人
+        for (int other = 0; other < n; other++) {
+            if (other == potential) {
+                continue;
+            }
+            if (!knows(potential, other) && knows(other, potential)) { // 别人都认识他，他不认识别人
+                continue;
+            }
+            else {
+                return -1;
+            }
+        }
+        return potential; 
+    }
+}
