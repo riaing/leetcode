@@ -112,3 +112,54 @@ class Solution {
         return curIndex;
     }
 }
+
+----------------- 2022 以上相同--------------------------
+ /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+
+/*
+思路：把深度相同的node放一起。深度定义：子节点到当前node的深度。比如子节点=1，子节点的parent=2
+遍历每个node时，找到他的深度，并同时把他放到list相应的位置。位置= 深度-1 （因为list index 的base是0）
+- 所以需要后续遍历，找到每个node的左右最大深度，+1就得cur node的深度。
+*/
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        findDepth(root, res);
+        return res;
+    }
+    
+    // 定义：输入节点 root，返回以 root 为根的树的最大深度. 定义子节点深度 = 1，null tree = 0 -> 便于加value到list和index符合
+    private int findDepth(TreeNode root, List<List<Integer>> res) {
+        if (root == null) {
+            return 0;
+        }
+
+        // 后续遍历左右子树拿maxDepth
+        int left = findDepth(root.left, res);
+        int right = findDepth(root.right, res);
+        
+        int curDepth = Math.max(left, right) + 1; // handle了子树为null
+        // add into result 
+        while (res.size() < curDepth) {
+            res.add(new ArrayList<Integer>());
+        }
+        res.get(curDepth - 1).add(root.val);
+        
+        return curDepth;
+    }
+}
