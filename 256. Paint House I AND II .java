@@ -53,6 +53,38 @@ class Solution {
     }
 }
 
+-----------2022 反应以上的写法 ---------------------------------------
+  /*
+dp[i][j] : paint i个house，并且第ith house 为j色的minimum cost
+dp[i][j] = dp[i-1][color] + cost[i][j] -> color != j & color是其他另两种颜色
+*/
+class Solution {
+    public int minCost(int[][] costs) {
+        int n = costs.length;
+        int[][] dp = new int[n][3];
+        dp[0][0] = costs[0][0];
+        dp[0][1] = costs[0][1];
+        dp[0][2] = costs[0][2];
+        
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < 3; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+                for (int color = 0; color < 3; color++) {
+                    if (color != j) {
+                        dp[i][j] = Math.min(dp[i][j], dp[i-1][color] + costs[i][j]);
+                    }
+                }
+            }
+        }
+        
+        // result 
+        int res = Integer.MAX_VALUE;
+        for (int color = 0; color < 3; color++) {
+            res = Math.min(res, dp[n-1][color]);
+        }
+        return res; 
+    }
+}
 --------------------------------优化----------------------------------------
 ```
 #### Optimization Solution
