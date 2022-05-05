@@ -40,3 +40,37 @@ public class Solution {
         
     }
 }
+
+--------------- 2022 ----------------------------------
+    
+    /*
+N - length of string, L - required length, here is 10 
+BF:  
+Time complexity : O((N-L)*L), N-L次substring，每次substring是O（L）
+space: O(N-L)*L : 总共build那么多个string
+
+可以做到O（N-L），要把string化为0100111然后hash
+*/
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        int start = 0;
+        Set<String> seen = new HashSet<String>();
+        Set<String> res = new HashSet<String>();
+        for (int end = 0; end < s.length(); end++) {
+            while (s.substring(start, end+1).length() > 10) {
+                start++;
+            }
+            String cur = s.substring(start, end+1);
+            if (cur.length() == 10) {
+                if (seen.contains(cur)) {
+                    res.add(cur);
+                }
+                else{
+                    seen.add(cur);
+                }
+            }
+        }
+        return new ArrayList<String>(res); 
+    }
+}
+    
