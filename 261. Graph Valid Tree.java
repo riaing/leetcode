@@ -64,3 +64,45 @@ class Solution {
         return false;
     }
 }
+
+--------------------2022 常规解法： BFS detect cycle + 查是否union ---------------------------------------
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        // create graph: O(N + E) N - number of node, E - edges 
+        Map<Integer, Set<Integer>> neibor = new HashMap<Integer, Set<Integer>>(); 
+        for (int i = 0; i < n; i++) { // O(n)
+            neibor.put(i, new HashSet<Integer>());
+        }
+        for (int[] e : edges) { // o(E)
+            int a = e[0];
+            int b = e[1];
+            neibor.get(a).add(b);
+            neibor.get(b).add(a);
+        }
+        
+        // create q and put 0 
+        Set<Integer> visited = new HashSet<Integer>();
+        Queue<Integer> q = new LinkedList<Integer>();
+        visited.add(0);
+        q.offer(0);
+        
+        //  For each of the N nodes, its adjacent edges is iterated over once.  In total, this means that all E edges are iterated over once by the inner loop. This, therefore, gives a total time complexity of O(N + E).
+        while (!q.isEmpty()) {
+            int cur = q.poll(); 
+            for (Integer curNeibor : neibor.get(cur)) {
+                if (visited.contains(curNeibor)) { // find cycle
+                    return false;
+                }
+                q.offer(curNeibor);
+                visited.add(curNeibor);
+                // move the edge from neibor's set 
+                if (neibor.get(curNeibor).contains(cur)) {
+                    neibor.get(curNeibor).remove(cur);
+                }
+            }
+        }
+        
+        return visited.size() == n; // 有可能有没有union起来的node
+    }
+}    
+    
