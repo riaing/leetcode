@@ -90,3 +90,84 @@ class Solution {
         return 1 + Math.max(getHeight(root.left), getHeight(root.right));
     }
 }
+
+----------------- 2022 两种放置方法 ----------------------------------
+     /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<String>> printTree(TreeNode root) {
+        // 1. 找height
+        int height = getHeight(root);
+        int width =  (int) Math.pow(2, height+1) - 1; 
+        // 2. 递归放到相应的位子
+        String[][] matrix = new String[height+1][width];
+        Arrays.stream(matrix).forEach(row -> Arrays.fill(row, ""));
+        
+        // 方法1： 按题目给的提示计算
+        int col = (matrix[0].length - 1) / 2;
+        // place(matrix, 0, col, h, root); 
+        
+        // 方法2： 左子树的位置就是从root 分开，前一半的中间。 如果root放在mid， 左子树就放在（0 + (mid -1)） / 2的地方  https://www.youtube.com/watch?v=ipIL1qVAazk&ab_channel=HuaHua 
+        place2(matrix, 0, 0, width-1, root);
+        
+        // System.out.println(Arrays.deepToString(matrix));
+
+
+        return Arrays.stream(matrix)
+                               .map(Arrays::asList)
+                               .collect(Collectors.toList());
+    }
+    
+    private void place(String[][] matrix, int r, int c, int h, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        // place root value 
+        matrix[r][c] = root.val + "";
+        if (root.left != null) {
+            place(matrix, r+1, c - (int) Math.pow(2, h-r-1), h, root.left); // 填充范围就是左边一半的中间
+        }
+        if (root.right != null) {
+             place(matrix, r+1, c + (int) Math.pow(2, h-r-1), h, root.right);
+        }
+    }
+    
+    // 记这种解法
+    private void place2(String[][] matrix, int r, int left, int right, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        // place root value 
+        int mid = (left + right) / 2; 
+        matrix[r][mid] = root.val + "";
+        
+       
+        if (root.left != null) {
+            place2(matrix, r+1, left, mid-1, root.left); // 填充范围就是左边一半的中间
+        }
+        if (root.right != null) {
+             place2(matrix, r+1, mid+1, right, root.right);
+        }
+    }
+    
+    
+    private int getHeight(TreeNode root) {
+        if (root == null) {
+            return -1;
+        }
+        return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
+    }
+}
