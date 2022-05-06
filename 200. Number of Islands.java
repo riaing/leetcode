@@ -144,3 +144,34 @@ public class Solution {
         }
     }
 }
+
+--------- 2022 DFS -----------------------------------
+    class Solution {
+    public int numIslands(char[][] grid) {
+        int cnt = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1') {
+                    cnt++;
+                    paint(grid, i, j);
+                }
+            }
+        }
+        return cnt; 
+    }
+    
+    private void paint(char[][] grid, int r, int c) {
+        // 先将此cell paint
+        grid[r][c] = '0';
+        //将四面八方paint成0
+        int[] row = {1, -1, 0, 0};
+        int[] col = {0, 0, 1, -1};
+        for (int i = 0; i < row.length; i++) {
+            int newRow = r + row[i];
+            int newCol = c + col[i];
+            if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length && grid[newRow][newCol] == '1') {
+                paint(grid, newRow, newCol);
+            }
+        }
+    }
+ }
