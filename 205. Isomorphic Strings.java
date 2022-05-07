@@ -82,3 +82,35 @@ class Main {
         return true;
     }
 }
+
+----------------- 2022 更简洁 -------------------------------------------------------
+    /*
+注意 两string必须是一对一对应： st, ee -> false 
+*/
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        // corner case 
+        if (s.length() != t.length()) {
+            return false; 
+        }
+        // s -> t 对应关系
+        Map<Character, Character> map = new HashMap<Character, Character>();
+        // t 出现过的char
+        Set<Character> seen = new HashSet<Character>();
+        for (int i = 0; i < s.length(); i++) {
+            char curS = s.charAt(i);
+            char curT = t.charAt(i);
+            if (!map.containsKey(curS)) {
+                if (seen.contains(curT)) { // st，ee的情况
+                    return false;
+                }
+                map.put(curS, curT);
+                seen.add(curT);
+            }
+            if (curT != map.get(curS)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
