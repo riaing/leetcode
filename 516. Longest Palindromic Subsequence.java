@@ -130,7 +130,7 @@ else
   dp[startIndex][endIndex] = Math.max(dp[startIndex + 1][endIndex], dp[startIndex][endIndex - 1])
   
 /*
-dp[i][j] : 以 i start，j end 的最长 LPS 
+dp[i][j] : 以 i s为tart，j 为end的区间 的最长 LPS，不一定包括i，j 
 只能从尾推
 start: dp[i][i] = 1 
 time: O(n^2), where ‘n’ is the length of the input sequence.
@@ -155,4 +155,39 @@ class Solution {
         return dp[0][s.length()-1];
     }
 }  
+
+------------------ 2022. 5 ----------------------------
+  /*
+dp[i][j] - i,j之间的LCP， 不一定要包括i,J
+
+三种情况： 
+if s[i] != s[j]:
+dp[i+1][j]去头, dp[i][j-1]去尾, dp[i+1][j-1]去头也去尾
+if s[i] == s[j]
+dp[i+1][j]去头, dp[i][j-1]去尾, dp[i+1][j-1] + 2 去头也去尾
+
+*/
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        for (int i = 0; i < s.length(); i++){
+            dp[i][i] = 1;
+        }
+        
+        for (int i = s.length() - 2; i >= 0; i--) {
+            for (int j = i+1; j < s.length(); j++) {
+                dp[i][j] = Math.max(dp[i+1][j], dp[i][j-1]);
+                // if (i+1 <= j-1) { 这个不要，不然aa这种处理不了
+                    if (s.charAt(i) == s.charAt(j)) {
+                        dp[i][j] = Math.max(dp[i][j], dp[i+1][j-1] + 2);
+                    }
+                    else {
+                        dp[i][j] = Math.max(dp[i][j], dp[i+1][j-1]);   
+                    }
+                // }
+            }
+        }
+        return dp[0][s.length()-1];   
+    }
+}
 
