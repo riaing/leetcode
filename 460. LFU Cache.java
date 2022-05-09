@@ -176,3 +176,115 @@ class LFUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */            
+
+-------------- 2022 3 hashMap + linkedHashSet 更简单--------------------------------------
+  https://mp.weixin.qq.com/s/oXv03m1J8TwtHwMJEZ1ApQ
+  /*
+1. keyToValue Map -> 方便get时O（1）
+2， keyToFreq Map -> 记录key的frequency，方便移出和增加
+3. freqToListOfKeys Map -> 1. 加入的key必须保证时序 2. remove 某个key时要是O（1） -> LinkedHashSet(内部实现是double linkedlist)
+4、 minFreq -> 每次put一个新key时，更新为1。 每次get时也要更新，
+
+代码框架：
+get时
+1， increase frequency (key)
+
+put时
+1. 如果key exist
+    改值
+    increase frequency
+2. 如果key不在
+    b.如果到了capacity  
+        removeMinFrequency
+        put到 keyToValue， increase frequency到1 
+    a. 如果还没到capacity
+        put到 keyToValue， increase frequency到1 
+3. 跟新 minFreq到1 
+*/
+class LFUCache {
+    Map<Integer, Integer> keyToValue = new HashMap<Integer, Integer>();
+    Map<Integer, Integer> keyToFreq = new HashMap<Integer, Integer>();
+    Map<Integer, LinkedHashSet<Integer>> freqToKeys = new HashMap<Integer, LinkedHashSet<Integer>>();
+    int minFreq = 0; 
+    int capacity; 
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity; 
+    }
+    
+    public int get(int key) {
+        if (keyToValue.containsKey(key)) {
+            increaseFrequency(key);
+            return keyToValue.get(key);
+        }
+        return -1; 
+        
+    }
+    
+    public void put(int key, int value) {
+        if (capacity == 0) {
+                return; 
+        }
+        
+        if (keyToValue.containsKey(key)) {
+            keyToValue.put(key, value);
+            increaseFrequency(key); 
+        }
+        else {
+     
+            if (keyToValue.size() >= capacity) {
+                removeMinFrequency();
+            }
+            // add key
+            keyToValue.put(key, value);
+            keyToFreq.put(key, 1); 
+            freqToKeys.putIfAbsent(1, new LinkedHashSet<Integer>());
+            freqToKeys.get(1).add(key);
+            // update minFreq 
+            minFreq = 1; 
+        }
+    }
+    
+    private void increaseFrequency(int key) { // update keyToFreq, freqToListOfKeys, minFreq
+        // 从old freq中删掉
+        int oldFreq = keyToFreq.get(key); 
+        LinkedHashSet<Integer> keysWithOldFreq = freqToKeys.get(oldFreq); 
+        keysWithOldFreq.remove(key);
+        
+        if (keysWithOldFreq.isEmpty()) { // 此时这个freq没有key了
+            freqToKeys.remove(oldFreq); 
+            if (minFreq == oldFreq) {
+                minFreq++; 
+            }
+        }
+        
+        // 加到新的freq set中
+        int newFreq = oldFreq + 1; 
+        freqToKeys.putIfAbsent(newFreq, new LinkedHashSet<Integer>());
+        freqToKeys.get(newFreq).add(key);
+        
+        // 更新keyToFreq table
+        keyToFreq.put(key, newFreq); 
+    }
+    
+    
+    private void removeMinFrequency() {
+        // 1. 找到对应的key
+        LinkedHashSet<Integer> keysWithMinFreq  = freqToKeys.get(minFreq);
+        int keyToRemove = keysWithMinFreq.iterator().next(); 
+        // 2. remove from 3 maps. 
+        keysWithMinFreq.remove(keyToRemove);
+        if (keysWithMinFreq.isEmpty()) { // 此时这个freq没有key了
+            freqToKeys.remove(minFreq); 
+        }
+        keyToValue.remove(keyToRemove);
+        keyToFreq.remove(keyToRemove); 
+    }
+}
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
