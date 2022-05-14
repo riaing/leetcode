@@ -67,7 +67,7 @@ class Solution {
     }
 }
 
---------- 2022.5 常规做法：找两点 --------------------
+--------- 2022.5 要掌握的做法：找两点之间的面积 --------------------
   /*
 必须掌握的解法：求matrix中两点围成的长方形的面积
 
@@ -76,7 +76,7 @@ class Solution {
 dp[i][j] - 以（i.j） 为右下角，到（0，0）的长方形中含有的1的总数
 dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1] + matrix[i][j] 
 
-2. 求任一点(i,j) 左上角， 到任一点（a,b）右下角，围成的长方形中1的总数
+2. 求任一点(i,j) 左上角， 到任一点（a,b）右下角，围成的长方形中1的总数 -> O（n^2) 
 size = dp[a][b] - dp[a-i][b] - dp[a, b-j] + dp[a-i][b-j] 
 
 3. 判断这两点是否围成长方形： size == (a-i)*(b-j) 
@@ -109,6 +109,68 @@ class Solution {
                    }
                }
            }
+        }
+        return res; 
+    }
+}
+
+----------- 2022.5 本题特有的做法：想象成histogram-------------------------------------------------------
+  /*
+本题的解法：以i，j为右下角的长方形有几种情况
+1. 高为1，底为x：x=从i往左走，能找到的最长长度
+2. 高为2，底为y：y= Min{i-1这行往左走的最长长度，i这行往左走的最长(x)} -> i.j 往上推高为2
+。。。
+3. 高为n，底为Min{i-n+1这行往左的最长，i-n+1+1往左最长(就是高为n-1那行的宽)}
+
+所有的这些长方形面积最大的就是以i,j为右下角的最大长方形面积
+
+所以本题要以宽dp： dp[i][j] - i,j 这点往左推的最长长度： O（n^2）
+然后对于每个i,j，算出高为1，2。。直到最大高的各个长方形面积，再取最大值。每个高对应那行的宽记录在dp中了，真正的宽为0-高之间宽的最小值
+
+*/
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        // 1.以i,j 开始（包括），向左走，最多能找到多少个连续的1，
+        int[][] dp = new int[matrix.length][matrix[0].length]; 
+        // 第一列是初始值
+        for (int i = 0; i < matrix.length; i++) {
+            dp[i][0] = matrix[i][0] - '0'; 
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 1; j < matrix[0].length; j++) {
+                dp[i][j] = 0;
+                if (matrix[i][j] == '1') {
+                    dp[i][j] = 1 + dp[i][j-1];
+                }
+               
+            }
+        }
+    
+        int h; 
+        int w; 
+        int curSize; 
+        int res = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                // 从高为1开始往上推，求面积
+                int lastWidth = matrix[0].length; 
+                for (int n = i; n >= 0; n--) {
+                    if (dp[n][j] == 0) { // pruning: 这行没有宽，宽0
+                        break; 
+                    }
+                    if (matrix[n][j] != '1') { // 说明找到最大高了
+                        break; 
+                    }
+                    h = i - n + 1; 
+                    // 求面积：1. 求宽
+                    w = Math.min(lastWidth, dp[n][j]);
+                    lastWidth = w; 
+                    // 2. 面积
+                    curSize = h * w; 
+                    // System.out.println("i " + i + " j " + j + " n " + n + " - " + " h " + h  + " w " + w + " : " + curSize);
+                    res = Math.max(res, curSize);   
+                }
+            }
         }
         return res; 
     }
