@@ -21,32 +21,92 @@ Constraints:
 1 <= nums[i] <= 1000
 0 <= k <= 106
   
-  -------------- sliding window ----------------------
-  /*
-maintain 一个window，里面的 product 小于 k。 O（n*2)
-*/
+  -------------- DP做法：超时。 ----------------------
 class Solution {
     public int numSubarrayProductLessThanK(int[] nums, int k) {
-        int result = 0;
-        for (int start = 0; start < nums.length; start++) {
-            int end = start; 
-            int curVal = 1; 
-            while (end < nums.length) {
-                curVal = curVal * nums[end];
-                if (curVal < k) {
-                    result++;
-                    end++;
+        int[][] dp = new int[nums.length][nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            dp[i][i] = nums[i];
+        }
+        
+        int res = 0; 
+        for (int i = 0; i < nums.length; i++) {
+            if (dp[i][i] < k) {
+                res++;
+            }
+            for (int j = i+1; j < nums.length; j++) {
+                dp[i][j] = dp[i][j-1] * nums[j];
+                if (dp[i][j] > k) {
+                    break; 
                 }
-                else { // pruning. 因为都是正数
-                    break;
+                if (dp[i][j] < k) {
+                    res++;
                 }
             }
         }
-        return result; 
+        return res; 
     }
 }
 
------------ 进阶版：print 所有 subarray。-------------------------------
+-------------- Sliding window O(n) ----------------------------------------
+ 
+ /*
+sliding window题 + 算window内解的个数（数学）
+*/
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int res = 0; 
+        int curProduct = 1; 
+        int start = 0; 
+        int end;
+        for (end = start; end < nums.length; end++) {
+            curProduct *= nums[end];
+            while (curProduct >= k && start <= end) {
+                // 维持window
+                curProduct /= nums[start];
+                start++; 
+            }
+              res += end - start + 1; 
+        }
+        return res; 
+    }
+}
+
+--------- 进阶：print所有 array ------------------------------
+ 
+ /*
+sliding window题 + 算window内解的个数（数学）
+*/
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int res = 0; 
+        int curProduct = 1; 
+        int start = 0; 
+        int end;
+        List<List<Integer>> resPrint = new ArrayList<List<Integer>>(); 
+        for (end = start; end < nums.length; end++) {
+            curProduct *= nums[end];
+            while (curProduct >= k && start <= end) {
+                // 维持window
+                curProduct /= nums[start];
+                start++; 
+            }
+              res += end - start + 1; 
+            // print result 
+             List<Integer> cur = new ArrayList<Integer>();
+            int curStart = start;
+            while (curStart <= end) {
+                cur.add(nums[curStart]);
+                resPrint.add(cur);
+                curStart++;
+            }
+        }
+        System.out.println(resPrint);
+        return res; 
+    }
+}
+
+----------- educative的写法- 进阶版：print 所有 subarray。-------------------------------
   
   /*
 https://www.educative.io/courses/grokking-the-coding-interview/RMV1GV1yPYz 
