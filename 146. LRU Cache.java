@@ -159,3 +159,119 @@ if has the key in map, we need
         addToEnd;
     }
  }
+
+---------------- 2022.5 自己写 ----------------
+    class Node {
+    Node pre;
+    Node next;
+    int key; 
+    int val; 
+    
+    public Node(int key, int val) {
+        this.key = key;
+        this.val = val;
+    }
+}
+class LRUList {
+    Node sudo = new Node(-1, -1);
+    Node tail = sudo; 
+    
+    public LRUList() {
+        
+    }
+    
+    public void add(Node n) {
+        tail.next = n;
+        n.pre = tail; 
+        tail = tail.next; 
+    }
+    
+    public Node removeAtFirst() {
+        if (sudo == tail) {
+            return null;
+        }
+        Node head = sudo.next;
+        Node nextNode = sudo.next.next; 
+        
+        // if tail == head 
+        if (tail == head) {
+            tail = sudo;
+        }
+        else {
+            sudo.next = nextNode;
+            if (nextNode != null) {
+                nextNode.pre = sudo;
+            }
+        }
+
+        return head; 
+    }
+    
+    public void remove(Node n) {
+        if (n == tail) {
+            tail = tail.pre;
+            tail.next = null; 
+        }
+        
+          // remove from middle 
+        else {
+            Node nPre = n.pre;
+            Node nNext = n.next;
+            nPre.next = nNext;
+            nNext.pre = nPre; 
+        } 
+    }
+}
+
+class LRUCache {
+    int capacity;;
+    Map<Integer, Node> map; 
+    LRUList lrulist;     
+    public LRUCache(int capacity) {
+        this.capacity = capacity; 
+        this.map = new HashMap<Integer, Node>();
+        this.lrulist = new LRUList();
+    }
+    
+    public int get(int key) {
+        if (map.containsKey(key)) {
+            // extrac and put it into the end 
+            Node curKeyNode = map.get(key);
+            lrulist.remove(curKeyNode);
+            lrulist.add(curKeyNode);
+            return map.get(key).val;
+        }
+        return -1; 
+    }
+    
+    public void put(int key, int value) {
+        Node cur;
+        // 1. 没有此key
+        if (!map.containsKey(key)) {
+            cur = new Node(key, value);
+            if (map.size() >= capacity) {
+                Node removedNode = lrulist.removeAtFirst();
+                // update map 
+                int keyToRemove = removedNode.key;
+                map.remove(keyToRemove);
+            }
+              // add curNode
+                lrulist.add(cur); 
+                map.put(key, cur);
+        }
+        // 有此key。 更新
+        else {
+            map.get(key).val = value; 
+            cur = map.get(key);
+            lrulist.remove(cur);
+            lrulist.add(cur); 
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
