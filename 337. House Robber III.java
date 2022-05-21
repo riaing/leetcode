@@ -121,3 +121,103 @@ class Solution {
         return res;
     }
 }
+
+------------- 2022.5 TreeD&C + print所有房子 --------------------
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/*
+衍生：print所有房子
+存这层取，or不取的值，以及当前最大值 
+取： root.val + 下一层不取
+不取(!)：下一层可取可不取，取决于大的值 
+*/
+
+class Node {
+    TreeNode root; 
+    int withNodeSum;
+    int withoutNodeSum; 
+    
+    List<TreeNode> withNodeChain;  // 衍生，print所有值
+    List<TreeNode> withoutNodeChain; 
+    public Node(TreeNode root, int withNodeSum, int withoutNodeSum, List<TreeNode> withNodeChain, List<TreeNode> withoutNodeChain) {
+        this.root = root;
+        this.withNodeSum = withNodeSum;
+        this.withoutNodeSum = withoutNodeSum;
+        this.withNodeChain = withNodeChain;
+        this.withoutNodeChain = withoutNodeChain; 
+    }
+}
+
+class Solution {
+    public int rob(TreeNode root) {
+        Node res = traverse(root);
+        int returnRes = 0; 
+        if (res.withNodeSum > res.withoutNodeSum) {
+            returnRes = res.withNodeSum;
+            res.withNodeChain.forEach(o -> System.out.println("res: " + o.val));
+        }
+        else {
+            returnRes = res.withoutNodeSum;
+            res.withoutNodeChain.forEach(o -> System.out.println("res: " + o.val));
+        }
+        return returnRes; 
+    }
+    
+    private Node traverse(TreeNode root) {
+        if (root == null) {
+            return new Node(null, 0, 0, new ArrayList<>(), new ArrayList<>());
+        }
+        if (root.left == null && root.right == null) {
+            List<TreeNode> withoutChain = new ArrayList<>();
+
+            List<TreeNode> chain = new ArrayList<>();
+            chain.add(root);
+            return new Node(root, root.val, 0, chain, withoutChain); 
+        }
+        Node leftNode = traverse(root.left); 
+        Node rightNode = traverse(root.right);
+        int includeRoot = root.val + leftNode.withoutNodeSum + rightNode.withoutNodeSum;
+        // 注意这里！ 如果这层不偷，那么就取下层的最大值（下层可偷或者不偷）
+        int notIncludeRoot = Math.max(leftNode.withNodeSum, leftNode.withoutNodeSum) + 
+                                Math.max(rightNode.withNodeSum, rightNode.withoutNodeSum);
+        
+        // 衍生：build chain。返回所有要偷的房子
+        List<TreeNode> withoutCur = new ArrayList<TreeNode>(); 
+   
+            withoutCur.addAll(leftNode.withNodeSum > leftNode.withoutNodeSum ? 
+                                        leftNode.withNodeChain : leftNode.withoutNodeChain);
+
+
+            withoutCur.addAll(rightNode.withNodeSum > rightNode.withoutNodeSum ? 
+                                        rightNode.withNodeChain : rightNode.withoutNodeChain);
+
+
+        
+        
+        
+        List<TreeNode> withCur = new ArrayList<TreeNode>(); 
+        withCur.add(root);
+        withCur.addAll(leftNode.withoutNodeChain);
+        withCur.addAll(rightNode.withoutNodeChain);
+        
+        if (root.val == 4) {
+            
+        }
+
+        return new Node(root, includeRoot, notIncludeRoot, withCur, withoutCur);
+    }
+}
