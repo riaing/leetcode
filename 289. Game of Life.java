@@ -87,3 +87,60 @@ class Solution {
 }
 
 https://blog.csdn.net/NoMasp/article/details/52122735 
+
+----------------------- 2022、5 ---------------------------------------------------
+  /*
+走两遍。第一遍，根据规则变cell，但用特殊字符表示之前的state
+live -> die. 将cell 变成-1
+die -> live, 将cell 变成 2
+
+第二遍
+-1的cell恢复成0
+2的cell恢复成1 
+
+时间O（m*n*8）
+空间O（1）
+
+*/
+class Solution {
+    public void gameOfLife(int[][] board) {
+        
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                // 1. find live neibors count 
+                int liveNeiborCount = 0;
+                int[] row = {1,-1, 0, 0, -1,-1,1, 1};
+                int[] col = {0, 0, 1,-1, -1, 1,-1,1};
+                for (int k = 0; k < row.length; k++) {
+                    int newR = i + row[k];
+                    int newC = j + col[k];
+                    if (newR >= 0 && newR < board.length && newC >= 0 && newC < board[0].length && (board[newR][newC] == 1 || board[newR][newC] == -1)) {
+                        liveNeiborCount++;
+                    }
+                }
+                // 跟新
+                if (board[i][j] == 0 && liveNeiborCount == 3) {
+                    board[i][j] = 2;
+                }
+                else if (board[i][j] == 1) {
+                    if (liveNeiborCount < 2 || liveNeiborCount > 3) {
+                        board[i][j] = -1;
+                    }
+                }
+            }
+        }
+        
+        // 恢复特殊记号： -1 -> 0, 2 -> 1
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 1;
+                }
+                else if (board[i][j] == -1) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+                
+    }
+}
