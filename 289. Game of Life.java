@@ -101,6 +101,7 @@ die -> live, 将cell 变成 2
 时间O（m*n*8）
 空间O（1）
 
+follow up 2: 只记活cell -> sparce matrix的解法
 */
 class Solution {
     public void gameOfLife(int[][] board) {
