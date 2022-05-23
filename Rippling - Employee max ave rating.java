@@ -10,7 +10,32 @@
   /*
  * 
  1. 根据需求描述，构建Employee的数据结构，有姓名，薪水，Team的组织关系(manager 和 subordinates)，performance rating, etc （主要是构建树形结构和最基本的类结构）
-2. 根据Employee的team树形结构，遍历和找到employee whose team has the highest performance rating average（基本的树的DFS）
+求 employee whose team has the highest performance rating average（基本的树的DFS）。leave node也可以作为结果
+
+------------------- 原题 ----------------- 
+Q. Company xyz.com has an organizational structure such that each employee in the company can have at most one manager
+and may have many subordinates. The company recently conducted their quarterly performance review cycle and each employee has received a performance rating.
+
+An example structure is as follows:
+
+          A(11)
+ B(3)                    C(1)
+
+                D(4)             E(10)
+
+A is the manager of B and C
+C is the manager of D and E
+Performance ratings are mentioned in brackets
+
+Now given the employee information of a company, return the employee whose team has the highest performance rating average.
+A team is defined as a group consisting of an employee and all their subordinates (not just the direct ones).
+S
+ample input/output:
+Input format: [employee name, rating, List]
+data = [['A', 5, ['B', 'C']], ['B', 3, []], ['C', 2, ['D', 'E']], ['D', 4, []], ['E', 10, []]
+Output: E
+
+Modified version of https://leetcode.com/problems/employee-importance/
  */
 
 import java.io.*;
@@ -49,12 +74,12 @@ class Solution {
   static Employee res; 
 
   public static Employee highestAveRating(Employee root) {
-    // // 1. 包括A
-    //   traverse(root);
-    // 2. 不包括A 
-    for (Employee sub : root.subordinates) {
-      traverse(sub);
-    }
+    // // 1. 包括最老大
+      traverse(root);
+    // 2. 不包括最老大
+    // for (Employee sub : root.subordinates) {
+    //   traverse(sub);
+    // }
       return res; 
   }
 
@@ -62,7 +87,11 @@ class Solution {
     if (root == null) {
       return new Node(null, 0.0, 0);
     }
-    if (root.subordinates == null) { // 最底层员工
+    if (root.subordinates == null) { 
+      if (root.rating > maxAveRating) { // 包括底层员工 
+        res = root; 
+        maxAveRating = root.rating;
+    }
       return new Node(root, root.rating, 1);  
     }
 
@@ -75,7 +104,8 @@ class Solution {
     }
     // update the maximum 
     System.out.println("totalRating " + totalRating + " name " + root.name);
-    if (totalSize != 1 && totalRating / totalSize > maxAveRating) {
+    // if (totalSize != 1 && totalRating / totalSize > maxAveRating) { // 不包括最底层员工
+    if (totalRating / totalSize > maxAveRating) { // 包括底层员工 
       res = root; 
       maxAveRating = totalRating / totalSize; 
     }
@@ -85,7 +115,12 @@ class Solution {
 
   public static void main(String[] args) {
 
-    Employee A = new Employee("A", null, null, 5.0);
+    /*
+             A (20)
+     B(1)             c(1)
+   D(1)  E(2)      F(1)
+    */
+    Employee A = new Employee("A", null, null, 20.0);
     Employee B = new Employee("B", A, null, 1.0); 
     Employee C = new Employee("C", A, null, 1.0);
     List<Employee> Bs = Arrays.asList(new Employee("D", B, null, 1.0), new Employee("E", B, null, 2.0));
@@ -101,6 +136,7 @@ class Solution {
     System.out.println(test1.name);
   }
 }
+
 
 ----------------------------- 第二问，参考leetcode 337 -------------------------------
   /**
