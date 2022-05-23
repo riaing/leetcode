@@ -29,7 +29,7 @@ s only contains lower case English characters and parentheses.
 It is guaranteed that all parentheses are balanced.
 
 
----------------- stack 做法 -------------------
+---------------- stack 做法. 粗略算时间：O（n)层括号，每层O（n）。所以O(n^2) -------------------
 /*
 stack做法
 */
@@ -101,5 +101,31 @@ class Solution {
         }
         return b.toString();
     }
-    
+}
+
+---------------- Recursion， raw 写法。真正写要优化 ------------------------
+ class Solution {
+    public String reverseParentheses(String s) {
+        int imbalance = 0;
+        int leftIndex = -1;
+        int rightIndex = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                imbalance++;
+                if (leftIndex == -1) {
+                    leftIndex = i;
+                }
+            } else if (s.charAt(i) == ')') {
+                imbalance--;
+                if (imbalance == 0 && rightIndex == -1) {
+                    rightIndex = i;
+                }
+            }
+        }
+        if (leftIndex == -1) {
+            return s;
+        }
+        StringBuilder part = new StringBuilder(reverseParentheses(s.substring(leftIndex + 1, rightIndex)));
+        return s.substring(0, leftIndex) + part.reverse() + reverseParentheses(s.substring(rightIndex + 1)); /
+    }
 }
