@@ -145,3 +145,13 @@ class Solution {
                 
     }
 }
+
+------------ follow up 2: sparse matrix problem: board is infinite -----------------------------------
+  solution： 只存live cell的node in a set 
+  iterate set, 找到 all neibors of the live cell, put into a map as a key, and the live cell as value (cell -> List(neibors)). The map should contain 
+  a cel -> its live neibors 
+  after done the set, iterate through the Map, follow the rule to check how many cells from the key set are now alive 
+  
+  
+  
+  
