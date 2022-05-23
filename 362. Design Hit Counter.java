@@ -144,3 +144,47 @@ class HitCounter {
  * obj.hit(timestamp);
  * int param_2 = obj.getHits(timestamp);
  */
+
+-------------------- 2022.5 -------------------------------------------------------------
+    
+
+class HitCounter {
+    Deque<Integer> countList = new LinkedList<Integer>();
+    Deque<Integer> timeList = new LinkedList<Integer>();
+    int totalCount = 0; 
+
+    public HitCounter() {
+        
+    }
+    
+    public void hit(int timestamp) {
+        if (timeList.isEmpty() || timeList.getLast() != timestamp) {
+            timeList.add(timestamp);
+            countList.add(1);
+        }
+        else {
+            int newVal = countList.getLast() + 1;
+            countList.removeLast();
+            countList.add(newVal);
+        }
+        totalCount++; 
+        // 提高：每次get时就可以删掉过期的
+    }
+    
+    public int getHits(int timestamp) {
+        while (!timeList.isEmpty() && timestamp - timeList.peek() >= 300) {
+            timeList.removeFirst();
+
+            totalCount -= countList.peek();
+            countList.removeFirst();
+        }
+        return totalCount; 
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
