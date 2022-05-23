@@ -153,5 +153,54 @@ class Solution {
   after done the set, iterate through the Map, follow the rule to check how many cells from the key set are now alive 
   
   
+/*
+第三问：matrix 很sparse怎么办？-> 只需要存live cell 
+
+*/
+class Solution {
+    public void gameOfLife(int[][] board) {
+        // 第三问：sparce matrix
+        //1. 找到所有的live cell 
+        Queue<int[]> q = new LinkedList<int[]>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 1) {
+                    q.offer(new int[]{i, j});
+                }
+            }
+        }
+        
+        // 2. for each live cell, add its neibor into map, and count # of live cells for each neibor 
+        Map<String, Integer> map = new HashMap<String, Integer>(); // location -> # of live cells of neibors 
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            map.putIfAbsent(cur[0] + "," + cur[1], 0);
+            // find its neibor. all its neibor now has at least 1 live cell surounded 
+            int[] row = {1,-1, 0, 0, -1,-1,1, 1};
+            int[] col = {0, 0, 1,-1, -1, 1,-1,1};
+            for (int k = 0; k < row.length; k++) {
+                int newR = cur[0] + row[k];
+                int newC = cur[1] + col[k];
+                if (newR >= 0 && newR < board.length && newC >= 0 && newC < board[0].length) {
+                    String neiborLocal = newR+","+newC;
+                    map.put(neiborLocal, map.getOrDefault(neiborLocal, 0) + 1); // means its neibor has at lease one live cell surrounded. 
+                }
+            }
+        }
+        // 3. go through all cells in map and follow the rule to update 
+        for (String cellLocal : map.keySet()) {
+            String[] local = cellLocal.split(",");
+            int curVal = board[Integer.parseInt(local[0])][Integer.parseInt(local[1])];
+            if (curVal == 0 && map.get(cellLocal) == 3) {
+                board[Integer.parseInt(local[0])][Integer.parseInt(local[1])] = 1;
+            }
+            else if (curVal == 1 && (map.get(cellLocal) < 2 || map.get(cellLocal) > 3)) {
+                board[Integer.parseInt(local[0])][Integer.parseInt(local[1])] = 0;
+            }
+        }
+        return;
+                
+    }
+}
   
   
