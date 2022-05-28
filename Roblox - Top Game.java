@@ -1,3 +1,4 @@
+---------------------多余DS的解法：userData(userId,gameID -> 总时长，总轮数）多余了，只需要记录user -> 所有游戏的总时长，总轮数 --------------
 https://leetcode.com/playground/ApGq9aXv 
 
 /*
@@ -171,6 +172,144 @@ public class Main {
         System.out.println("user map ");
         userData.forEach((k,v) -> System.out.println(k + " : " + v.totalTime + " round " + v.round)); 
         System.out.println("-------------------- userStatusMap ");
+        userStatusMap.forEach((k,v) -> System.out.println(k + " : " + v.inGame + " startTime " + v.joinTime)); 
+        System.out.println("-------------------------- invalid sessin");
+        invalidSession.forEach((k,v) -> System.out.println(k + " : " + v)); 
+        return topGame; 
+    }
+    
+      public static void main(String[] args) {
+          String[] arr = {
+                "0,user1,1000,join", // invalid 
+                "1,user1,1001,join", // user 1 joined game 1001
+                "5,user2,1002,join", // user 2 joined game 1002
+                "10,user1,1001,quit", // user 1 quit game 1001 after 10 seconds
+                "20,user2,1002,quit", // user 2 quit game 1002 after 15 seconds}
+                "24,user2,A,join", // invalid 
+                "30,user2,B,join",}; // invalid 
+              
+        System.out.println(topGame(arr));
+    }
+}
+                                      
+              ---------------------------- update的解法：只记录user -> 总游玩时间，不需要：user+game ->总游玩时间 -----------------------------------------
+class UserStatus {
+    String inGame; 
+    long joinTime;
+    
+    public UserStatus(String inGame, long joinTime) {
+        this.inGame = inGame; 
+        this.joinTime = joinTime; 
+    }
+}
+
+class Info {
+    long totalTime;
+    int round;
+    
+    public Info(long totalTime, int round) {
+        this.totalTime = totalTime;
+        this.round = round;
+    }
+}
+public class Main {   
+    public static String topGame(String[] arr) {
+        Map<String, UserStatus> userStatusMap = new HashMap<>(); // userid -> {in which game, join time}
+        Map<String, Info> gameData = new HashMap<String, Info>(); // gameId -> {total time, total round}
+        // follow up 
+        Map<String, Info> userData = new HashMap<>(); // userId -> {所有游戏的total time, total round} 
+        Map<String, List<Long>> invalidSession = new HashMap(); // userId + gameId -> List: time spent in last game 
+    
+        
+        // 1. 通过user status map知道user上次游戏的加入时间。同时更新 userData
+        for (String log : arr) {
+            String[] cur = log.split(",");
+            long timeStamp = Long.parseLong(cur[0]); 
+            String user = cur[1];
+            String game = cur[2];
+            String type = cur[3]; 
+            
+            userStatusMap.putIfAbsent(user, new UserStatus(null, 0)); 
+            String lastGame = userStatusMap.get(user).inGame;
+            if (type.equals("quit")) {
+                // 1. drop the invalid quit game 
+                if (lastGame == null || !lastGame.equals(game)) { 
+                    continue;  
+                }
+                // 2. calculate one session 
+                long session = timeStamp - userStatusMap.get(user).joinTime; 
+                // add the session into game map 
+                gameData.putIfAbsent(game, new Info(0,0));
+                gameData.get(game).totalTime += session;
+                gameData.get(game).round += 1;
+                //----  follow up, add to user map ------ 
+                userData.putIfAbsent(user, new Info(0,0)); 
+                userData.get(user).totalTime += session;
+                userData.get(user).round += 1; 
+                // ---follow up ---------
+                // 3. 记得复原 
+                userStatusMap.put(user, new UserStatus(null, 0)); 
+            }
+            else if (type.equals("join")) {
+                // follow up: 判断invalid session. lastGame的时间 = 持续到这次join的时间
+                if (lastGame != null) {
+                    long lastTime = userStatusMap.get(user).joinTime; 
+                    invalidSession.putIfAbsent(user+","+lastGame, new ArrayList<>()); 
+                    invalidSession.get(user+","+lastGame).add(timeStamp - lastTime);
+                }
+                // ------ follow up 完 ----------------- 
+                // 更新user status map
+                userStatusMap.get(user).inGame = game;
+                userStatusMap.get(user).joinTime = timeStamp;
+            }
+        }
+        
+        // 2. 统计每个game的时间
+        long maxTime = 0;
+        String topGame = "";
+        for (String g : gameData.keySet()) {
+            if (gameData.get(g).totalTime > maxTime) {
+                maxTime = gameData.get(g).totalTime;
+                topGame = g; 
+            }
+        }
+        
+        // --------- follow up, recover data by 2 rules -------------------------------------------------- 
+        // 1. 统计所有invalid session，which 之后user不在join游戏 -> userStatusMap 中user 不为null的
+        for (String user : userStatusMap.keySet()) {
+            if (userStatusMap.get(user).inGame != null) {
+                String userGame = user + "," + userStatusMap.get(user).inGame;
+                // 加到invalid session map中， 它对应的游戏时间此时为0 （因为没有下个游戏进来）
+                invalidSession.putIfAbsent(userGame, new ArrayList<>());
+                invalidSession.get(userGame).add(Long.MAX_VALUE);       
+            }
+        }
+        
+        // 2 计算每个user的ave 
+        Map<String, Long> userAveTime = new HashMap<String, Long>();
+        for (String user : userData.keySet()) {
+            userAveTime.put(user, userData.get(user).totalTime / userData.get(user).round);
+        }
+        // 3. 给invalid session 取min, 修复的game session加到game map
+        for (String key : invalidSession.keySet()) {
+            String user = key.split(",")[0];
+            String game = key.split(",")[1];
+            for (Long option1 : invalidSession.get(key)) {
+                Long recoveredTime = Math.min(option1, userAveTime.get(user));
+                // add it to game map 
+                gameData.putIfAbsent(game, new Info(0,0));
+                gameData.get(game).totalTime = gameData.get(game).totalTime + recoveredTime;
+                gameData.get(game).round = gameData.get(game).round + 1;
+            }
+        }
+        
+        System.out.println("------------------ user ave ");
+        userAveTime.forEach((k,v) -> System.out.println(k + " : " + v)); 
+        System.out.println("----------------------game map");
+        gameData.forEach((k,v) -> System.out.println(k + " : " + v.totalTime + " round " + v.round)); 
+        System.out.println("------------------user map ");
+        userData.forEach((k,v) -> System.out.println(k + " : " + v.totalTime + " round " + v.round)); 
+        System.out.println("-------------------- userStatusMap");
         userStatusMap.forEach((k,v) -> System.out.println(k + " : " + v.inGame + " startTime " + v.joinTime)); 
         System.out.println("-------------------------- invalid sessin");
         invalidSession.forEach((k,v) -> System.out.println(k + " : " + v)); 
