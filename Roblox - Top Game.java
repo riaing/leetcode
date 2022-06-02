@@ -193,6 +193,53 @@ public class Main {
 }
                                       
               ---------------------------- update的解法：只记录user -> 总游玩时间，不需要：user+game ->总游玩时间 -----------------------------------------
+      ----------------第一问 -------------------
+lass UserStatus {
+   String status;
+   int game;
+   long time;
+
+   public UserStatus(String status, int game, long time) {
+     this.status = status;
+     this.game = game;
+     this.time = time; 
+   }
+ }
+
+class Solution {
+  static Map<String, UserStatus> lastStatus = new HashMap<>(); // user -> last status 
+  static Map<Integer, Long> gameMap = new HashMap<>(); // game -> total Time 
+  public static int topGame(String[] input) {
+    long maxTime = 0;
+    int top = 0; 
+    for (String s : input) {
+      String[] log = s.split(",");
+      //"1500000000,user1,1001,join"  
+      long curTime = Long.parseLong(log[0]);
+      String curUser = log[1];
+      int curGame = Integer.parseInt(log[2]);
+      String curStatus = log[3];
+      if (curStatus.equals("quit")) {
+        if (!lastStatus.containsKey(curUser) || !lastStatus.get(curUser).status.equals("join") || lastStatus.get(curUser).game != curGame) {
+          continue; 
+        }
+        long duration = curTime - lastStatus.get(curUser).time;
+        gameMap.put(curGame, gameMap.getOrDefault(curGame, (long)0) + duration); 
+        lastStatus.remove(curUser);
+
+        // determine top game
+        if (gameMap.get(curGame) > maxTime) {
+          maxTime = gameMap.get(curGame);
+          top = curGame;
+        }
+      }
+      else if (curStatus.equals("join")) {
+        lastStatus.put(curUser, new UserStatus(curStatus, curGame, curTime));
+      }
+    }
+  return top; 
+  }
+                                      --------------------第二问 --------------------------                                   
 class UserStatus {
     String inGame; 
     long joinTime;
