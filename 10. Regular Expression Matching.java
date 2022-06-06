@@ -34,6 +34,16 @@ It is guaranteed for each appearance of the character '*', there will be a previ
   ---------------- DP -----------------------------------------------
   /*
 一旦遇到*通配符，前面的那个字符可以选择重复一次，可以重复多次，也可以一次都不出现，
+
+dp[i][j] = dp[i][j-2] ; b, a* -> 一个不取
+ = dp[i][j-1]: a, a* -> 取一个
+ =dp[i-1][j]: a, a* -> 取多个
+ 
+ 
+扩展：如果还要支持+。 思路和* 一样，只是
+1） 当加号前的字符match时， 对比*少了一个都不取的情况
+2） 当不match时（当 b, a+时），直接返回false
+
 */
 class Solution {
     public boolean isMatch(String s, String p) {
@@ -67,6 +77,15 @@ class Solution {
                                    dp[i][j-1] ||  // 算match 1次： s: a, p: a*
                                    dp[i-1][j]; // match多次: 和当前的i匹配了，查查和i-1是否匹配
                                    
+                    }
+                }
+                // 加号
+                else if (p.charAt(j-1) == '+') { 
+                    if (p.charAt(j-2) != s.charAt(i-1) && p.charAt(j-2) != '.') {
+                        dp[i][j] = false; // c, a+
+                    }
+                    else {
+                         dp[i][j] =  dp[i][j-1] || dp[i-1][j];    // 相比*，少了一个都不取的情况
                     }
                 }
             }
