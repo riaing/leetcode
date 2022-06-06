@@ -161,110 +161,107 @@ if has the key in map, we need
  }
 
 ---------------- 2022.5 自己写 ----------------
-    class Node {
+class Node {
+    int key; 
+    int val;
     Node pre;
     Node next;
-    int key; 
-    int val; 
     
     public Node(int key, int val) {
         this.key = key;
         this.val = val;
     }
 }
-class LRUList {
-    Node sudo = new Node(-1, -1);
-    Node tail = sudo; 
+
+class NodeList {
+    Node sudo;
+    Node cur; 
     
-    public LRUList() {
-        
+    public NodeList() {
+        this.sudo = new Node(-1, -1);
+        cur = sudo;
     }
     
-    public void add(Node n) {
-        tail.next = n;
-        n.pre = tail; 
-        tail = tail.next; 
+    public void add(Node node) {
+        cur.next = node;
+        node.pre = cur; 
+        cur = cur.next;
+    }
+    
+    public void remove(Node node) {
+        Node preNode = node.pre;
+        Node nextNode = node.next; 
+        if (cur == node) { // if it's at the end, so it's cur  
+            cur = cur.pre; 
+            cur.next = null; 
+        }
+        else {
+            preNode.next = nextNode;
+            nextNode.pre = preNode; 
+        }   
     }
     
     public Node removeAtFirst() {
-        if (sudo == tail) {
-            return null;
-        }
-        Node head = sudo.next;
-        Node nextNode = sudo.next.next; 
-        
-        // if tail == head 
-        if (tail == head) {
-            tail = sudo;
-        }
-        else {
-            sudo.next = nextNode;
-            if (nextNode != null) {
-                nextNode.pre = sudo;
-            }
-        }
-
-        return head; 
-    }
-    
-    public void remove(Node n) {
-        if (n == tail) {
-            tail = tail.pre;
-            tail.next = null; 
-        }
-        
-          // remove from middle 
-        else {
-            Node nPre = n.pre;
-            Node nNext = n.next;
-            nPre.next = nNext;
-            nNext.pre = nPre; 
-        } 
+        Node toRemove = sudo.next;
+        /* 就是 remove method的内容
+        // // if only one node 
+        // if (toRemove == cur) {
+        //     cur = sudo;
+        //     sudo.next = null; 
+        // }
+        // else {
+        //     Node nextNode = toRemove.next;
+        //     nextNode.pre = sudo;
+        //     sudo.next = nextNode;
+        // }*/
+        remove(toRemove); 
+        return toRemove;
     }
 }
 
 class LRUCache {
-    int capacity;;
-    Map<Integer, Node> map; 
-    LRUList lrulist;     
+    int capacity;
+    Map<Integer, Node> map;
+    NodeList list;
     public LRUCache(int capacity) {
-        this.capacity = capacity; 
-        this.map = new HashMap<Integer, Node>();
-        this.lrulist = new LRUList();
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+        this.list = new NodeList();   
     }
     
     public int get(int key) {
         if (map.containsKey(key)) {
-            // extrac and put it into the end 
-            Node curKeyNode = map.get(key);
-            lrulist.remove(curKeyNode);
-            lrulist.add(curKeyNode);
-            return map.get(key).val;
+            Node cur = map.get(key);
+            list.remove(cur);
+            list.add(cur);
+            return cur.val;
         }
-        return -1; 
+        return -1;
     }
     
-    public void put(int key, int value) {
-        Node cur;
-        // 1. 没有此key
-        if (!map.containsKey(key)) {
-            cur = new Node(key, value);
+    public void put(int key, int value) { //注意：如果map有值，则不会增加capacity，直接更新就好
+        // corner case 
+        if (capacity == 0) {
+            return; 
+        }
+        // 如果map有，直接更新
+        if (map.containsKey(key)) {
+            Node cur = map.get(key);
+            cur.val = value; 
+            list.remove(cur);
+            list.add(cur);
+        }
+        else {
+            // 1. 如果超capacity，先移走Least used
             if (map.size() >= capacity) {
-                Node removedNode = lrulist.removeAtFirst();
-                // update map 
-                int keyToRemove = removedNode.key;
+                Node toRemove = list.removeAtFirst();
+                int keyToRemove = toRemove.key;
                 map.remove(keyToRemove);
             }
-              // add curNode
-                lrulist.add(cur); 
-                map.put(key, cur);
-        }
-        // 有此key。 更新
-        else {
-            map.get(key).val = value; 
-            cur = map.get(key);
-            lrulist.remove(cur);
-            lrulist.add(cur); 
+            // 2.add the new node
+             Node newNode = new Node(key, value);
+             map.put(key, newNode);
+            list.add(newNode);
         }
     }
 }
