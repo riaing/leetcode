@@ -74,3 +74,43 @@ class Solution {
         return area; 
     }
 }
+
+------------------ DP 解法，要多扫几趟 --------------------------------------------------
+    /*
+DP 解法：竖直方向找水。算每个位子上能储的水、 
+
+Time: O(n)
+Space: O(n)
+*/
+class Solution {
+    public int trap(int[] height) {
+        int[] left = new int[height.length]; // 当前i的位置的左边的最高点
+        int[] right = new int[height.length]; // 当前i的位置的右边的最高点
+        
+        right[height.length - 1] = 0;
+        for (int i = height.length - 2; i >= 0; i--) {
+            right[i] = Math.max(right[i+1], height[i+1]); 
+        }
+        
+        // 优化，这趟可以和下面的一起算。可以优化成只走两趟
+        left[0] = 0;
+        for (int i = 1; i < height.length; i++) {
+            left[i] = Math.max(left[i-1], height[i-1]);
+        }
+        // System.out.println(Arrays.toString(left)); 
+        
+        // 计算竖直方向每个位子的水
+        int res = 0; 
+        for (int i = 0; i < height.length; i++) {
+            if (left[i] == 0 || right[i] == 0) {
+                continue;
+            }
+            int minHeight = Math.min(left[i], right[i]);
+            int realHeight = minHeight - height[i]; 
+            if (realHeight> 0) {
+                res += realHeight * 1;
+            }
+        }
+        return res; 
+    }
+}
