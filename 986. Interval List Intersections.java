@@ -67,3 +67,30 @@ class Solution {
         return results;
     }
 }
+
+---------------------------- 2022.6 --------------------------------------------------------------
+ class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        int i = 0; int j = 0;
+        List<int[]> res = new ArrayList<int[]>();
+        while (i < firstList.length && j < secondList.length) {
+            int[] first = firstList[i];
+            int[] second = secondList[j];
+            int[] common = new int[]{Math.max(first[0], second[0]), Math.min(first[1], second[1])};
+            if (common[0] <= common[1]) { // 是否有intersect
+                res.add(common);
+            }
+            if (first[1] < second[1]) {
+                i++;
+            }
+            else {
+                j++;
+            }
+        }
+        int[][] arr = new int[res.size()][2];
+        for (int k = 0; k < res.size(); k++) {
+            arr[k] = res.get(k);
+        }
+        return arr; 
+    }
+}
