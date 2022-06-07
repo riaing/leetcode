@@ -25,3 +25,25 @@ public class Solution {
         
     }
 }
+
+--------------------- 2022 --------------------------------
+    class Solution {
+    public double myPow(double x, int n) {
+        long N = n;  // 注意 正负数的overflow
+        if (n == 0) {
+            return 1.0;
+        }
+        if (N < 0) {
+            N = -N;
+            x = 1/x;  
+        }
+        
+        double half = myPow(x, (int) (N / 2));
+        if (N % 2 == 0) {
+            return half * half; 
+        }
+        else {
+            return half * half * x; 
+        }
+    }
+}
