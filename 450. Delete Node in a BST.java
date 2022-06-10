@@ -132,3 +132,68 @@ class Solution {
     }
 }
 
+-------------- 2022.6 相似 -----------------------------
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+定删右边（或左边，都一样）
+1. 删root时，应该把右边最小或者左边最大当成root
+2. 当等于root时，如果右边子树为null，直接return 左子树
+
+O(lgn)
+*/
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+        if (root.val == key) {
+            if (root.right == null) {
+                return root.left; // 这里包含了root.left = null && root.right = null的情况 
+            }
+            // 右子树不为null，找到右子树的最小值
+            else {
+                TreeNode min = rightMin(root.right);
+                root.val = min.val;
+                root.right = deleteNode(root.right, min.val); // 必须是node为unique value时能这么做
+            }
+        }
+        
+        else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        }
+        else { // root.val > key 
+            root.left = deleteNode(root.left, key);
+        }
+        return root; 
+    }
+    
+    
+    private TreeNode rightMin(TreeNode root) {
+       /* 递归写法
+        if (root.left == null) {
+            return root;
+        }
+        return rightMin(root.left);
+        */
+        
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root; 
+    }
+    
+}
