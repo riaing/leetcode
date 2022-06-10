@@ -29,6 +29,19 @@ public class Solution {
     }
 }
 
+--------------------- 2022. 6 ------------------------------------------------------------------------
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (q == null) {
+            return p == null;
+        }
+        else if (p == null) { // 这时候q != null
+            return false;
+        }
+        // 这时候 q.p 都不等于null
+        return  q.val == p.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+}
 
 ------------非递归解法： 类似Binary Tree Level Order Traversal，用queue存当前层续的节点，同时加上下一层节点，直到Queue size为零-------------- 
 /**
