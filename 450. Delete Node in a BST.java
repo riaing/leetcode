@@ -132,8 +132,8 @@ class Solution {
     }
 }
 
--------------- 2022.6 相似 -----------------------------
-    /**
+-------------- 2022.6 相似但不通过改值-----------------------------
+/**
  * Definition for a binary tree node.
  * public class TreeNode {
  *     int val;
@@ -167,8 +167,15 @@ class Solution {
             // 右子树不为null，找到右子树的最小值
             else {
                 TreeNode min = rightMin(root.right);
-                root.val = min.val;
-                root.right = deleteNode(root.right, min.val); // 必须是node为unique value时能这么做
+                //  // 1.  必须是node为unique value时能这么做
+                // root.val = min.val;
+                // root.right = deleteNode(root.right, min.val); 
+                // 2. general的写法，我们一般不会通过修改节点内部的值来交换节点。因为在实际应用中，BST 节点内部的数据域是用户自定义的，可以非常复杂，而 BST 作为数据结构（一个工具人），其操作应该和内部存储的数据域解耦，所以我们更倾向于使用指针操作来交换节点，根本没必要关心内部数据。
+                root.right = deleteNode(root.right, min.val);  // 删除min值节点
+                // 用右子树最小的节点替换 root 节点
+                min.left = root.left;
+                min.right = root.right;
+                root = min;
             }
         }
         
