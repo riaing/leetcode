@@ -37,6 +37,9 @@ If graph[u] contains v, then graph[v] contains u.
 -------------------------- DFS 染色题 -----------------------------
 
 /*
+说白了就是遍历一遍图，一边遍历一边染色，看看能不能用两种颜色给所有节点染色，且相邻节点的颜色都不相同。
+既然说到遍历图，也不涉及最短路径之类的，当然是 DFS 算法和 BFS 皆可了，DFS 算法相对更常用些，所以我们先来看看如何用 DFS 算法判定双色图。
+
 color题，根据题意，node和他所有的neibor必须是不同颜色。所以dfs/bfs来color，如果一个neibor已经和node颜色一样了，说明以前被color过且不能bipartie
 */
 class Solution {
