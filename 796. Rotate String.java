@@ -26,6 +26,10 @@ O（n^2). 比较时O（n），总共cutn次
 */
 class Solution {
     public boolean rotateString(String s, String goal) {
+        //sol1 simple check O(n^2)时间，O（N）空间
+        return A.length() == B.length() && (A + A).contains(B);
+        
+        // sol2
         if (s.length() != goal.length()) {
             return false;
         }
