@@ -218,3 +218,32 @@ class Solution {
         return dp[(coins.length - 1)%2][amount];
     }
 } 
+
+--------------- 2022.6最轻爽的解法 ---------------
+    /*
+dp[i][j] // 前i个coin，组成和为j,最少需要几个硬币
+dp[i][j] = min {dp[i-1][j] -> 不取当前， dp[i][j-num[i]] -> 取当前一个}
+*/
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length][amount+1];  
+        Arrays.stream(dp).forEach(o -> Arrays.fill(o, amount+1));
+        for (int i = 0; i < coins.length; i++) {
+            dp[i][0] = 0;
+        }
+        for (int i = 1; coins[0] * i <= amount; i++) {
+            dp[0][coins[0] * i] = i;
+        }
+        
+        for (int i = 1; i < coins.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                dp[i][j] = dp[i-1][j]; 
+                if (j - coins[i] >= 0) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i][j- coins[i]]+1); // 
+                }
+                
+            }
+        }
+        return dp[coins.length-1][amount] == amount+1 ? -1 : dp[coins.length-1][amount];
+    }
+}
