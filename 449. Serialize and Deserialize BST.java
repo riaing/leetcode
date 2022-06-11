@@ -84,3 +84,67 @@ public class Codec {
 // Your Codec object will be instantiated and called as such:
 // Codec codec = new Codec();
 // codec.deserialize(codec.serialize(root));
+
+
+------------- 2022.6 ----------------------------
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+/*
+对比 297 题普通二叉树的序列化，利用 BST 左小右大的特性主要可以避免序列化空指针，利用 min, max 边界来划定一棵子树的边界，从而提升算法效率。
+*/
+public class Codec {
+    private String deli = ",";
+    // 前序遍历
+    public String serialize(TreeNode root) { 
+        StringBuilder b = new StringBuilder();
+        serialize(root, b); 
+       
+        return b.toString();
+    }
+    private void serialize(TreeNode root, StringBuilder b) {
+        if (root == null) {
+            return;
+        }
+        b.append(root.val+deli);
+        serialize(root.left, b);
+        serialize(root.right, b); 
+    }
+
+    // 重点是min，max边界用来确定左右子树
+    public TreeNode deserialize(String data) {
+        if (data.isEmpty()) return null;
+        // 1. 变成linkedlist
+        String[] arr = data.split(","); // 先拆开
+        List<Integer> tmp = Arrays.stream(arr).map(o -> Integer.parseInt(o)).collect(Collectors.toList()); // 转成integer
+        LinkedList<Integer> input = new LinkedList<Integer>(tmp); // 转成linkedList
+        // 2. 给最大最小值
+        return deserialize(input, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    private TreeNode deserialize(LinkedList<Integer> input, int min, int max) {
+        // 用min, max判断子树边界
+        if (input.isEmpty() || input.getFirst() < min || input.getFirst() > max) {
+            return null;
+        }
+        TreeNode root = new TreeNode(input.getFirst());
+        input.removeFirst();
+        // 造左右子树
+        root.left = deserialize(input, min, root.val);
+        root.right = deserialize(input, root.val, max); 
+        return root; 
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// String tree = ser.serialize(root);
+// TreeNode ans = deser.deserialize(tree);
+// return ans;
