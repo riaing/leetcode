@@ -20,10 +20,33 @@ Constraints:
 
 ------------------------ 3 解法 ------------------------------
 /*
-HashMap解法： Time n; Space: n
+HashSet解法： Time n; Space: n
 Two pointer解法： Time：nlgn， space：1. 两者sort，two pointer指向两头，数字小的那边++
 binary search解法：sort其中一个，iterate另一个array，通过bs在sort中找值 Time: nlgn, space: 1 
 */
+ 
+ ----------------------------- HashSet ----------------------------
+ class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> s1 = new HashSet<Integer>();
+        for (int i : nums1) {
+            s1.add(i);
+        }
+        Set<Integer> inter = new HashSet<Integer>();
+        for (int j : nums2) {
+            if (s1.contains(j)) {
+                inter.add(j);
+            }
+        }
+        int[] res = new int[inter.size()];
+        int i = 0;
+        for (int n : inter) {
+            res[i] = n;
+            i++;
+        }
+        return res;
+    }
+}
 
 ---------------------------- 2 pointer -------------------------------
 class Solution {
