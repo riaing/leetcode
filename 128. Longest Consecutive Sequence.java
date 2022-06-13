@@ -51,3 +51,36 @@ class Solution {
         return res; 
     }
 }
+
+------------------------- 2022. 6 -----------------------------
+    
+    /*
+time: O(n). 每次找sequence只会从最小的开始，所以每个元素最多走一遍
+*/
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        // 1. construct set 
+        Set<Integer> set = new HashSet<Integer>(); 
+        for (int i : nums) {
+            set.add(i);
+        }
+        
+        int max = 0; 
+        for (int n : set) {
+            if (set.contains(n-1)) { // 本题特殊：只从starting找。{1，2，3} 就只会从1开始，而且跳过2，3
+                continue;
+            }
+            // 2. 从start起，找最长能走到哪
+            int cur = n; 
+            int curMax = 0; 
+            while (set.contains(cur)) {
+                curMax++;
+                cur++; 
+            }
+            // 3. 跟新
+            max = Math.max(max, curMax);
+        }
+        return max; 
+        
+    }
+}
