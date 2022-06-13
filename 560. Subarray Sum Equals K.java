@@ -33,3 +33,34 @@ class Solution {
         return res;
     }
 }
+
+---------------- preSum + Map O(n) ----------------------
+    /*
+preSum DP。 o(n^2) 
+DP + Map: O(n) -> sum(i,j)=sum(0,j)-sum(0,i). 当遇到sum(0,j)时，通过map找有几个sum(0, i). 
+*/
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int res = 0; 
+        Map<Integer, Integer> countMap = new HashMap<>(); // preSum -> 对应的count
+        int[] dp = new int[nums.length+1];
+        dp[0] = 0; 
+        countMap.put(0, 1); 
+        
+        for (int i = 1; i <= nums.length; i++) {
+            // 1. 计算dp[i]
+            dp[i] = dp[i-1] + nums[i-1];
+            int need = dp[i] - k; 
+
+            // 2. 找i前面有没有对应的dp[j]. 如果之前存在值为 need 的前缀和. 说明存在以 nums[i-1] 结尾的子数组的和为 k 
+            if (countMap.containsKey(need)) {
+                res += countMap.get(need);
+            }
+            // 3. 更新Map
+            countMap.put(dp[i], countMap.getOrDefault(dp[i], 0) + 1);
+        }
+        
+
+        return res; 
+    }
+}
