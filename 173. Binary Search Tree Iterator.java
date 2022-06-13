@@ -30,46 +30,44 @@ For the following binary search tree, in-order traversal by using iterator is [1
  * }
  */
 
-public class BSTIterator {
-    final Deque<TreeNode> stack = new LinkedList<TreeNode>(); 
+class BSTIterator {
+    Deque<TreeNode> stack;
+    
     public BSTIterator(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        TreeNode node = root;
-        // Add the left node to stack. 
-        while(node != null) {
-            stack.push(node);
-            node = node.left;
-        }
+        this.stack = new LinkedList<>();
+        pushLeftBranch(root, stack); 
     }
-
-    /** @return whether we have a next smallest number */
-    public boolean hasNext() {
-        return !stack.isEmpty();
-    }
-
-    /** @return the next smallest number */
+    
     public int next() {
-        TreeNode smallest = stack.pop();
-        // add the right node 
-        if (smallest.right != null) {
-            TreeNode node = smallest.right;
-            while (node != null) {
-                stack.push(node);
-                // then add the left 
-                node = node.left;
-            }            
+        // 重点是1.先pop自己，2.把自己的右边加到stack里
+        TreeNode cur = stack.pop();
+        // stack.forEach(o -> System.out.println(o.val));
+        pushLeftBranch(cur.right, stack);
+        return cur.val; 
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty(); 
+        
+    }
+    
+    private void pushLeftBranch(TreeNode root, Deque<TreeNode> stack) {
+        // 将左子树全部加到stack 
+        while (root != null) {
+            stack.push(root);
+            root = root.left;
         }
-        return smallest.val;
+        
     }
 }
 
 /**
- * Your BSTIterator will be called like this:
- * BSTIterator i = new BSTIterator(root);
- * while (i.hasNext()) v[f()] = i.next();
+ * Your BSTIterator object will be instantiated and called as such:
+ * BSTIterator obj = new BSTIterator(root);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
  */
+
  -----------------------------------------------------
  
     For 0(n) time and o(1) space, see https://github.com/awangdev/LintCode/blob/master/Java/Binary%20Search%20Tree%20Iterator.java 
