@@ -103,9 +103,6 @@ class TimeMap {
  * String param_2 = obj.get(key,timestamp);
  */
 
--------------using treeMap.floorKey(key) funciton ------------------------------------
- https://leetcode.com/problems/time-based-key-value-store/solution/ 
-
 
 ---------------bineray自己的模板
 //binary search，找到左边第一个小于target的数。 
@@ -163,6 +160,46 @@ class TimeMap {
         else {
             return "";
         }
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
+ 
+------------- 2022.6 using treeMap.floorKey(key) ------------------------------------
+ https://leetcode.com/problems/time-based-key-value-store/solution/ 
+
+/*
+TreeMap 解法。 set比get慢
+bs解法：get比set慢 
+*/
+class TimeMap {
+    Map<String, TreeMap<Integer, String>> map;
+    public TimeMap() {
+        this.map = new HashMap<>();
+        
+    }
+    
+    public void set(String key, String value, int timestamp) { // lgn, n size of the map 
+        if (!map.containsKey(key)) {
+            map.put(key, new TreeMap<Integer, String>());
+        }
+        TreeMap<Integer, String> treeMap = map.get(key);
+        treeMap.put(timestamp, value);
+    }
+    
+    public String get(String key, int timestamp) { // O(1)
+        if (!map.containsKey(key)) {
+            return "";
+        }
+
+        // System.out.println(map.get(key).floorEntry(1).getValue());
+        Map.Entry<Integer, String> entry = map.get(key).floorEntry(timestamp);
+        return entry == null ? "" : entry.getValue(); 
     }
 }
 
