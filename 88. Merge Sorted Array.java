@@ -15,24 +15,25 @@ Output: [1,2,2,3,5,6]
 ------------------解： 从尾端起-----------------------------------------------------------------------------
 class Solution {
     public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int e1 = m -1;
-        int e2 = n-1;
-        int e = m + n -1;
-        while (e1 >= 0 && e2 >= 0) {
-            if (nums1[e1] <= nums2[e2]) {
-                nums1[e] = nums2[e2];
-                e2--;
+        int place = nums1.length - 1; 
+        m--;
+        n--;
+        while (m >= 0 && n >= 0) {
+            if (nums1[m] >= nums2[n]) {
+                nums1[place] = nums1[m];
+                m--;
             }
             else {
-                nums1[e] = nums1[e1];
-                e1--;
+                nums1[place] = nums2[n];
+                n--;
             }
-            e--;
+            place--;
         }
-          while (e2 >= 0) {
-            nums1[e] = nums2[e2];
-            e2--;
-            e--;
+
+        while (n >= 0) {
+            nums1[place] = nums2[n];
+            n--;
+            place--;
         }
     }
 }
