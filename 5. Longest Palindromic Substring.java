@@ -375,9 +375,9 @@ class Solution {
         boolean[][] dp = new boolean[s.length()][s.length()]; 
         int res = 0; 
         String sub = "";
-        for (int i = 0; i < s.length(); i++) {
-            dp[i][i] = true; 
-        }
+//         for (int i = 0; i < s.length(); i++) { -> 后面包括了
+//             dp[i][i] = true; 
+//         }
         
         for (int i = s.length() - 1; i >= 0; i--) {
             for (int j = i; j < s.length(); j++) {
