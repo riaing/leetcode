@@ -121,6 +121,36 @@ public int kthSmallest(TreeNode root, int k) {
       return 1 + countNodes(n.left) + countNodes(n.right);
 
   }
+---------------------- 2022.6 inorder traversal的写法 -------------------------
+   /*
+follow up: 
+想找到第 k 小的元素，或者说找到排名为 k 的元素，如果想达到对数级复杂度，关键也在于每个节点得知道他自己排第几。
+-> 需要在二叉树节点中维护额外信息。每个节点需要记录，以自己为根的这棵二叉树有多少个节点。
+当然，size 字段需要在增删元素的时候需要被正确维护，力扣提供的 TreeNode 是没有 size 这个字段的. 
+需要1. build a new tree 2。 binary search找k -> 看下面code
+*/
+class Solution {
+    int rank = 0;
+    int res = 0;
+    public int kthSmallest(TreeNode root, int k) {
+        traverse(root, k);
+        return res; 
+    }
+    
+    private void traverse(TreeNode root, int k) {
+       if (root == null) {
+           return;
+       }
+        traverse(root.left, k);
+        rank++; // 走到了自己，当前rank+1
+        if (k == rank){
+            res = root.val;
+            return;
+        }
+        traverse(root.right, k); 
+        
+    }
+}
   
   --------------------**! answer to follow up question -----------------------------------------------------------------
   道题的Follow up中说假设该BST被修改的很频繁，而且查找第k小元素的操作也很频繁，问我们如何优化。其实最好的方法还是像上面的解法那样利用分治法来快速定位
