@@ -368,4 +368,30 @@ class Solution {
         return s.substring(index[0], index[1]+1);
     }
 }       
+
+    --------------- 2022.6 和上面思路一样，写法更简洁 --------------------
+        class Solution {
+    public String longestPalindrome(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()]; 
+        int res = 0; 
+        String sub = "";
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = true; 
+        }
         
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = i; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j)) { 
+                    if (i+1 > j-1 || dp[i+1][j-1]) { // // 两元素相邻 或者中间是palindrome 
+                        dp[i][j] = true;
+                        if (j-i+1 > res) {
+                            res = j-i+1;
+                            sub = s.substring(i, j+1); 
+                        }
+                    } 
+                }
+            }
+        }
+        return sub; 
+    }
+}
