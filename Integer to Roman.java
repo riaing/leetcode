@@ -34,21 +34,104 @@ D: 500
 CM: 900
 M: 1000
 
-public class Solution {
+// 思路是从最大的找起
+class Solution {
+    private static final int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};    
+    private static final String[] symbols = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+    
     public String intToRoman(int num) {
-        String[] dict = {"I", "IV", "V","IX", "X","XL","L","XC","C","CD","D","CM","M"}; //add some additional 
-        int[] digit = {1,4,5,9,10,40,50,90,100,400,500,900,1000};
-        String result ="";
-        for( int i =12 ; i>=0; i--){ //反向，从最大的开始。 
-            if(num >= digit[i]){
-                int count = num/digit[i];
-                num = num % digit[i];
-                while(count >0){
-                    result = result + dict[i];
-                    count --; 
+        String res =""; 
+        for (int i = 0; i < values.length; i++) {
+            if (num >= values[i]) {
+                int count = num / values[i];
+                num = num % values[i];
+                while (count > 0) {
+                    res += symbols[i];
+                    count--;
                 }
             }
         }
-        return result; 
+        return res; 
+    }
+}
+
+------------ 比较general的写法，太长 -----------
+    class Node {
+    int smallVal;
+    char smallSymbol;
+    int largeVal;
+    char largeSymbol;
+    
+    public Node(int smallVal, char smallSymbol, int largeVal, char largeSymbol) {
+        this.smallVal = smallVal;
+        this.smallSymbol = smallSymbol;
+        this.largeVal = largeVal;
+        this.largeSymbol = largeSymbol;
+    }
+}
+
+class Solution {
+    Map<Integer, Node> nodeMap = new HashMap<>();
+    Map<Integer,Integer> countMap = new HashMap<>();
+    Map<Integer, String> symbolMap = new HashMap<>(); 
+    public String intToRoman(int num) {
+        nodeMap.put(4, new Node(1000, 'M', 5000, ' '));
+        nodeMap.put(3, new Node(100, 'C', 500, 'D'));
+        nodeMap.put(2, new Node(10, 'X', 50, 'L'));
+        nodeMap.put(1, new Node(1, 'I', 5, 'V'));
+        
+        countMap.put(4, 1000);
+        countMap.put(3, 100);
+        countMap.put(2, 10);
+        countMap.put(1, 1);
+        
+        symbolMap.put(4, "IV");
+        symbolMap.put(9, "IX");
+        symbolMap.put(40, "XL");
+        symbolMap.put(90, "XC");
+        symbolMap.put(400, "CD");
+        symbolMap.put(900, "CM");
+        symbolMap.put(1, "I");
+        symbolMap.put(5, "V");
+        symbolMap.put(10, "X");
+        symbolMap.put(50, "L");
+        symbolMap.put(500, "D");
+        symbolMap.put(1000, "M");
+        
+        
+        String res = "";
+        while (num > 0) {
+            int count = String.valueOf(num).length(); 
+            int toCal = num - num % countMap.get(count);
+            res += build(toCal);
+            num = num % countMap.get(count);
+        }
+        
+        return res; 
+    }
+    
+    private String build(int num) {
+        // 1. find it's count 
+        String res = "";
+       
+        while (num > 0) {
+            if (symbolMap.containsKey(num)) {
+                res += symbolMap.get(num);
+                num -= num; 
+            }
+            else {
+                int len = String.valueOf(num).length(); 
+                if (num > nodeMap.get(len).largeVal) { // 大于5
+                    res += nodeMap.get(len).largeSymbol;
+                    num -= nodeMap.get(len).largeVal; 
+                }
+                int oneNeeded = num / nodeMap.get(len).smallVal; // 小于5 
+                for (int i = 0; i < oneNeeded; i++) {
+                    res += nodeMap.get(len).smallSymbol;
+                    num -= nodeMap.get(len).smallVal;
+                }
+            }
+        }
+        return res; 
     }
 }
