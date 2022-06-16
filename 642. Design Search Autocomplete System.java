@@ -188,3 +188,132 @@ class AutocompleteSystem {
  * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
  * List<String> param_1 = obj.input(c);
  */
+
+---------- 2022、6 标准trie ------------------------------
+	/*
+https://cheonhyangzhang.gitbooks.io/leetcode-solutions/content/642-design-search-autocomplete-system.html
+本题的特点是：通过freqMap来记录每个input的freq，TrieNode上存所有的input。
+*/
+class TrieNode {
+    boolean isLeaf; 
+    HashMap<Character, TrieNode> children; // key是children的char，value是children的node
+    List<String> cands; // 存prefix为当前的leave - 看题optional
+    public TrieNode() {
+        this.isLeaf = false; 
+        this.children = new HashMap<Character, TrieNode>();
+        this.cands = new ArrayList<>();
+    }
+}
+
+class Trie {
+    TrieNode root;
+    public Trie() {
+        this.root = new TrieNode();
+    }
+    
+    // 从root开始，遍历word。 每次更新的是children
+    public void insert(String word) {
+        // 先拿到root
+        TrieNode cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i); 
+            if (!cur.children.containsKey(c)) {
+                cur.children.put(c, new TrieNode());
+            }
+            // 把当前string加到children的candiate list里，记住都是在children上操作
+            cur.children.get(c).cands.add(word);
+            // 更新leave 
+            if (i == word.length() - 1) {
+                cur.children.get(c).isLeaf = true;
+            }
+            // 移动到children
+            cur = cur.children.get(c);
+        }
+    }
+    
+    // 遍历pre。从root中找
+    public TrieNode search(String pre) {
+        TrieNode cur = root; 
+        for (int i = 0; i < pre.length(); i++) {
+            char c = pre.charAt(i);
+            if (!cur.children.containsKey(c)) {
+                return null; 
+            }
+            // 往下移一个node
+            cur = cur.children.get(c);
+        }
+        return cur; 
+    }
+}
+
+
+class AutocompleteSystem {
+    Trie trie = new Trie();
+    Map<String, Integer> freqMap = new HashMap<>();  // 存每个input 的frequency
+    String cur = ""; 
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        // 1. 建立freqMap和Trie 
+        for (int i = 0; i < sentences.length; i++) {
+            freqMap.put(sentences[i], times[i]);
+            trie.insert(sentences[i]); 
+        }
+    }
+    
+    public List<String> input(char c) {
+        List<String> suggestions = new ArrayList<>(); 
+        if (c == '#') {
+            // 查看是不是新string
+            if (!freqMap.containsKey(cur)) {
+                freqMap.put(cur, 1);
+                trie.insert(cur);
+            }
+            else {
+                freqMap.put(cur, freqMap.get(cur) + 1);
+            }
+            // 复原search string
+            cur = "";
+        }
+        else {
+            cur += c; 
+            // 1. 从trie中找到对应的candidate
+            TrieNode node = trie.search(cur);
+            // 2. 通过freqMap sort，找到top3
+            suggestions = getSuggestion(node); 
+        }
+        return suggestions;
+    }
+    
+    private List<String> getSuggestion(TrieNode node) {
+        List<String> res = new ArrayList<>();
+        if (node == null || node.cands.isEmpty()) {
+            return res; 
+        }
+        List<String> candidates = node.cands; 
+        // 1. 通过freq Map，sort 从大到小
+        Comparator<String> com = new Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                if (freqMap.get(a) == freqMap.get(b)) {
+                    // 按照ascii 小的优先。利用string自身compareTo即可
+                    return a.compareTo(b);
+                }
+                return freqMap.get(b) - freqMap.get(a); 
+            }
+        };
+        Collections.sort(candidates, com); 
+        // 2. 遍历拿到top 3 
+        for (String s : candidates) {
+            res.add(s);
+            if (res.size() == 3) {
+                break; 
+            }
+        }
+        return res; 
+    }
+}
+
+/**
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
+ */
