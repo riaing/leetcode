@@ -39,7 +39,7 @@ Constraints:
 1 <= k <= nums1.length * nums2.length
 nums1 and nums2 are sorted.
 
------------------------------------------------- binary search -------------------------------------------------
+------------------------------------------------ Binary Search (n+m)log(10^10) -------------------------------------------------
 /*
 bs: 乘积[lower, upper] ， 可用无穷小到无穷大 
 主思路：
@@ -74,8 +74,8 @@ class Solution {
         // int test = countSmallerOrEqual(nums1, nums2, -9); 
         // System.out.println(test); 
         //   return 0; 
-        long lower = Long.MIN_VALUE;
-        long upper = Long.MAX_VALUE;
+        long lower =  (long) Math.pow(10,10) * -1; 
+        long upper =  (long) Math.pow(10,10);
         while (lower < upper) {
             long m =  lower + (upper - lower) / 2; 
             long count = countSmallerOrEqual(nums1, nums2, m);
@@ -169,6 +169,5 @@ class Solution {
         return start; 
     }
 }
-
 
 
