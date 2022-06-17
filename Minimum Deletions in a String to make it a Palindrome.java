@@ -100,7 +100,6 @@ So, our solution for a given string ‘st’ will be:
 class Solution {
     public int minInsertions(String s) {
         int[][] dp = new int[s.length()][s.length()];
-        Map<String, List<Character>> track = new HashMap<String, List<Character>>(); // at index i+"|"+"j", the characers need to be removed 
         int[][] from = new int[s.length()][s.length()]; // 0: from i+1, j-1, 1: from i+1, j, 2: from i, j-1
         
         for (int i = 0; i < s.length(); i++) {
