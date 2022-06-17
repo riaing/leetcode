@@ -104,10 +104,10 @@ class Solution {
 dp[i][j] 前 i，j 个元素能变换的最小次数。0说明不取
 dp[0][0] = 0; dp[0][j] = j 全删; dp[i][0] = i
 
-dp[i][j] = min {
-                1+ min(dp[i-1][j], dp[i][j-1]), 
-                dp[i-1][j-1] if i==j or dp[i-1][j-1] + 1 if i!=j
-                }
+dp[i][j] = 
+            min (1+ min(dp[i-1][j], dp[i][j-1]), dp[i-1][j-1]) if i==j
+            min (1+ min(dp[i-1][j], dp[i][j-1]), dp[i-1][j-1] + 1) if i!=j => 需要replace一下
+            
 */
 class Solution {
     public int minDistance(String word1, String word2) {
