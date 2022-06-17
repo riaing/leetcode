@@ -47,9 +47,9 @@ O(NlgK)的写法：in order traversal 先，然后把value 放到 q里 -> 经典
 O（lgN)的写法：用stack来实现在树上的traversal https://blog.csdn.net/qq508618087/article/details/50982007 
 
 O(N)写法：in order traversal + 类似sliding window的思路
-如果结果集合中元素还不到k个, 就把当前元素加到集合中去, 如果集合中的元素个数多于k了, 那么有二种情况:
-1. target的值比集合中最小的值小, 因为中序遍历是有序的, 最小元素就是第0个元素 -> 返回结果
-2. 否则，比较当前值和集合中最小值, 如果当前结点值比那个值更靠近target, 那么我们就用当前元素替换最小的值。直到我们无法再找到能够替换的元素,
+如果结果集合中元素还不到k个, 就把当前元素加到集合中去, 如果集合中的元素个数多于k了, 比较list头与target之差，和cur与target之差， 那么有二种情况:
+1。 list头与target之差 < cur与target之差, 因为中序遍历是有序的, 最小元素就是第0个元素 -> 返回结果
+2. 否则，说明当前结点比list头更靠近target： 丢掉头，继续往后找，直到我们无法再找到能够替换的元素,
 */
 class Solution {
     LinkedList<TreeNode> list = new LinkedList<>();
