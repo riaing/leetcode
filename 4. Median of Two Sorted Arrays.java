@@ -129,3 +129,120 @@ class Solution {
         } 
     }
 }
+                    
+ ------------------ 2022.6 对短的array进行binary search ----------------------------------
+                    /*
+概念
+中位数= len+1 / 2, 偶数再去找右边一个
+
+---------------------------------------------
+ref: https://www.youtube.com/watch?v=4n4h3FbWUJ8 
+Time O(lgn). n是长度短的array
+
+#-1. half = (alen + blen + 1) / 2。再将a，b分割成总长度为half
+
+a = 1 | 4 ： 分割成1=a左，4=a右
+b = 2，3，| 7 ：分割成3=b左，7=b右
+
+#0. 中位数 = Max(a左，b左), if len 奇
+      = { Max(a左，b左) + min（a右, b右）}/ 2, if len 偶
+
+#1、 如何找ab左右这四个数？ -> 通过对短的数组进行二分。a的分割处=k= a的len / 2， b的分割处= half总长度 -k 
+#2， 什么时候找到中位数？ -> a左<= b右，a右 >= b左
+#3. 什么特殊情况？ 
+ - 找ab左max时， if b右=0： a中所有都比b小， res= a左
+                if a右= 0： b中所有比a 小， res = b左
+ - 找ab右min时，  if  a中所有都比b小， res= b右
+                if b中所有比a小， res = a右
+                
+ sudo code -----------------
+ 先求valid的ab左右四个数 (#1,2)
+ 再求max左，min右 (#3)
+ 再根据 奇偶长度得出中位数 (#0)
+ 
+ half = (a len + b len + 1) / 2 
+ start = 0;
+ end = 短的len
+ a右 = 0；
+ b右 = 0；
+ 
+ while (start <= end) 
+    
+    a右= end + start / 2;
+    a左 = a右-1
+    b右 = half - a右； 
+    b左 = b右-1
+    // 2. 不符合中位数条件，就二分找valid四个数
+    if (a右 > start && a左> b右) end = a右-1
+    if (a右< end && a右< b左) start = a右+1 
+    
+    // 3. 找到四个数，求max ab左，和min ab右
+       // 只取valid的值
+       a左 < 0 ? integerMin : a左
+       a右 >= a len ？integerMax : a右
+       .. 同样操作对b左右
+       max左 = max(a，b左)
+       min右 = min(a,b 右)
+        
+    // 4 返回中位数
+        if odd -> max左
+        if even -> ave(max左，min右)
+ 
+*/
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length == 0 && nums2.length == 0) {
+            return 0; 
+        }
+        // 将短的设为nums1
+        if (nums1.length > nums2.length) {
+            int[] tmp = nums2;
+            nums2 = nums1;
+            nums1 = tmp; 
+        }
+        
+        boolean even = ((nums1.length + nums2.length) % 2) == 0;
+        int half = (nums1.length + nums2.length + 1) / 2; 
+        int start = 0;
+        int end = nums1.length;
+        int aRight = 0;
+        int bRight = 0; // 切分处，同时也是right的index
+        int aLeft = 0;
+        int bLeft = 0;
+        // 对短的进行二分
+        while (start <= end) {
+            aRight = (start + end) / 2;
+            bRight = half - aRight; 
+            aLeft = aRight - 1;
+            bLeft = bRight - 1; 
+            // 求valid的四个数，ab左，ab右
+            if (aRight > start && nums1[aLeft] > nums2[bRight]) {  // try != start 
+                end = aRight - 1;
+            }
+            else if (aRight < end && nums1[aRight] < nums2[bLeft]) {
+                start = aRight + 1;
+            }
+            else {
+                // 找到了valid的四个数，求min左. max右
+                    // 特殊，a全小余b或反之
+                int aLeftVal = aLeft < 0 ? Integer.MIN_VALUE : nums1[aLeft];
+                int bLeftVal = bLeft < 0 ? Integer.MIN_VALUE : nums2[bLeft];
+                int aRightVal = aRight >= nums1.length ? Integer.MAX_VALUE : nums1[aRight];
+                int bRightVal = bRight >= nums2.length ? Integer.MAX_VALUE : nums2[bRight];
+                
+                int maxLeft = Math.max(aLeftVal, bLeftVal);
+                int minRight = Math.min(aRightVal, bRightVal); 
+
+                // 根据长度奇偶返回中位
+                if (!even) {
+                    return maxLeft * 1.0;
+                }
+                else {
+                    return (maxLeft + minRight) / 2.0; // 必须变成double！ 
+                }
+            }
+
+        }
+        return 0; 
+    }
+}
