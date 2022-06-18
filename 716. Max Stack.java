@@ -1,72 +1,87 @@
-------------------------1 normal stack 1 max stack to store the max value corresponding to curent value in normal stack ----------------
-class MaxStack {
-    Deque<Integer> maxValStack; 
-    Deque<Integer> stack;
 
+
+
+解法1：
+if 2 stacks: 
+PopMax (On)
+pop, push, peek: o(1)
     
-    /** initialize your data structure here. */
+解法2
+if Double LinkedList + TreeMap  
+popMax, pop, push(Olgn) -> 追求popMax最优用这种 
+peek: o(1) 
+------------------------1 normal stack 1 max stack to store the max value corresponding to curent value in normal stack ----------------
+/*
+stack1. 正常stack
+stack2. 到当前元素为止的max value
+
+注意：两stack size衡一样。pop和push操作会apply到两stack上
+
+push 
+- 如果当前元素ith 小于max stack顶，max stack再push一遍栈顶，说明栈顶是ith. i-1th的最大值
+
+pop 
+- 要同时pop stack和 max stack的值。
+如果stack栈顶小于 maxStack栈顶，pop直到相等。
+再把倒出的元素push回去
+*/
+class MaxStack {
+    Deque<Integer> stack;
+    Deque<Integer> maxStack;
     public MaxStack() {
-        maxValStack = new LinkedList<Integer>();
-        stack = new LinkedList<Integer>();
-       
+        this.stack = new LinkedList<>();
+        this.maxStack = new LinkedList<>();
     }
     
     public void push(int x) {
-        if (!maxValStack.isEmpty()) {
-            maxValStack.push(Math.max(x, maxValStack.peek()));
+        // 1. stack 直接push
+        stack.push(x);
+        //2. max stack push 
+        if (maxStack.isEmpty()) {
+            maxStack.push(x);
         }
         else {
-            maxValStack.push(x);
+           int maxVal = Math.max(x, maxStack.peek());
+            maxStack.push(maxVal);
         }
-        stack.push(x);
     }
     
     public int pop() {
-        maxValStack.pop();
+        // 1. max stack 
+        maxStack.pop();
+        // 2. stack 
         return stack.pop();
-       
     }
     
     public int top() {
         return stack.peek();
-        
     }
     
     public int peekMax() {
-        return maxValStack.peek(); 
+        return maxStack.peek();    
     }
     
-    // here need a buffer stack 
-    public int popMax() { //O(n) 
-        Deque<Integer> buffer = new LinkedList<Integer>();
-        int res = 0;
-        while (!stack.isEmpty()) {
-            int cur = stack.pop();
-            int max = maxValStack.pop();
-            if (cur == max) {
-                res = cur; 
-                break;
-            }
-            buffer.push(cur);
+    public int popMax() {
+        Deque<Integer> tmp = new LinkedList<Integer>(); 
+        int curMax = maxStack.peek();  // 要单独记录，因为接下来的push pop会产生不同的最大值
+        // 1, 找值
+        while (stack.peek() != curMax) {
+            tmp.push(pop()); // 注意：同时改变两个stack
         }
-        
-        while (!buffer.isEmpty()) {
-            this.push(buffer.pop());
+        // 2. 移除值
+        pop(); //从stack和maxStack中移除当前最大值
+        // 3. 加回max之后的值
+        pushBack(tmp);
+        return curMax; 
+    }
+    
+    // 把倒出来的元素丢回stack
+    private void pushBack(Deque<Integer> tmp) {
+        while (!tmp.isEmpty()) {
+            push(tmp.pop()); // 注意：必须同时作用于两stack上
         }
-        return res; 
     }
 }
-
-/**
- * Your MaxStack object will be instantiated and called as such:
- * MaxStack obj = new MaxStack();
- * obj.push(x);
- * int param_2 = obj.pop();
- * int param_3 = obj.top();
- * int param_4 = obj.peekMax();
- * int param_5 = obj.popMax();
- */
-
 ----------------double LinkedList + TreeMap解法-----------------------------------------
     https://leetcode.com/problems/max-stack/solution/ 
 
