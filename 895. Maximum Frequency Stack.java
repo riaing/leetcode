@@ -40,11 +40,17 @@ It is guaranteed that there will be at least one element in the stack before cal
 https://labuladong.gitee.io/algo/2/22/67/ 
 ------------------- Heap 写法 --------------------------------------------
 /*
+方法2:没那么好
+Map: val -> frequency 
+PriorityQueue: 按frequency 排的Node
+- Map和PQ 操作绑定，每次push都会产生一个新的node 
+
 解决tie的方法：用sequenceNumber来代表每次加入的顺序
 
 Space: We will need O(N) space for the heap and the map, so the overall space complexity of the algorithm is O(N)
-
+Time: O(lgn)
 */
+
 
 class Node {
     int sequenceNum; // 代表是第几次每次push
