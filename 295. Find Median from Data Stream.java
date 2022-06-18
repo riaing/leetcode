@@ -42,6 +42,8 @@ If 99% of all integer numbers from the stream are in the range [0, 100], how wou
 /*
 用 heap 空间是 O（n)
 Time： (logN), worst case happens in balance heap 
+min, max heap. 大小之差为1. 每次加完balance
+
 
 如果用 insertion sort
 1. 如果是 array，那么 addNum 可以用 binary search 找 insert 的地方，insert 是 lgn。但 insert 后，后段 array 需要往后挪一格，最坏是 O（n）。所以整体是 O（lgn + n) 
@@ -87,7 +89,7 @@ class MedianFinder {
                 secondPart.offer(num);
             }
         }
-        // 调整，使 first 总是最多多一个
+        // 调整 balance，使 first 总是最多多一个
         while (firstPart.size() - secondPart.size() > 1) {
             int curNum = firstPart.poll();
             secondPart.offer(curNum);
