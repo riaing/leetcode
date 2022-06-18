@@ -41,6 +41,7 @@ If 99% of all integer numbers from the stream are in the range [0, 100], how wou
 ----------------------- 2 heap --------------------------------------------------
 /*
 用 heap 空间是 O（n)
+Time： (logN), worst case happens in balance heap 
 
 如果用 insertion sort
 1. 如果是 array，那么 addNum 可以用 binary search 找 insert 的地方，insert 是 lgn。但 insert 后，后段 array 需要往后挪一格，最坏是 O（n）。所以整体是 O（lgn + n) 
