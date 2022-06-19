@@ -179,20 +179,29 @@ class LFUCache {
 
 -------------- 2022 3 hashMap + linkedHashSet 更简单--------------------------------------
   https://mp.weixin.qq.com/s/oXv03m1J8TwtHwMJEZ1ApQ
-  /*
+/*
 1. keyToValue Map -> 方便get时O（1）
-2， keyToFreq Map -> 记录key的frequency，方便移出和增加
-3. freqToListOfKeys Map -> 1. 加入的key必须保证时序 2. remove 某个key时要是O（1） -> LinkedHashSet(内部实现是double linkedlist)
+2，keyToFreq Map -> 记录key的frequency，方便移出和增加
+3. freqToListOfKeys Map -> freq -> linkedHashSet<Keys>
+    1. 加入的key必须保证时序 2. remove 某个key时要是O（1） -> LinkedHashSet(内部实现是double linkedlist)
 4、 minFreq -> 每次put一个新key时，更新为1。 每次get时也要更新，
+
+Helper function: 
+increaseFrequency() 
+ - freqToListOfKeys Map 拿到cur， remove。
+ - freqToListOfKeys 给frequency增加1 
+ - 更新keyToFreq Map
+ - 更新minFrq, if = increase的freq
 
 代码框架：
 get时
-1， increase frequency (key)
+ - keyToFreq Map +1 
+ - increaseFrequency
 
 put时
 1. 如果key exist
     改值
-    increase frequency
+    increaseFrequency
 2. 如果key不在
     b.如果到了capacity  
         removeMinFrequency
