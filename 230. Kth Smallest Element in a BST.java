@@ -151,6 +151,45 @@ class Solution {
         
     }
 }
+
+------------- 2022.6 stack写法 --------------------------
+   /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        Deque<TreeNode> stack = new LinkedList<TreeNode>(); 
+        pushLeft(root, stack);
+        while (k > 0) {
+            TreeNode cur = stack.pop();
+            k--;
+            if (k == 0) {
+                return cur.val;
+            }
+            pushLeft(cur.right, stack);
+        }
+        return -1; 
+    }
+    
+    private void pushLeft(TreeNode cur, Deque<TreeNode> stack) {
+        while (cur != null) {
+            stack.push(cur);
+            cur = cur.left;
+        }   
+    }
+}
   
   --------------------**! answer to follow up question -----------------------------------------------------------------
   道题的Follow up中说假设该BST被修改的很频繁，而且查找第k小元素的操作也很频繁，问我们如何优化。其实最好的方法还是像上面的解法那样利用分治法来快速定位
