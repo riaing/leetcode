@@ -161,6 +161,34 @@ if has the key in map, we need
  }
 
 ---------------- 2022.5 自己写 ----------------
+    
+    /*
+Map<Key, Node> : Use one map to store key -> allocated_node map.
+List<Node> : sorted list (DLL). 
+Node {key, val}
+
+每个操作对结构更新
+1. Map 
+2. List
+
+DoubleLinkedList 
+ - add(newNode) 加在最后面
+ - removeAtFirst() 
+ - Remove()
+ 
+ put {
+    if map 有
+        list remove cur
+        list add cur 
+    else map 没有
+        if > capacity 
+            list remove first 
+        list add cur 
+        map put cur 
+ }
+ 
+*/
+    
 class Node {
     int key; 
     int val;
