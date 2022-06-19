@@ -218,3 +218,42 @@ class AllOne {
  * String param_3 = obj.getMaxKey();
  * String param_4 = obj.getMinKey();
  */
+
+---------------Double linkedList + HashMap<key, node> -------------------
+ /*
+https://www.youtube.com/watch?v=HMft4KYdOIM 
+
+Map<Key, Node> : Use one map to store key -> allocated_node map.
+List<Node> : sorted frequency list (DLL). 
+Node {count, set<Keys>}
+
+每个操作对三个结构更新
+1. Map 
+2. List
+3. Node 
+
+DoubleLinkedList 
+ - addBack(Cur, newNode) 将newNode add 到cur后面
+ - addFront(cur, newnode) 在cur前面加newNode
+ - Remove(cur)
+ 
+inc {
+ if map contains key 
+    1. get node from the list
+    if node's next == node.val + 1 : 直接更新
+    else： insert a new Node, 更新
+ else map NOT contains key 
+    if List第一个的count == 1 ： 直接加进去
+    else
+        建新node count=1，放到list首
+}
+
+dec {
+  1. 拿到node
+  
+  if curNode == list首： 直接更新
+  if 前一个node不存在 （pre.val + 1 != node.val) 
+        建新Node， addFront(cur, NewNode)
+   else if 前一个node存在，直接更新
+}
+*/
