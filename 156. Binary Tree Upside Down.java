@@ -84,3 +84,43 @@ class Solution {
     }
     
 }
+
+---------------- 后续遍历 2022。6 return 最左边 -----------------------------
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+
+*/
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        if (root.left == null && root.right == null) {
+            return root;
+        }   
+        TreeNode left = upsideDownBinaryTree(root.left);
+        upsideDownBinaryTree(root.right);
+        
+        TreeNode newRoot = root.left;
+        TreeNode curRight = root.right;
+        newRoot.left = curRight;
+        newRoot.right = root;
+        root.left = null;
+        root.right = null; 
+        return left; 
+    }
+}
