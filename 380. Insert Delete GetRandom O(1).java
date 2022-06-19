@@ -34,6 +34,23 @@ randomSet.getRandom();
 Map & list
 remove时，swap要remove的value和list的最后一个，再removelist的最后一个，就能保证update list的操作为o(1)
 
+
+Map：value - index  
+List : value in order
+
+insert {
+ if map contains key -> false 
+ 插到列表最后
+}
+
+delete {
+    if map NOT key -> false 
+    1、 swap 当前和list 最后元素
+    2、 remove list最后
+    3、 更新map index
+}
+
+
 */
 class RandomizedSet {
     List<Integer> list; 
