@@ -80,3 +80,43 @@ class Solution {
         return minLen == s.length()+1 ? "" : s.substring(subStringStart, subStringStart + minLen); 
     }
 }
+
+------------------- 差不多的写法 -------------------------------------
+ class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> countMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
+        }
+        
+        int count = 0; 
+        int minRes = s.length() + 1;
+        String res = "";
+        int start = 0;
+        
+        for (int i = start; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (countMap.containsKey(c)) {
+                countMap.put(c, countMap.get(c) - 1);
+                if (countMap.get(c) == 0) {// 找全了当前字母
+                    count++; 
+                }
+            }
+
+            while (count == countMap.size()) { // 找到了一个解
+                if (minRes > i - start + 1) {
+                    minRes = i - start + 1;
+                    res = s.substring(start, i+1);
+                }
+                if (countMap.containsKey(s.charAt(start))) {
+                    countMap.put(s.charAt(start), countMap.get(s.charAt(start)) + 1);
+                    if (countMap.get(s.charAt(start)) > 0) {
+                        count--;
+                    }
+                }
+                 start++;
+            }
+        }
+        return res; 
+    }   
+}
