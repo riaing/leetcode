@@ -48,11 +48,19 @@ class Solution {
 }
 
 -------------------------- 2022 ---------------------------------------------------------------
- /*
+/*
 dp[i][0/1] : 以i结尾的前i个元素，0 - 的最大值， 1 -的最小值
+dp[i]  = if i >= 0: dp[i][max] = dp[i-1][max] * n[i], n[i]
+                    dp[i][min] = dp[i-1][min] * n[i], n[i]
+         
+         if i < 0:  dp[i][max] = dp[i-1][min] * n[i], n[i]
+                    dp[i][min] = dp[i-1][max] * n[i], n[i]            
+
 本题重点：
 1. 要求contituous array，所以必须包括n
 2. 计算会和前一个的min，max有关。所以array需要记住min，max
+
+O(n) 
                                              
 */
 class Solution {
