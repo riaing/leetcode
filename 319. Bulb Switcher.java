@@ -49,6 +49,7 @@ Math解法: https://www.youtube.com/watch?v=8sF5HIJxlXE&ab_channel=CatRacketCode
                                     所以得出 floor squareroot n就是结果
 */
 class Solution {
+ // 1. brute force 
 //     public int bulbSwitch(int n) {
 //         if (n <= 1) {
 //             return n;
@@ -74,7 +75,31 @@ class Solution {
 //         return on; 
 //     }
     
+ // 2. 一步到位
     public int bulbSwitch(int n) {
         return (int) Math.sqrt(n);
+    }
+ 
+ // 3. 
+ "1. toggle奇数次的最后亮
+2. 对灯泡i，如果round d % i == 0， 则在round d会被toggle
+3. 灯泡会被toggle的次数 = 所有因子。 如果灯泡 i 能被squre root，说明有奇数次toggle
+4. 问题变成求 1-n之间有多少个数能被开平方 "
+  
+    // 求1-n中有多少数可以被开平方
+   public int bulbSwitch(int n) {
+        if (n <= 1) {
+            return n; 
+        }
+        int res = 0;
+        for (int i = 1; i <= n; i++) {
+            if (i*i <= n) {
+                res ++;
+            }
+            else {
+                break;
+            }
+        }
+        return res; 
     }
 }
