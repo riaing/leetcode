@@ -43,18 +43,25 @@ s consists of only English letters (both uppercase and lowercase), digits (0-9),
 根据数字，e/E, 符号，dot，分四种情况讨论来返回false。
 需要三个boolean： seenDigit, seenE, seenDot.
 返回seenDigit 
+只用考虑cur char之前
+
+digit: seenDigit = true 
+symbol: 可以有两个。只能出现在开头或者e的后面。 否则false
+dot: 只能有一个dot。if seenDot || seenE? false; set seenDot = true
+E: 只能有一个E。 if seenE || !SeenDigit? false; set seenE = true. seenDigit = false  
+*/
 
 digits: must >= 1 (seenDigit)
  - set seenDigit = true 
  
-sign: only at the very beginning, or right after E. : -63e+7
+sign:可以用两个 only at the very beginning, or right after E. : -63e+7
  - if not, return false  
  
-E: 1. only one (seenE).  2. Must appear after decimal/digits (seenDigit = true) 3. 它之后必须接integer
+E: 只能有一个。1. only one (seenE).  2. Must appear after decimal/digits (seenDigit = true) 3. 它之后必须接integer
   - if seenE || !seenDigit => return false 
   - set seenE = true. seenDigit = false (后面得是数字)
   
-Dot: 1. 只能 <=1 decimal number, <= 1 dot. (seenDot). 2. Must appear Before E (seenE = false ) 
+Dot: 只能有一个 1. 只能 <=1 decimal number, <= 1 dot. (seenDot). 2. Must appear Before E (seenE = false ) 
  - if seenDot || seenE => return false
  - set seenDot = true
  
