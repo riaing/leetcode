@@ -86,3 +86,32 @@ class Solution {
         return finalRes;
     }
 }
+
+--------------------- 如果要in place ------------------
+    /*
+如果要in place的merge
+*/
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        // 1. sort by starting time 
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int last = 0;
+        for (int i = 1; i < intervals.length; i++) {
+            int[] cur = intervals[i];
+            int[] lastInterval = intervals[last];
+            if (cur[0] <= lastInterval[1]) {
+                intervals[last][1] = Math.max(cur[1], lastInterval[1]);
+            }
+            else { // 没overlap，把当前移到last+1处
+                last++; 
+                // 把当前移到last这里
+                intervals[last] = cur;
+            }
+        }
+        // last就是合并后的array的最后一个元素
+        // int[][] res = new int[last+1][2]; 
+        int[][] res = Arrays.copyOfRange(intervals, 0, last+1); 
+
+        return res; 
+    }
+}
