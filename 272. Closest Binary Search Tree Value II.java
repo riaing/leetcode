@@ -24,6 +24,8 @@ The number of nodes in the tree is n.
  
 
 Follow up: Assume that the BST is balanced. Could you solve it in less than O(n) runtime (where n = total nodes)?
+ Follow up 1: 在o(N)解法里减少space？ 
+ follow up 2： 在O(n)解法里如果tree imbalance如何提前结束,
 
 ---------------------- in order traversal + sliding window 思路 ----------------------------------------------
 
