@@ -53,7 +53,7 @@ strs[i] contains any possible characters out of 256 valid ASCII characters.
 
 Follow up: Could you write a generalized algorithm to work on any possible set of characters?
 
--------------------------------- 把string ----------------------------------------
+-------------------------------- 把string encode成 （长度）原string ----------------------------------------
 /*
 trunked string : serialize时记录length 和 string (5)aaaaa(100)b...b 
 */
@@ -89,6 +89,42 @@ public class Codec {
             }
         }
         return res;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(strs));
+
+-----------------------------------更简单， string encode成 长度+原string ----------------------
+  public class Codec {
+
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        StringBuilder b = new StringBuilder();
+        for (String s : strs) {
+            b.append(s.length() + "+" + s);
+        }
+        return b.toString();
+    }
+
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) { // 2+a13+abc
+        int i = 0;
+        List<String> res = new ArrayList<>();
+        while (i < s.length()) {
+            int len = 0; 
+            while (i < s.length() && Character.isDigit(s.charAt(i))) {
+                len = len * 10 + (s.charAt(i) - '0');
+                i++;
+            }
+            //  i = '+' now 
+            i++; // skip '+';
+            String cur = s.substring(i, i+len);
+            res.add(cur);
+            i = i+len; 
+        }
+        return res; 
     }
 }
 
