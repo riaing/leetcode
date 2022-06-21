@@ -48,3 +48,57 @@ public class Solution {
         return count; 
     }
 }
+
+---------------------- 2022 ----------------
+ /*
+0. 空间换时间，先给个大小为n的数组
+1. 从2开始，判断是不是prime，然后把他的倍数全部mark off
+     // to mark off. can start from n的n倍数，因为n-1倍数已经在cur = n-1时被处理了
+2. 只用mark off 2- sqrtN, 因为大于sqrtN的都会被mark off了
+3. 扫一遍array拿还是prime的值
+
+Time: 
+总共是o(n)
+*/
+class Solution {
+    public int countPrimes(int n) {
+        if (n <= 1) {
+            return 0;
+        }
+        boolean[] nonPrime = new boolean[n];
+        for (int i = 2; i < Math.sqrt(n); i++) { // O(sqrtN)
+            if (!nonPrime[i]) { // 是个prime，把倍数都mark off 
+                // to mark off. can start from n的n倍数，因为n-1倍数已经在cur = n-1时被处理了
+                for (int k = i; k * i < n; k++) { // 找prime的倍数个数，大概是 loglogN 
+                    nonPrime[k*i] = true;
+                }
+            }
+        }
+        // #3  找res
+        int res = 0; 
+        for (int i = 2; i < n; i++) {
+            if (!nonPrime[i]) {
+                res++;
+            }
+        }
+        return res; 
+    }
+    
+    
+    
+    
+    
+    // 本题不用但有意义的code
+    private boolean isPrime(int n) { // O(lgn)
+        int res = 0; 
+        for (int i = 2; i < Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                res += 2;
+            }
+            if (res >= 2) {
+                return false;
+            }
+        }
+        return true; 
+    }
+}
