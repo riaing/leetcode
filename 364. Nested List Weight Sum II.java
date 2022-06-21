@@ -166,6 +166,75 @@ class Solution {
     }
 }
 
+-------------------- 更省时的DFS --------------------
+ /**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *     // Constructor initializes an empty nested list.
+ *     public NestedInteger();
+ *
+ *     // Constructor initializes a single integer.
+ *     public NestedInteger(int value);
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // Set this NestedInteger to hold a single integer.
+ *     public void setInteger(int value);
+ *
+ *     // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+ *     public void add(NestedInteger ni);
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+
+/*
+递归找深度，类似于 https://leetcode.com/problems/find-leaves-of-binary-tree/ 是 叶子depth为0， 本题是root depth为0 
+1、 先递归找到每个深度的sum， =》List<Integer> 
+2，算完后 list的index+1 就是 depth，按公式算即可
+
+Time O（n + 层数)
+*/
+class Solution {
+    public int depthSum(List<NestedInteger> nestedList) {
+        // 1. 重点是求出每层的sum。 
+        List<Integer> sumPerLevel = new ArrayList<>(); 
+        findSum(nestedList, 1, 0, sumPerLevel); // o(n)
+        
+         //2. follow the rule to do calculation， sumPerLevel的index就和depth相关
+        int res = 0; 
+        for (int i = 0; i < sumPerLevel.size(); i++) { // O(层数)
+            int depth = i + 1;
+            res += depth * sumPerLevel.get(i);
+        }
+        return res;
+    }
+    
+    private void findSum(List<NestedInteger> nestedList, int depth, int curIndex, List<Integer> res) { 
+        while (res.size() < depth) {
+            res.add(0);
+        }
+        
+        for (int i = curIndex; i < nestedList.size(); i++) {
+            NestedInteger curN = nestedList.get(i);
+      
+            if (curN.isInteger()) {
+                res.set(depth-1, res.get(depth-1) + curN.getInteger());
+            }
+            else {
+                findSum(curN.getList(), depth+1, 0, res);
+            }
+        }
+    }
+}
 ------------------ 2022.4. BFS ----------------------------------
  
  /**
