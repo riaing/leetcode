@@ -205,11 +205,6 @@ class Solution {
         helper(root);
        
         return secondMin == Long.MAX_VALUE ? -1 : (int) secondMin;
-        
-        // follow up: 求thirdMin
-         if (secondMin != -1) { // 可求thirdMin
-            findThridMin(root);
-        }
     }
     
     private void helper(TreeNode root) {
@@ -221,20 +216,47 @@ class Solution {
             helper(root.right);  // 当root 大于 min时，so all values in the subtree at \text{node}node are at least \text{node.val}node.val, so there cannot be a better candidate
         }
     }
-    
-    // follow up： 求third Min    
-    private void findThridMin(TreeNode root) {
+}
+
+--------- follow up: 求thirdMin ----------------------
+    与上不同之处： 
+    1. 找到第二小后还要递归找三， and要把old min2给到min3
+    2. root.val == min1 或者min2时都要递归
+    3. 只有找到 root.val > min2， < cur min3时才return
+    class Solution {
+    int min;
+    long secondMin;
+    long thirdMin = Long.MAX_VALUE; // [2,2,3,5,2,7,3] -> 5 
+    public int findSecondMinimumValue(TreeNode root) {
+        this.min = root.val; 
+        this.secondMin = Long.MAX_VALUE;
+        helper(root); 
+        
+        secondMin = secondMin == Long.MAX_VALUE ? -1 : (int) secondMin; 
+        System.out.println("thirdMin " + thirdMin);
+        return (int) secondMin; 
+    }
+    private void helper(TreeNode root) {
         if (root == null) {
             return;
         }
-        if (root.val > secondMin && root.val < thirdMin) {
-            System.out.println("here"); 
-            thirdMin = root.val; 
+        if (root.val > min && root.val < secondMin) {
+            thirdMin = secondMin;
+            secondMin = root.val; 
+            // 找到第二小之后还要继续找第三小
+            helper(root.left);
+            helper(root.right);
             return;
         }
-        findThridMin(root.left);
-        findThridMin(root.right);
+        else if (root.val > secondMin && root.val < thirdMin) {
+            thirdMin = root.val; 
+        }
+        else if (root.val == min || root.val == secondMin) { // 当root 大于 min时，so all values in the subtree at \text{node}node are at least \text{node.val}node.val, so there cannot be a better candidate
+             helper(root.left);
+             helper(root.right);
+        } 
     }
+    
 }
-}
+
  
