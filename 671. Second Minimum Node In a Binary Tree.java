@@ -205,16 +205,36 @@ class Solution {
         helper(root);
        
         return secondMin == Long.MAX_VALUE ? -1 : (int) secondMin;
+        
+        // follow up: 求thirdMin
+         if (secondMin != -1) { // 可求thirdMin
+            findThridMin(root);
+        }
     }
     
     private void helper(TreeNode root) {
         if (root.val != min && secondMin > root.val) { // 跟新secondMin
             secondMin = root.val;
         }
-        else if (root.val == min && root.left != null) {
+        else if (root.val == min) {
             helper(root.left);
-            helper(root.right); 
+            helper(root.right);  // 当root 大于 min时，so all values in the subtree at \text{node}node are at least \text{node.val}node.val, so there cannot be a better candidate
         }
     }
+    
+    // follow up： 求third Min    
+    private void findThridMin(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        if (root.val > secondMin && root.val < thirdMin) {
+            System.out.println("here"); 
+            thirdMin = root.val; 
+            return;
+        }
+        findThridMin(root.left);
+        findThridMin(root.right);
+    }
+}
 }
  
