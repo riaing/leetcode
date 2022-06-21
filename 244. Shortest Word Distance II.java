@@ -19,8 +19,10 @@ Time: build Map O（n）， shortest最差O（n） -> O（n）
 space: build Map O(n)
 
 Followup：
-如果call很频繁怎么办？ 
+1. 如果call很频繁怎么办？ 
 原题是construct O(n) 然后每次callO(n)，但如果用2d hashmap是可以实现每次call O(1)的，只不过construct要O(n^2)
+2. 如果一个list L 远长于另一个怎么做？ 
+ - if L >> K， 遍历K， binary search 在L中找cloest。 时间O(KlgL), 
 */
 class WordDistance {
     Map<String, List<Integer>> map; // map to word, index positions 
