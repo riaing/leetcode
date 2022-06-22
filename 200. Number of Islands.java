@@ -175,3 +175,40 @@ public class Solution {
         }
     }
  }
+
+------------------- follow up 求每个岛的面积 ------------------------
+    /*
+follow up: 输出每个岛的面积。将paint的return改为面积,类似： https://leetcode.com/problems/max-area-of-island/
+*/
+class Solution {
+    public int numIslands(char[][] grid) {
+        int cnt = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1') {
+                    cnt++;
+                    int area = paint(grid, i, j);
+                    System.out.println("start index " + i + "-" + j + " area " + area); 
+                }
+            }
+        }
+        return cnt; 
+    }
+    
+    private int paint(char[][] grid, int r, int c) {
+        int sum = 1;
+        // 先将此cell paint
+        grid[r][c] = '0';
+        //将四面八方paint成0
+        int[] row = {1, -1, 0, 0};
+        int[] col = {0, 0, 1, -1};
+        for (int i = 0; i < row.length; i++) {
+            int newRow = r + row[i];
+            int newCol = c + col[i];
+            if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length && grid[newRow][newCol] == '1') {
+                sum +=  paint(grid, newRow, newCol);
+            }
+        }
+        return sum; 
+    }
+ }
