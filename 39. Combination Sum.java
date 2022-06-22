@@ -63,3 +63,36 @@ class Solution {
         helper(arr, target, curSum, index+1, cur, res);
     }
 }
+
+----------- 易理解写法 --------------------------
+ /*
+如果求总共多少个解，就是coin change - dp
+dp[i][j] 前i个数字中组成sum为j的解法
+dp[i][j] = dp[i-1][j] + dp[i][j-num[i]] :当前数字取或者不取
+如果数字只能取一次： 
+dp[i][j] = dp[i-1][j] + dp[i-1][j-num[i]] :当前数字取或者不取： https://github.com/riaing/leetcode/blob/master/Combination%20Sum%E7%9A%84DP%E7%89%88.java 
+*/
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates); 
+        List<Integer> curRes = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        helper(candidates, target, 0, 0, curRes, res);
+        return res; 
+        
+    }
+    private void helper(int[] cand, int target, int index, int curSum, List<Integer> curRes, List<List<Integer>> res) {
+        if (curSum == target) {
+            res.add(new ArrayList<>(curRes));
+            return; 
+        }
+        for (int i = index; i < cand.length; i++) {
+            if (curSum + cand[i] > target) {
+                return;
+            }
+            curRes.add(cand[i]);
+            helper(cand, target, i, curSum + cand[i], curRes, res);
+            curRes.remove(curRes.size() - 1);
+        }
+    }
+}
