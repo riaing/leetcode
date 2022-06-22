@@ -124,3 +124,44 @@ class Solution {
         
     }
 }
+
+----------------------比以上更清晰 ----------------------
+ /*  min heap存 pair index. 
+规则：如果栈顶是(i,j)， 那么下一个比他小的只可能是 (i+1, j) or (i, j+1)，把这两个入栈
+注意去重：用visitedIndex 数组
+
+Time O（k*lgk) 
+space: o(k)
+
+*/
+
+
+class Solution {
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> (nums1[a[0]] + nums2[a[1]]) - (nums1[b[0]] + nums2[b[1]]));
+        Set<String> visitedIndex = new HashSet<>();
+        pq.offer(new int[]{0,0});
+        visitedIndex.add("0+0");
+        List<List<Integer>> res = new ArrayList<>();
+        
+        while(res.size() < k && !pq.isEmpty()) { // 可能不够k个
+            int[] pre = pq.poll();
+            res.add(Arrays.asList(nums1[pre[0]], nums2[pre[1]]));
+            // add the next 2 
+            int next2 = pre[1] + 1;
+            int next1 = pre[0] + 1; 
+            String nums2move = pre[0] +"+" + next2;
+            String nums1move = next1 + "+" + pre[1];
+            
+            if (pre[1] + 1 < nums2.length && !visitedIndex.contains(nums2move)) {
+                visitedIndex.add(nums2move);
+                pq.offer(new int[]{pre[0], pre[1] + 1});
+            }
+            if (pre[0] + 1 < nums1.length && !visitedIndex.contains(nums1move)) {
+                visitedIndex.add(nums1move);
+                pq.offer(new int[]{pre[0] + 1, pre[1]});
+            }
+        }
+        return res; 
+    }
+}
