@@ -1,3 +1,30 @@
+Numbers can be regarded as the product of their factors.
+
+For example, 8 = 2 x 2 x 2 = 2 x 4.
+Given an integer n, return all possible combinations of its factors. You may return the answer in any order.
+
+Note that the factors should be in the range [2, n - 1].
+
+ 
+
+Example 1:
+
+Input: n = 1
+Output: []
+Example 2:
+
+Input: n = 12
+Output: [[2,6],[3,4],[2,2,3]]
+Example 3:
+
+Input: n = 37
+Output: []
+ 
+
+Constraints:
+
+1 <= n <= 107
+ --------------------------------------------------------DFS backtracking 基础班 -----------------   
 /*
 https://www.cnblogs.com/grandyang/p/5332722.html
 
@@ -29,6 +56,51 @@ class Solution {
     }
 }
 
+-----------------DFS backtracking，更多优化 -------------------
+    /*
+对于所有可选因子，一个个挑 DFS backtracking
+本题重点在于去重：
+#1.类似于subset题，要保证加入的每个数都大于等于前一个数：可以避免 223，232中232这个重复解 -> index 保证 不往回走
+#2  只用考虑除数为 2 - square root of n： 12的可挑因子为 2 3 4 6. 
+    因为每次不走回头路，走到4时，其实已经无法组成 以4为最小值的解了。所以只需要从sqrtN的因子中找，
+
+*/
+class Solution {
+    public List<List<Integer>> getFactors(int n) {
+        List<List<Integer>> res = new ArrayList<>(); 
+        List<Integer> curRes = new ArrayList<>(); 
+        if (n <= 2) {
+            return res; 
+        }
+        helper(n, 2, curRes, res);
+        return res; 
+    }
+    
+ private void helper(int target, int index, List<Integer> curRes, List<List<Integer>> res) {
+        // 写法1：在刚进来时加
+        // if (curRes.size() >= 1) { 
+        //     curRes.add(target); // target = 4, curRes =【3】 -> [3,4]
+        //     res.add(new ArrayList<>(curRes));
+        //     curRes.remove(curRes.size() - 1);
+        // }
+     
+        for (int i = index; i <= Math.sqrt(target); i++) { // 只用找开平方个， 12 = 3*4 = 4*3
+            // 要prune，当前数可能不能组成target 
+            if (target % i == 0) {
+                curRes.add(i);
+                // 写法2， 找到一个解就加
+                curRes.add(target / i);
+                res.add(new ArrayList<>(curRes)); 
+                curRes.remove(curRes.size() - 1);
+                // 写法2 完
+                
+                helper(target / i, i, curRes, res);
+                curRes.remove(curRes.size() - 1);
+            }
+            
+        }
+    }
+}
 ------------ 2022. D&C 解法， 并不比DFS好 -------------------------------------------------------------------------------
 /*
 本题重点在于去重：#1.类似于subset题，要保证加入的每个数都大于等于前一个数：可以避免 223，232中232这个重复解 -> 需要记录最后加入的数
