@@ -31,6 +31,14 @@ Follow up:
 Try to come up with as many solutions as you can. There are at least three different ways to solve this problem.
 Could you do it in-place with O(1) extra space?
 
+ /*
+solution：
+1. 每次移一格，移k次
+2. 找切口再把两段接起来。用extra space
+3. 三次翻转。 O（1） 
+
+从哪切： len - k%len. 注意k可能超过arry 长度
+*/
 ------------------- 找到切口，用extra space --------------
 /*
 从哪切： len - k%len. 注意k可能超过arry 长度
