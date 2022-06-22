@@ -273,3 +273,72 @@ class Solution {
     }
   
 }
+
+--------------2022.6 对桶循环 + memo -------------
+ 
+/*
+Time: 按照bucket traverse，对于每个bucket，要从头遍历，每个元素选 or 不选 ： O（2^n). 
+    k个bucket： O（k* 2^n)
+sapce: o(n) : visited数组    
+
+memo: 只记录错的条件，说明用了xyz个元素后不管怎么放bucket根本组成不了解。
+反之不行，用了xyz元素如果能组成解，他们放到不同bucket后说不定就错了，所以这是不能记录。
+用了memo后就不用 visited[] 了。
+*/
+class Solution {
+    int[] memo;
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        this.memo = new int[1<<16];   // 0 - 没用过， 1-true， 2：false
+        Arrays.sort(nums); // 进一步优化：可以按end来sort，
+        //find the average num of this list, all subsets must add up to this ave
+        int sum = 0;
+        for(int num : nums) {
+            sum += num;
+        }
+        // if it's not divisible, return false; 
+        if (sum % k != 0) {
+            return false;
+        }
+        int ave = sum / k;
+        
+        boolean[] visited = new boolean[nums.length];
+        return search(0, 0, ave, k, nums, visited, 0);  
+    }
+    
+    private boolean search(int curSum, int start, int target, int k, int[] nums, boolean[] visited, int state) {
+        // 因为array是sorted的。 prune
+        if(curSum > target) { // 这里不能memo，因为元素换个bucket说不定就行了
+            return false;
+        }
+        
+        if (k == 1) { // We made k - 1 subsets with target sum and last subset will also have target sum.
+            return true;
+        }
+        if (memo[state] == 2) {
+            return false;
+        }
+     
+        // if we found we subset, we need to search for another subset, by reset curSum to 0, start to 0(means we will search from beginning again), and k-1(means we've already found one subset)
+        if (curSum == target) {
+            return search(0, 0, target, k-1, nums, visited, state);
+        }
+        //if we don't find one subset, we continue by adding numbers to current subset
+        for (int i = start; i < nums.length; i++) {
+            // 这段相当于 下个if 
+            // if (visited[i]) {
+            //     continue;
+            // }
+            if ((state & 1 << i) > 0) {
+                continue; 
+            }
+            
+            visited[i] = true;
+            if (search(curSum+nums[i], i+1, target, k, nums, visited, (state | 1 << i))) {
+                return true;
+            }
+            visited[i] = false;
+        }
+        memo[state] = 2; 
+        return false;
+    }
+}
