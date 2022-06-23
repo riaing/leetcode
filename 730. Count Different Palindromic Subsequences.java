@@ -26,7 +26,7 @@ Constraints:
 1 <= s.length <= 1000
 s[i] is either 'a', 'b', 'c', or 'd'. 
 
-
+Follow up： print 所有解
 
 ------------------------------------------ DP ---------------------------------------------------
 /*
@@ -108,4 +108,130 @@ class Solution {
         // System.out.println(t % modulo);
         return (int) dp[0][n-1];
     }
+}
+
+-------- follow  up: print 所有解 ---------------
+ code： https://leetcode.com/playground/XmSGnDyz
+ 
+ /* 730衍生，print所有palindromic subsequence 
+面经： https://www.1point3acres.com/bbs/thread-800846-3-1.html 
+解法： https://leetcode.com/discuss/interview-question/372459/
+
+Set<String>[][] memo ： i,j 结尾的所有pal seq 
+思路还是一样，1）这里不用去重 2）内部只有一个字母相同时加入string start+end
+ - 首尾不一样：  memo(bc) = memo(b) + memo(c)
+ - 首尾一样
+    内部没相同字母： = memo[i+1, j-1] + "s[i]", "s[i]s[j]"
+    内部1个字母： = memo[i+1, j-1] + "s[i]s[j]"  =》 重点！此时s[i] 已经包含了
+    内部2个以上字母： = memo[i+1, j-1] =》 重点！不用去重
+
+Time： O（n^2 * n 每轮copy最多用n)
+*/
+public class Main {
+    public static void main(String[] args) {
+        List<String> res = palindromes("bcbcb"); // [cc, bcb, bb, b, c, bbb, bcbcb, cbc, bccb] 
+        System.out.println(res);
+    }
+    
+    
+    //  ------------解法2 因为用了set不用考虑去重。= (i+1,j) ; (i, j-1); (i+1,j-1); 给 (i+1,j-1)每个值append首尾 if i== j。 四个结果加起来就是解 -----------------------------
+      private static List<String> palindromes(String s) {
+        if (s == null || s.length() == 0) return Collections.emptyList();
+        int len = s.length();
+        
+        Set<String>[][] dp = new Set[len][len]; // dp[i][j] denotes all solutions in s.substring(i,j+1);
+        for (int i=0; i<len; i++) {
+            dp[i][i] = new HashSet<>();
+            dp[i][i].add(String.valueOf(s.charAt(i)));
+            dp[i][i].add("");
+        }
+        for (int i=1; i<len; i++) {
+            dp[i][i-1] = new HashSet<>();
+            dp[i][i-1].add("");
+        }
+        
+        for (int j=1; j<len; j++) {
+            for (int i=j-1; i>=0; i--) {
+                dp[i][j] = new HashSet<>();
+                for (String p:   dp[i][j-1]) dp[i][j].add(p);
+                for (String p:   dp[i+1][j]) dp[i][j].add(p);
+                for (String p: dp[i+1][j-1]) dp[i][j].add(p);
+                if (s.charAt(i) == s.charAt(j)) {
+                    for (String p: dp[i+1][j-1]) dp[i][j].add(s.charAt(i) + p + s.charAt(j));
+                }
+            }
+        }
+        
+        dp[0][len-1].remove("");
+        return new ArrayList<>(dp[0][len-1]);
+    }
+    
+    // ------------------------ 解法1, 按730的思路写的，其实不用，因为这里set直接去重，等于解决了730的难点 ----------------------------------------------- 
+    public static Set<String> findAllPalindromicSubsequences(String input) {
+        int n = input.length();
+        Set<String>[][] memo = new Set[n][n]; //记！
+        dfs(input, memo, 0, n-1); 
+        return memo[0][n-1];
+    }
+    
+    private static Set<String> dfs(String s, Set<String>[][] memo, int start, int end) {
+        Set<String> curRes = new HashSet<>();
+        if (start > end) {
+            return curRes;
+        }
+        if (start == end) {
+            curRes.add(s.charAt(start)+"");
+            memo[start][end] = curRes;
+            return curRes; 
+        }
+        if (memo[start][end] != null) {
+            return memo[start][end];
+        }
+        
+        if (s.charAt(start) != s.charAt(end)) { // dp[i][j] = dp[i+1][j] + dp[i][j-1] - dp[i+1][j-1] ； 这题因为是set不用remove dup 
+            Set<String> r1 = dfs(s, memo, start + 1, end);
+            Set<String> r2 = dfs(s, memo, start, end - 1);
+            r1.addAll(r2);
+            // 与计算个数的题不一样处： 
+             // Set<String> r3 = dfs(s, memo, start+1, end-1);
+            // r1.removeAll(r3); // 因为是set 不用remove dup
+            curRes = r1; 
+        }
+        else {
+            // 首先dp[i][j] = dp[i+1][j-1] * 2 
+            curRes = dfs(s, memo, start + 1, end - 1);
+            if (curRes.size() != 0) { // 对里面每个元素要append (start)xx(end)
+                List<String> newStrings = new ArrayList<>();
+                for (String curS : curRes) {
+                    newStrings.add(s.charAt(start) + curS + s.charAt(end));
+                }
+                curRes.addAll(newStrings); 
+            }
+            
+            // 找i+1， j-1中的相同字母的个数
+            int i = start + 1; int j = end - 1;
+            while (i < end && s.charAt(i) != s.charAt(start)) {
+                i++;
+            }
+            while (j > start && s.charAt(j) != s.charAt(start)) {
+                j--;
+            }
+            if (i > j) { // 0字母和start一样
+                curRes.add(s.charAt(start)+"");
+                curRes.add(s.charAt(start) + "" + s.charAt(start));  // 重点
+            }
+            else if (i == j) { //1个字母一样。得加上 start + end 
+                curRes.add(s.charAt(start) + "" + s.charAt(start));
+            }
+             // 与计算个数的题不一样处： 用了set 所以不用remove dup
+            // else { // 2个字母一样， 得减 dp[l+1][r-1], l,r are the first/last pos of s[i] in s[i+1, j-1]
+            //     Set<String> remove = dfs(s, memo, i + 1, j -1);
+            //     curRes.removeAll(remove);
+            // }
+        }
+        memo[start][end] = curRes; 
+        return curRes;
+    }
+    
+
 }
