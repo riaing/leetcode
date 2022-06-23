@@ -115,3 +115,115 @@ class Solution {
         return memo[state];
     }
 }
+
+----------------------------- BFS  空间要大些 ------------------
+/*
+总：用的DFS思路，bitmask 就是通过bit来代表新的matrix。
+
+DFS,对于每个1，可取可不取。取的话更新matrix，传个新的matrix，进行递归。
+技巧1： 把matrix flatten成一维。对于 i,j -> i * n + j就是转换后的数。 恢复时对于k -> k / n = row, k %n = col
+技巧2： 用32位数来代表新的matrix。 i,j位是1，就先算出i，j 变成1维的数k，然后state & 1 << k 就把这个数设成1 
+当要把这个数变成0 时： 先取非，把位数变成0，然后再 & state： newState &= ~(1 << (k * n + j)); 
+
+refer： http://leungyukshing.cn/archives/LeetCode%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A%EF%BC%88519%EF%BC%89--%202174.%20Remove%20All%20Ones%20With%20Row%20and%20Column%20Flips%20II.html
+
+Time: {min(n,m)}! 比如行比列小，最多灭n行就行了，所以对于第一次有n个选择，第二次n-1个选择。。。阶乘
+技巧总结： 
+int[] memo = new int[1<<行*列]; 
+位置压缩成1维： i * 列 + j 
+1维变回行： k / 列
+1维变回列： k % 列
+把某个位置变为0：取非再and： & ~位置
+*/
+
+
+class Node {
+    int pos; // 当前的position 
+    int matrix;  // 当前状态下的matrix
+    public Node(int pos, int matrix) {
+        this.pos = pos;
+        this.matrix = matrix; 
+    }
+}
+
+class Solution {
+    int col;
+    int row; 
+    public int removeOnes(int[][] grid) {
+        this.col = grid[0].length;
+        this.row = grid.length; 
+        
+        int initialMatrix = 0; // 存最开始的有1的matrix
+        Queue<Node> q = new LinkedList<Node>();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    int position = i * col + j; 
+                    initialMatrix |= (1 << position);  // 把matrix这行设为1
+                    q.offer(new Node(position, -1)); 
+                }
+            }
+        }
+        // corner case 
+        if (initialMatrix == 0) {
+            return 0; 
+        }
+        
+        // 给q中的每个值加入initial matrix
+        int size = q.size();
+        for (int i = 0; i < size; i++) {
+            Node n = q.poll();
+            n.matrix = initialMatrix; 
+            q.offer(n);
+        }
+        
+        // BFS , 对于每一个点，把行列的1消掉后，把matrix剩下的1和当前matrix状态放进queue
+        int steps = 0;
+        while (!q.isEmpty()) {
+            size = q.size(); 
+            for (int k = 0; k < size; k++) {
+                Node cur = q.poll();
+                // // 1. 查当前matrix是否是最终状态 // 不需要这几行，因为q中必须是有1的matrix，所以刚进来时不可能是全0
+                // if (cur.matrix == 0) {
+                //     return steps;
+                // }
+                
+                // 2. 将matrix当前行列变成0 + 判断
+                changeToZero(cur);
+                if (cur.matrix == 0) {
+                    return ++steps; 
+                }
+                // 3. 把matrix剩下1的位置加入q
+                for (int i = 0; i < row; i++) {
+                    for (int j = 0; j < col; j++) {
+                        int nextPos = i * col + j;
+                        if ((cur.matrix & (1 << nextPos)) > 0) {
+                            q.offer(new Node(nextPos, cur.matrix));
+                        }
+                    }
+                }
+                
+            }
+            steps++;
+        }
+        return steps; 
+    }
+    
+    // 更改matrix 状态 
+    private void changeToZero(Node n) {
+        int curRow = n.pos / col;
+        int curCol = n.pos % col;
+        int matrix = n.matrix;
+        // 1. 先change 列
+        for (int i = 0; i < row; i++) {
+            int changePos = i * col + curCol; 
+            matrix &=  ~(1 << changePos); 
+        }
+        // 2. change 行
+        for (int j = 0; j < col; j++) {
+            int changePos = curRow * col + j;
+            matrix &= ~(1<< changePos);
+        }
+        n.matrix = matrix; 
+    }
+} 
