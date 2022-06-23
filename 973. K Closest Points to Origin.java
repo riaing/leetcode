@@ -55,7 +55,8 @@ class Solution {
 binary search on distance. 找个mid distance，把array分成两半。如果小的那半的个数大于k，说明要找的在小的那半中，因此可以丢到大的那半。反之，小的那半全算进结果，再binary search大的那半。
 通过不断丢掉一半的array和更新k，来找到最终结果
 
-time o(n), space o(n)： required for the arrays containing distances and reference indices. 
+time o(n), 切分时要iterate whole cur list，  第一遍O(n)， 第二遍O（n/2), n/4, ... n/n = 2n 
+space o(n)： required for the arrays containing distances and reference indices. 
 */
 
 class Node {
@@ -126,4 +127,67 @@ class Solution {
     private double calculate(int[] point) {
         return Math.sqrt(point[0]* point[0] + point[1] * point[1]); 
     }
+}
+
+--------------- quick select ------------------------------
+ /*
+标准quick select模板
+
+time o(n), 切分时要iterate whole cur list，  第一遍O(n)， 第二遍O（n/2), n/4, ... n/n = 2n 
+
+space o(1)：
+*/
+
+class Solution {
+    private double calculate(int[] point) {
+        return Math.sqrt(point[0]* point[0] + point[1] * point[1]); 
+    }
+    
+    public int[][] kClosest(int[][] points, int k) {
+        int lo = 0;
+        int hi = points.length - 1;
+        k = k -1; // k要变成index base
+        while (lo <= hi) {
+            int p = partition(points, lo, hi);
+            if (p == k) {
+                return Arrays.copyOfRange(points, 0, p+1);
+            }
+            else if (p < k) {
+                lo = p + 1;
+            }
+            else {
+                hi = p - 1;
+            }
+        }
+        return points; 
+    }
+    
+    // quick select 代码
+    private int partition(int[][] points, int lo, int hi) {
+        int i = lo;
+        int j = hi;
+        double p = calculate(points[lo]);
+        while (i <= j) {
+            // 移动i
+            while (i < hi && calculate(points[i]) <= p) {
+                i++;
+            }
+            while (j > lo && calculate(points[j]) > p) {
+                j--;
+            }
+            if (i >= j) {
+                break;
+            } 
+            swap(points, i, j); 
+        }
+        swap(points, lo, j);
+        return j;
+    }
+    
+    private void swap(int[][] points, int a, int b) {
+        int[] tmp = points[a];
+        points[a] = points[b];
+        points[b] = tmp;
+    }
+
 }
