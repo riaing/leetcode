@@ -66,7 +66,7 @@ class Solution {
     }
 }
 
------------------------------ 2022 ------------------------------------------------------------------
+----------------------------- 2022 stack + 1 variable ------------------------------------------------------------------
  
  
  /*
@@ -107,5 +107,60 @@ class Solution {
         }
         return res; 
         
+    }
+}
+
+------------------ follow up算inclusive时间。stack 记录jobId+状态改变时间 ---------
+ //重点：注意时间的细节： end时加1 
+
+/*
+followup：
+算inclusive time就得记录上个job状态改变的时间 
+Stack<int[]> 0: jobId, 1: 状态改变的时间(改成start/end)
+每次开新job时改变stack里lastJob的时间。
+*/
+
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        int[] exclusiveTime = new int[n];
+        int[] inclusiveTime = new int[n];
+        
+        Deque<int[]> stack = new LinkedList<>(); // 0; jobId, 1 - 状态改变的时间
+        for (int i = 0; i < logs.size(); i++) {
+            String[] cur = logs.get(i).split(":");
+            int jobId = Integer.parseInt(cur[0]);
+            int time = Integer.parseInt(cur[2]);
+            if (cur[1].equals("start")) {
+                 if(!stack.isEmpty()) {
+                    // 计算上一个的时间
+                    int[] lastJob = stack.pop();
+                    int exeTime = time - lastJob[1];
+                    exclusiveTime[lastJob[0]] += exeTime; 
+                    // 更新last job 状态时间
+                    lastJob[1] = time; 
+                    stack.push(lastJob);
+                }
+                 // push自己
+                stack.push(new int[]{jobId, time});
+            }
+            if (cur[1].equals("end")) { 
+                // 算自己时间
+                int[] self = stack.pop();
+                int exeTime = time - self[1] + 1; // 加1
+                exclusiveTime[jobId] += exeTime; 
+                
+                // 启动之前的job
+                if (stack.peek() != null) {
+                    int[] lastJob = stack.pop(); // 加1 
+                    lastJob[1] = time + 1; 
+                    stack.push(lastJob);
+                    
+                    // 算inclusive time
+                    inclusiveTime[lastJob[0]] += exeTime; // 当前job的运行时间就是和上个job重叠的时间
+                }
+            }
+        }
+        System.out.println(Arrays.toString(inclusiveTime)); 
+        return exclusiveTime; 
     }
 }
