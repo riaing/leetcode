@@ -395,3 +395,48 @@ class Solution {
         return sub; 
     }
 }
+        
+--------------------- 2022.6 中心扩展法 ---------------
+        /*
+expand法：遍历每个char，分奇偶两次向外面expand，找当前最长的回文
+
+时间： O（n^2) 遍历n，没轮expand n 
+假设从中间扩展，大部分都不是palimdrome，最坏是aaaa是o(N^2), 大部分是O（n)
+空间O（1）
+*/
+class Solution {
+    public String longestPalindrome(String s) {
+        int maxLen = 0;
+        String maxString = "";
+        // 遍历string，在每个位置expand 两次，找奇vs偶
+        for (int i = 0; i < s.length(); i++) {
+            int[] len1Index = expand(s, i, i); // odd
+            int[] len2Index = expand(s, i, i+1); // even 
+            int len1 = len1Index[1] - len1Index[0] + 1; 
+            int len2 =  len2Index[1] - len2Index[0] + 1; 
+            int len = Math.max(len1, len2);
+            // 更新global var
+            if (len > maxLen) {
+                maxLen = len;
+                if (len1 > len2) {
+                    maxString = s.substring(len1Index[0], len1Index[1] + 1); 
+                }
+                else {
+                    maxString = s.substring(len2Index[0], len2Index[1] + 1); 
+                }
+            }
+        }
+        return maxString;
+    }
+    
+    // 找到expand后的首尾index
+    private int[] expand(String s, int left, int right) { // 注：不能传中点，而要传左右指针。如果是偶数str： bb 处理方便
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        // 出来后左右之内是个palim
+        return new int[]{left+1,right-1};
+        
+    }
+}
