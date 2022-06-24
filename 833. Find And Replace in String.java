@@ -44,7 +44,7 @@ k == indices.length == sources.length == targets.length
 s consists of only lowercase English letters.
 sources[i] and targets[i] consist of only lowercase English letters.
 
--------------------------------直接解法 ---------------------------------------
+-------------------------------直接解法， O（lgN), 除了新string space---------------------------------------
 class Rule {
     int index;
     String source;
@@ -104,7 +104,45 @@ class Solution {
         return res; 
     }
 }
-----------------------------从后往前，因为题目说了不会overlap所以直接在string上改，更intuitive --------------------
+
+---------------直接解法：O（n）， 除了新string用O（n）space on map ------
+ /*
+1. 把要改的index等放到map里
+2. 遍历string， 要改的地方就查能不能replace
+
+Time： O（n）
+Space：O（n）
+*/
+class Solution {
+    public String findReplaceString(String s, int[] indices, String[] sources, String[] targets) {
+        // 重点 indice可能没sort
+        Map<Integer, String[]> map = new HashMap<>(); // key: 要replace的index， val：0-sources， 1-target
+        for (int i = 0; i < indices.length; i++) {
+            map.put(indices[i], new String[]{sources[i], targets[i]});
+        }
+        
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (!map.containsKey(i)) {
+                b.append(s.charAt(i));
+                continue;
+            }
+            String source = map.get(i)[0];
+            String target = map.get(i)[1];
+            
+            String toReplace = s.substring(i, i + source.length());
+            if (toReplace.equals(source)) {
+                b.append(target);
+                i = i + source.length() - 1;
+            }
+            else {
+                b.append(s.charAt(i)); 
+            }
+        }
+        return b.toString();
+    }
+}
+----------------------------从后往前，因为题目说了不会overlap所以直接在string上改，更intuitive . Time: o(lgN), 除了新string O（1）space --------------------
 
 class Rule {
     int index;
