@@ -15,7 +15,11 @@ You may assume that word1 does not equal to word2, and word1 and word2 are both 
 -----------------------------------------------------------
 /*
 两sorted list，求min distance： 2 pointer 基础题
-Time: build Map O（n）， shortest最差O（n） -> O（n）
+Time: build Map O（n）， 
+2 pointer 找shortest： max(K,L), K.L are the # of occurances of 2 words. K,L can be N for worst case 
+ - why max? 当一个list的所有元素大于另一个的时候，需要完全遍历另一个
+space: build Map O(n)
+
 space: build Map O(n)
 
 Followup：
