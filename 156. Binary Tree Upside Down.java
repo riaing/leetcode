@@ -110,7 +110,7 @@ class Solution {
             return root; 
         }
         TreeNode newRoot = upsideDownBinaryTree(root.left); 
-        upsideDownBinaryTree(root.right); 
+//         upsideDownBinaryTree(root.right);  因为 Every right node in the tree has no children.这行可省
         TreeNode oldLeft = root.left;
         TreeNode oldRight = root.right;
         root.right = null; 
