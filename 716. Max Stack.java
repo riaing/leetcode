@@ -188,3 +188,119 @@ class MaxStack {
  * int param_4 = obj.peekMax();
  * int param_5 = obj.popMax();
  */
+
+-------------- double linkedlist (ddl) + TreeMap<Integer, LinkedList<Node>> 更干净 -------
+    class Node {
+    int val;
+    Node pre;
+    Node next;
+    
+    public Node(int val) {
+        this.val = val;
+    }
+}
+
+class DDL {
+    Node sudo;
+    Node cur; 
+    public DDL() {
+        this.sudo = new Node(-1);   
+        this.cur = sudo; 
+    }
+    
+    public Node add(int val) {
+        Node n = new Node(val);
+        cur.next = n;
+        n.pre = cur; 
+        cur = cur.next;
+        return n; 
+    }
+    
+    public Node remove(Node n) {
+        if (n == null) {
+            return null; 
+        }
+        if (n == cur) {
+            cur = cur.pre;
+            cur.next = null;
+        }
+        else {
+            Node pre = n.pre;
+            Node next = n.next;
+            pre.next = next;
+            next.pre = pre; 
+        }
+        return n; 
+    }
+    
+    public Node removeLast() {
+        return remove(cur); 
+    }
+    
+    public Node peekLast() {
+        return cur; 
+    }
+}
+class MaxStack {
+    DDL ddl;
+    TreeMap<Integer, LinkedList<Node>> map;
+    public MaxStack() {
+        this.ddl = new DDL();
+        this.map = new TreeMap<>(); 
+    }
+    
+    public void push(int x) {
+        Node n = ddl.add(x);
+        map.putIfAbsent(x, new LinkedList<>());
+        map.get(x).add(n); 
+    }
+    
+    public int pop() {
+        if (map.isEmpty()) {
+            return -1; 
+        }
+        
+        Node toPop = ddl.removeLast(); 
+        map.get(toPop.val).removeLast();  // 保证是最后一个 
+        if (map.get(toPop.val).isEmpty()) {
+            map.remove(toPop.val);
+        }
+        return toPop.val;
+    }
+    
+    public int top() {
+        return ddl.peekLast().val;
+    }
+    
+    public int peekMax() {
+        if (map.isEmpty()) {
+            return -1; 
+        }
+        return map.lastKey();
+    }
+    
+    public int popMax() {
+        if (map.isEmpty()) {
+            return -1; 
+        }
+        int maxKey = map.lastKey(); 
+        Node maxNode = map.get(maxKey).removeLast(); // 必须是list才能拿到最后一个key
+        // map.get(maxKey).remove(maxNode);
+        if (map.get(maxKey).isEmpty()) {
+            map.remove(maxKey);
+        }
+        // remove from ddl 
+        ddl.remove(maxNode);
+        return maxKey;
+    }
+}
+
+/**
+ * Your MaxStack object will be instantiated and called as such:
+ * MaxStack obj = new MaxStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.peekMax();
+ * int param_5 = obj.popMax();
+ */
