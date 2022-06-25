@@ -1,4 +1,5 @@
 stream的add remove query interval。 用list每次O（n）扫太慢，这里用treeMap来快速找到要改的range。
+Linkedin 简化版： https://leetcode.com/playground/cvs3VGSH 
 
 
 --------题 
