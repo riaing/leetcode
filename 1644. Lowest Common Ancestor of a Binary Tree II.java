@@ -51,44 +51,67 @@ p != q
 方法1： 对二叉树进行完全搜索，同时global var记录p和q是否同时存在树中，从而满足题目的要求。
 方法2：新的object记录{Node，count} -> count == 2时才能返回node。 https://www.youtube.com/watch?v=d1b1WcKOGkU  
 */
+ 
+ 
 =============================== 方法1 =============================
-class Solution {
-    boolean findP;
-    boolean findQ; 
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        TreeNode res = findNode(root, p, q);
-        if (findP && findQ) {
-            return res;
-        }
+但对于这道题来说，p和q不一定存在于树中，所以你不能遇到一个目标值就直接返回，而应该对二叉树进行完全搜索（遍历每一个节点），如果发现p或q不存在于树中，那么是不存在LCA的。
+
+回想我在文章开头分析的几种find函数的写法，哪种写法能够对二叉树进行完全搜索来着？
+
+这种：
+
+TreeNode find(TreeNode root, int val) {
+    if (root == null) {
         return null;
-        
     }
-    
-    private TreeNode findNode(TreeNode root, TreeNode p, TreeNode q) {
-        if (root == null) {
-            return null;
-        }
-        
-        TreeNode left = findNode(root.left, p, q);
-        TreeNode right = findNode(root.right, p, q);
-        if (left != null && right != null) {
-            return root;
-        }
-        
-        if (root.val == p.val || root.val == q.val) {
-            if (root.val == p.val) {
-                findP = true;
-            }
-            else {
-                findQ = true;
-            }
-            return root; // 找到了一个值
-        }
-        
-        return left == null ? right : left; 
+    // 先去左右子树寻找
+    TreeNode left = find(root.left, val);
+    TreeNode right = find(root.right, val);
+    // 后序位置，判断 root 是不是目标节点
+    if (root.val == val) {
+        return root;
     }
-    
+    // root 不是目标节点，再去看看哪边的子树找到了
+    return left != null ? left : right;
 }
+那么解决这道题也是类似的，我们只需要把前序位置的判断逻辑放到后序位置即可：
+
+// 用于记录 p 和 q 是否存在于二叉树中
+boolean foundP = false, foundQ = false;
+
+TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    TreeNode res = find(root, p.val, q.val);
+    if (!foundP || !foundQ) {
+        return null;
+    }
+    // p 和 q 都存在二叉树中，才有公共祖先
+    return res;
+}
+
+// 在二叉树中寻找 val1 和 val2 的最近公共祖先节点
+TreeNode find(TreeNode root, int val1, int val2) {
+    if (root == null) {
+        return null;
+    }
+    TreeNode left = find(root.left, val1, val2);
+    TreeNode right = find(root.right, val1, val2);
+
+    // 后序位置，判断当前节点是不是 LCA 节点
+    if (left != null && right != null) {
+        return root;
+    }
+
+    // 后序位置，判断当前节点是不是目标值
+    if (root.val == val1 || root.val == val2) {
+        // 找到了，记录一下
+        if (root.val == val1) foundP = true;
+        if (root.val == val2) foundQ = true;
+        return root;
+    }
+
+    return left != null ? left : right;
+}
+这样改造，对二叉树进行完全搜索，同时记录p和q是否同时存在树中，从而满足题目的要求
 
 =================== 方法2 ========================================
 public class Node {
