@@ -147,3 +147,90 @@ class Solution {
         return;
     }
 }
+
+------------------ 2022. TreeMap 本题不用，是给 https://leetcode.com/problems/range-module/discuss/2120522/Java-or-TreeMap-or-Beats-85 的code -------
+/*
+https://leetcode.com/playground/cvs3VGSH 
+TreeMap做法
+
+# Add: 
+1.找到第一个和最后一个可能overlap的interval [first, last]
+eg: 10,20; 21,30. 插入 18，23
+- 找最后一个overlap： map.floorKey(23): Returns  reatest one <= the given key, , or null
+- 找第一个overlap：map.floorKey(18) 
+注意特殊case：首尾插入可能 TreeMap floorKey() return null
+
+2.遍历这段 intervals, 有相交就merge，删除；
+general 判断相交： a start <= b end && b start <= a end 
+
+3.map加入merge后的interval
+
+add(mlgn), m: # of overlapped intervals. 最坏 nlgn，到要merge
+getRange O(1)
+*/
+
+
+import java.util.*;
+
+class Solution {
+    int coverLen = 0; // follow up 
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        if (newInterval == null || newInterval.length == 0) {
+            return intervals; 
+        }
+        
+        TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
+        for (int[] cur : intervals) {
+            coverLen += cur[1] - cur[0]; // follow up 
+            map.put(cur[0], cur[1]);
+        }
+        if (map.isEmpty()) { // corner case 
+            map.put(newInterval[0], newInterval[1]); 
+            coverLen += newInterval[1] - newInterval[0]; // follow up 
+        }
+        
+        // 1. 找到可能overlap的interval range
+        int left = map.floorKey(newInterval[0]) == null ? map.firstKey() : map.floorKey(newInterval[0]);
+        int right = map.floorKey(newInterval[1]) == null ? map.lastKey() : map.floorKey(newInterval[1]);; 
+        SortedMap<Integer, Integer> mapRange = map.subMap(left, right+1); // 拿到那一段map的view
+ 
+        List<Integer> keyToRemove = new ArrayList<>();
+        for (Integer key : mapRange.keySet()) {  // O(m), m -> # overlapped intervals 
+            // 查相交
+            int curStart = key;
+            int curEnd = map.get(key);
+            if (newInterval[0] <= curEnd && curStart <= newInterval[1]) { // 删除加入都是 O（lgN)
+                keyToRemove.add(key);
+                newInterval[0] = Math.min(newInterval[0], curStart);
+                newInterval[1] = Math.max(newInterval[1], curEnd);
+            }
+        }
+        // remove 
+        for (int key : keyToRemove) {
+            coverLen -= map.get(key) - key; // follow up 
+            map.remove(key);
+        }
+        // add new interval 
+        map.put(newInterval[0], newInterval[1]);
+        coverLen += newInterval[1] - newInterval[0]; // follow up; 
+        
+       // System.out.println(map);
+        System.out.println("coverLen " + coverLen); // follow up
+       
+       // get result 
+        int[][] res = new int[map.size()][2];
+        int i = 0;
+        for (int k : map.keySet()) {
+            res[i][0] = k;
+            res[i][1] = map.get(k);
+            i++;
+        }
+        return res; 
+    }    
+    
+    // follow up: 比如insert之后的interval是[1,3], [6,9] -> (9-6)+(3-1) = 5 . 要求O（1）
+    private int getTotalCoveredLength() {
+        return coverLen; 
+    }
+}
+
