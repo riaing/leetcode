@@ -38,3 +38,30 @@ class Solution {
     }
     
 }
+-------------- 同样思路 写2 --------------------------
+    /*
+对于word1，和出现在它之前的最近的word2算距离：需要记录lastSeen word2
+同理对word2，需要记录lastSeen word1. 
+所以两者combine，对于w1/w2, 与lastSeen w2/w1算距离，同时跟新itself。扫一遍即可
+*/
+    
+class Solution {
+    public int shortestDistance(String[] wordsDict, String word1, String word2) {
+        int lastSeen1 = -1;
+        int lastSeen2 = -1;
+        int minDis = wordsDict.length;
+        for (int i = 0; i < wordsDict.length; i++) {
+            String cur = wordsDict[i];
+            if (cur.equals(word1)) {
+                lastSeen1 = i;  
+            }
+            else if (cur.equals(word2)) {
+                lastSeen2 = i; 
+            }
+            if (lastSeen1 != -1 && lastSeen2 != -1) {
+                minDis = Math.min(minDis, Math.abs(lastSeen1 - lastSeen2));
+            }
+        }
+        return minDis; 
+    }
+}
