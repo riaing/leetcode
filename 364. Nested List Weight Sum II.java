@@ -166,8 +166,8 @@ class Solution {
     }
 }
 
--------------------- 更省时的DFS --------------------
- /**
+-------------------- 更省时的DFS,直接dfs出每层的sum --------------------
+/**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
  * public interface NestedInteger {
@@ -197,40 +197,39 @@ class Solution {
  */
 
 /*
-递归找深度，类似于 https://leetcode.com/problems/find-leaves-of-binary-tree/ 是 叶子depth为0， 本题是root depth为0 
-1、 先递归找到每个深度的sum， =》List<Integer> 
-2，算完后 list的index+1 就是 depth，按公式算即可
-
-Time O（n + 层数)
+重点是求出number —> depth. Bfs 需要个data structure来记录 NestedInteger和它的depth』
+第一层：把nestedList加到queue里面去。
+每次poll element: 如果是integer，找到。如果是个list，把list的elment加到queue里，并且dpeth + 1
+Time: O(n*2)
 */
 class Solution {
-    public int depthSum(List<NestedInteger> nestedList) {
-        // 1. 重点是求出每层的sum。 
-        List<Integer> sumPerLevel = new ArrayList<>(); 
-        findSum(nestedList, 1, 0, sumPerLevel); // o(n)
-        
-         //2. follow the rule to do calculation， sumPerLevel的index就和depth相关
+    int maxDepth; 
+    public int depthSumInverse(List<NestedInteger> nestedList) {
+        List<Integer> sums = new ArrayList<>();
+        dfs(nestedList, 1, 0, sums);
+        // 计算
         int res = 0; 
-        for (int i = 0; i < sumPerLevel.size(); i++) { // O(层数)
-            int depth = i + 1;
-            res += depth * sumPerLevel.get(i);
+        for (int i = 0; i < sums.size(); i++) {
+            int w = maxDepth - (i+1) + 1;
+            res += w * sums.get(i);
         }
-        return res;
-    }
-    
-    private void findSum(List<NestedInteger> nestedList, int depth, int curIndex, List<Integer> res) { 
-        while (res.size() < depth) {
-            res.add(0);
-        }
+        return res; 
         
-        for (int i = curIndex; i < nestedList.size(); i++) {
-            NestedInteger curN = nestedList.get(i);
-      
-            if (curN.isInteger()) {
-                res.set(depth-1, res.get(depth-1) + curN.getInteger());
+    }
+    private void dfs(List<NestedInteger> nestedList, int curDepth, int curIndex, List<Integer> sums) {
+        if (curIndex >= nestedList.size()) {
+            return;
+        }
+        maxDepth = Math.max(maxDepth, curDepth);
+        if (sums.size() < curDepth) {
+            sums.add(0);
+        }
+        for (NestedInteger ni : nestedList) {
+            if (ni.isInteger()) {
+                sums.set(curDepth-1, sums.get(curDepth-1) + ni.getInteger());
             }
             else {
-                findSum(curN.getList(), depth+1, 0, res);
+                dfs(ni.getList(), curDepth+1, 0, sums);
             }
         }
     }
