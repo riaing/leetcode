@@ -106,21 +106,19 @@ class Solution {
 */
 class Solution {
     public TreeNode upsideDownBinaryTree(TreeNode root) {
-        if (root == null) {
-            return root;
+        if (root == null || root.left == null) {
+            return root; 
         }
-        if (root.left == null && root.right == null) {
-            return root;
-        }   
-        TreeNode left = upsideDownBinaryTree(root.left);
-        upsideDownBinaryTree(root.right);
-        
-        TreeNode newRoot = root.left;
-        TreeNode curRight = root.right;
-        newRoot.left = curRight;
-        newRoot.right = root;
-        root.left = null;
+        TreeNode newRoot = upsideDownBinaryTree(root.left); 
+        upsideDownBinaryTree(root.right); 
+        TreeNode oldLeft = root.left;
+        TreeNode oldRight = root.right;
         root.right = null; 
-        return left; 
+        root.left = null; 
+        oldLeft.right = root; 
+        oldLeft.left = oldRight;
+        return newRoot;
+    
+        
     }
 }
