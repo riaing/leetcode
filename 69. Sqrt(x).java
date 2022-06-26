@@ -39,26 +39,26 @@ public class Solution {
 
 ------------------- 2022.5 自己的模板 -------------------------------------------------
     
- class Solution {
+class Solution {
     public int mySqrt(int x) {
-        if (x < 2) {
+        if (x <= 1) {
             return x;
         }
-        int half = x / 2; 
-        long start = 0;  //
-        long end = half;
-        // find first k which k^2 > x 
+        long start = 2;
+        long end =  x/2; // 必须是long不然会超
         while (start <= end) {
             long mid = start + (end - start) / 2; 
-            // System.out.println("mid " + mid + " : " + mid*mid);
-            if (mid*mid > x) { //注意是long，不让mid*mid会超
-                end = mid - 1; 
+            if (mid * mid == x) { 
+                return (int) mid;
             }
-            else {
+            else if (mid * mid < x) {
                 start = mid + 1;
             }
+            else {
+                end = mid - 1;
+            }
         }
-        return (int) start - 1;
+        return (int) end; 
     }
-}    
+}
     
