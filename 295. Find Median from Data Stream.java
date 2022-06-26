@@ -117,3 +117,50 @@ class MedianFinder {
  * obj.addNum(num);
  * double param_2 = obj.findMedian();
  */
+-------------------- 2022。6 更简洁 -------------
+ 
+ class MedianFinder {
+    PriorityQueue<Integer> firstPart;
+    PriorityQueue<Integer> secondPart; 
+    public MedianFinder() {
+        this.firstPart = new PriorityQueue<Integer>((a,b) -> b - a); // max heap 
+        this.secondPart = new PriorityQueue<Integer>(); // min heap 
+    }
+    
+    public void addNum(int num) {
+        if (firstPart.isEmpty() || num <= firstPart.peek()) {
+            firstPart.offer(num);
+        }
+        else {
+            secondPart.offer(num);
+        }
+        balance(firstPart, secondPart); 
+    }
+    
+    public double findMedian() {
+        if (firstPart.size() == secondPart.size()) {
+            return (firstPart.peek() + secondPart.peek()) * 1.0 / 2;  // 注意变成double
+        }
+        else {
+            return firstPart.peek(); 
+        }
+    }
+    
+    // maintain first part + 1 = second Part
+    private void balance( PriorityQueue<Integer> firstPart,  PriorityQueue<Integer> secondPart) {
+        while (firstPart.size() - secondPart.size() > 1) {
+            secondPart.offer(firstPart.poll());
+        }
+        while (secondPart.size() > firstPart.size()) {
+            firstPart.offer(secondPart.poll());
+        }
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
+ 
