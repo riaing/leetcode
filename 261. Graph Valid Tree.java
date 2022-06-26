@@ -85,29 +85,28 @@ class Solution {
         }
         
         // create q and put 0 
+     // create q and put 0 
         Set<Integer> visited = new HashSet<Integer>();
         for (int cur : neibor.keySet()) {
             if (!visited.contains(cur)) {
-                if (!dfs(cur, -1, visited, neibor)) {
+                if (hasCycle(cur, -1, visited, neibor)) {
                     return false;
                 }
             }
         }
-        
         return true; 
     }
     
-        // detect cycle 
-    public boolean dfs(int node, int parent, Set<Integer> seen, Map<Integer, Set<Integer>> neibor) {
-        if (seen.contains(node)) return false;
+    public boolean hasCycle(int node, int parent, Set<Integer> seen, Map<Integer, Set<Integer>> neibor) {
+        if (seen.contains(node)) return true;
         seen.add(node);
         for (int neighbour : neibor.get(node)) {
             if (parent != neighbour) {
-                boolean result = dfs(neighbour, node, seen, neibor);
-                if (!result) return false;
+                boolean result = hasCycle(neighbour, node, seen, neibor);
+                if (result) return true;
             }
         }
-        return true;
+        return false;
     }
 }
 
@@ -132,7 +131,8 @@ class Solution {
         visited.add(0);
         q.offer(0);
         
-        //  For each of the N nodes, its adjacent edges is iterated over once.  In total, this means that all E edges are iterated over once by the inner loop. This, therefore, gives a total time complexity of O(N + E).
+        //  For each of the N nodes, its adjacent edges is iterated over once.  In total, this means that all E edges 
+        // are iterated over once by the inner loop. This, therefore, gives a total time complexity of O(N + E).
         while (!q.isEmpty()) {
             int cur = q.poll(); 
             for (Integer curNeibor : neibor.get(cur)) {
