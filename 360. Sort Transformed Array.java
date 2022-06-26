@@ -30,46 +30,41 @@ Follow up: Could you solve it in O(n) time?
 */
 class Solution {
     public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
-        boolean up = a >=0 ? true : false; 
-        int left = 0;
-        int right = nums.length - 1; 
-        int curP = a >= 0 ? nums.length - 1 : 0; 
-        int[] res = new int[nums.length];
-        while (left < right) {
-            int leftVal = cal(nums[left], a, b, c);
-            int rightVal = cal(nums[right], a, b, c);
+        boolean up = a > 0 ? true : false;   
+        int start = 0;
+        int end = nums.length - 1;
+        int index = a > 0 ? nums.length - 1 : 0;
+        int[] res = new int[nums.length]; 
+        while (start <= end) {
+            int cur1 = cal(a,b,c, nums[start]);
+            int cur2 = cal(a,b,c, nums[end]);
             if (up) {
-                if (leftVal > rightVal) {
-                    res[curP] = leftVal;
-                    left++;
+                if (cur1 > cur2) {
+                    res[index] = cur1;
+                    start++;
                 }
                 else {
-                    res[curP] = rightVal;
-                    right--;
+                    res[index] = cur2;
+                    end--;
                 }
-                curP--;
+                index--;
             }
             else {
-                if (leftVal < rightVal) {
-                    res[curP] = leftVal;
-                    left++;
+                if (cur1 < cur2) {
+                    res[index] = cur1;
+                    start++;
                 }
                 else {
-                    res[curP] = rightVal;
-                    right--;
+                    res[index] = cur2;
+                    end--;
                 }
-                curP++;      
+                index++;
             }
         }
-        // one num left if nums is odd number
-        if (left == right) {
-            res[curP] = cal(nums[left], a, b, c);
-        }
-        
         return res; 
+        
     }
-    
-    private int cal(int num, int a, int b, int c) {
-        return num * num * a + num * b + c;
+    private int cal(int a, int b, int c, int x) {
+        return a * x * x + b * x + c; 
     }
 }
