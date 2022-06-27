@@ -63,46 +63,56 @@ class Solution {
     }
     
     ----------------------------------------BFS---------------------------------------------------------
-    // 每个node访问一遍，每个node O(n*k) -> O(n^2 *k)
-//如果改成字母比较的话就是0 (n*26*k)
+/*
+n - list length。 k - string length
+Q最长为n，对Q的每个元素，call transferWord 找它的neibor：26*K 或者N 取小（这里假设26*k）小
+所以总共N*26*k
+*/
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        Queue<String> queue = new LinkedList<String>();
-        Set<String> set = new HashSet<String>(wordList);
-        int curLen = 1; 
-        queue.offer(beginWord);
-        while (!queue.isEmpty()) {
-            curLen++;
-            int size = queue.size();
+        Set<String> dic = new HashSet<>(wordList);
+        Queue<String> q = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        q.offer(beginWord);
+        visited.add(beginWord);
+        int step = 1; // 算上自己 
+        if (beginWord.equals(endWord)) {
+            return 0;
+        }
+        
+        while (!q.isEmpty()) { // O(n) 访问每个node
+            int size = q.size();
             for (int i = 0; i < size; i++) {
-                String a = queue.poll();
-                Set<String> remove = new HashSet<String>();
-                //O(n*k)
-                for (String s : set) {
-                    if (transformable(a, s)) {
-                        if (s.equals(endWord)) {
-                            return curLen;
-                        }
-                        queue.offer(s);
-                        remove.add(s);
+                String cur = q.poll();
+                List<String> transferred = transfer(cur, dic,visited);
+                for (String s :transferred) {
+                    if (s.equals(endWord)) {
+                        return ++step;
                     }
+                    q.offer(s);
                 }
-                set.removeAll(remove);
             }
+            step++;
         }
-        return 0;
+        return 0; 
     }
+    
     // 改用找到所有A的transform word，查看哪些在wordset里也可以。那就是o (26*k)
-    private boolean transformable(String a, String b) {
-        int differLetter = 0; 
-        for (int i = 0; i < a.length(); i++) {
-            if (a.charAt(i) != b.charAt(i)) {
-                differLetter++;
+    private List<String> transfer(String cur, Set<String> dic, Set<String> visited) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < cur.length(); i++) {
+            for (char letter = 'a'; letter <= 'z'; letter++) {
+                String cand = cur.substring(0, i) + letter + cur.substring(i+1);
+               
+                if (dic.contains(cand) && !visited.contains(cand)) {
+                    visited.add(cand);
+                     // System.out.println("cir " + cur + " " + cand);
+                    res.add(cand);
+                }
             }
         }
-        return differLetter == 1; 
+        return res; 
     }
-}
 }
 
 --------------------- 2022 BFS 比上面复杂一写的解法，但时间一样- ----------------------------------------
