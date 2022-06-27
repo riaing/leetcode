@@ -56,6 +56,21 @@ DFS,对于每个1，可取可不取。取的话更新matrix，传个新的matrix
 
 refer： http://leungyukshing.cn/archives/LeetCode%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A%EF%BC%88519%EF%BC%89--%202174.%20Remove%20All%20Ones%20With%20Row%20and%20Column%20Flips%20II.html
 
+Time: { 第一层有mn个选择，每个选择消除整行整列的1：m+n. => mn*（m + n) 
+        第二层估算不了，就最大估算有mn-1个选择 （假设每层只消一个1） => 、、、
+        总共min(m,n)层 ： 比如行比列小，最多灭n行就行了，
+=》 [mn*(m+n)]^k, k = min(m,n) 
+
+Space：
+DFS： Stack 是 min（m,n), array 用了 2^mn 大小 =》 2^mn + min(m,n)
+BFS: 第一轮有 mn个状态，第二轮有mn*(mn-1)个状态，总共k轮 =》 mn + mn*(mn-1) + mn*(mn-2) ... + mn*(mn-k)
+        
+技巧总结： 
+int[] memo = new int[1<<行*列]; 
+位置压缩成1维： i * 列 + j 
+1维变回行： k / 列
+1维变回列： k % 列
+把某个位置变为0：取非再and： & ~位置
 */
 class Solution {
     int row;
