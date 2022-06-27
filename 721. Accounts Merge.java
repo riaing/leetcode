@@ -87,3 +87,49 @@ class Solution {
         }
     }
 }
+
+------------ DFS 直接return list的写法 ----------
+ class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, Set<String>> emailMap = new HashMap<>();
+        for (List<String> account: accounts) {
+            String firstEmail = account.get(1);
+            emailMap.putIfAbsent(firstEmail, new HashSet<>());
+            for (int i = 2; i < account.size(); i++) {
+                String nextEmail = account.get(i);
+                emailMap.get(firstEmail).add(nextEmail);
+                
+                emailMap.putIfAbsent(nextEmail, new HashSet<>());
+                emailMap.get(nextEmail).add(firstEmail);
+                }
+        }
+        
+        Set<String> visited = new HashSet<>();
+        List<List<String>> res = new ArrayList<>();
+        for (List<String> account : accounts) { 
+            String name = account.get(0);
+            String first = account.get(1);
+            if (!visited.contains(first)) {
+                List<String> oneAccount = new ArrayList<>();
+                oneAccount.add(name);
+                List<String> emails = getEmails(first, visited, emailMap);
+                Collections.sort(emails); 
+                oneAccount.addAll(emails);
+                res.add(oneAccount);
+            }
+        }
+        return res;
+    }
+    
+    private List<String> getEmails(String cur, Set<String> visited, Map<String, Set<String>> emailMap) {
+        List<String> res = new ArrayList<>();
+        res.add(cur);
+        visited.add(cur);
+        for (String neibor : emailMap.get(cur)) {
+            if (!visited.contains(neibor)) {
+                res.addAll(getEmails(neibor, visited, emailMap));
+            }
+        }
+        return res; 
+    }
+}
