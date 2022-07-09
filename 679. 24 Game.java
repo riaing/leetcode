@@ -89,3 +89,73 @@ class Solution {
         return false;
     } 
 }
+
+--------------------------- backtracking -------------
+    /*
+这里的N = 4
+时间：
+第一层： N *N-1 * 4个选择
+第二层： N-1 * N-2 * 4 
+第三层： N-2 * N-3 * 4 
+总共N层
+所以N！*(N-1)!*4^N 
+
+空间：
+recursive stack = N
+每层copy一个新array，大小为 N-1， N-2。。。2， 1 相加 = O（N^2)  
+*/
+class Solution {
+    public boolean judgePoint24(int[] cards) {
+        LinkedList<Double> input = new LinkedList<>();
+        for (int i = 0; i < cards.length; i++) {
+            input.add(cards[i] * 1.0);
+        }
+        return helper(input);
+        
+    }
+    
+    private boolean helper(LinkedList<Double> input) {
+        if (input.size() == 1) {
+            return  Math.abs(input.get(0) - 24) <= 0.00001; // Math.round(input.get(0)) == 24; 不能用round！ 24.4 算错
+        }
+        
+        for (int i = 0; i < input.size(); i++) {
+            for (int j = 0; j < input.size(); j++) {
+                if (j == i) {
+                    continue; 
+                }
+                double first = input.get(i);
+                double second = input.get(j);
+                LinkedList<Double> copy = new LinkedList<>(input);
+                copy.remove(Double.valueOf(first));  copy.remove(Double.valueOf(second));
+                char[] symbol = {'+', '-', '*', '/'};
+                for (int k = 0; k < symbol.length; k++) {
+                    double val = calculate(first, second, symbol[k]); 
+                    copy.add(val);
+                    if (helper(copy)) {
+                        return true;
+                    }
+                    copy.removeLast();
+                }
+            }
+        }
+        return false; 
+    }
+    
+    private double calculate(double first, double second, char symbol) {
+        double res = 0; 
+        if (symbol == '+') {
+            res = first + second; 
+        }
+        else if (symbol == '-') {
+            res = first - second;
+        }
+        else if (symbol == '*') {
+            res = first * second;
+        }
+        else if (symbol == '/') {
+            res = first / second;
+        }
+        return res; 
+    }
+}
