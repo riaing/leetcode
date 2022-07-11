@@ -50,7 +50,7 @@ class Solution {
      }
 }
 
-------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------greedy --------------------------------------------------------------------------
 找到当前能覆盖的最大值（coverDistance），当i 超过这个值时，说明step ++， 在i没超过 coverDistance的循环中，每次update能到的最远距离。
 当i超过 coverDistance时，再把coverDistance update到之前步骤中找到的能到的最大距离。 
 http://www.cnblogs.com/lichen782/p/leetcode_Jump_Game_II.html
@@ -77,5 +77,36 @@ public class Solution {
             return step;    
         
         
+    }
+}
+
+
+------------ DP ---------------
+ /*
+dp[] min steps here 
+dp[i] = dp[j] + 1, if j + nums[j] >= i && dp[j] is reachable, j <[0, i-1]
+dp[0] = 0
+
+*/
+ /*
+dp[] min steps here 
+dp[i] = dp[j] + 1, if j + nums[j] >= i && dp[j] is reachable, j <[0, i-1]
+dp[0] = 0
+*/
+ 
+class Solution {
+    public int jump(int[] nums) {
+        int[] dp = new int[nums.length]; // at index i, the min steps needed 
+        dp[0] = 0;
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = Integer.MAX_VALUE;
+            for (int j = i-1; j >= 0; j--) {
+                if (nums[j] >= i-j && dp[j] != Integer.MAX_VALUE) { //如果前某位能跳到当前位置
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+            // System.out.println(dp[i]);
+        }
+        return dp[nums.length-1];
     }
 }
