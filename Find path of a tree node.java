@@ -72,6 +72,8 @@ class Solution {
     }
 
 ------------- Google 真题：求两个node之path ----------------------------------------------
+原题： https://leetcode.com/problems/step-by-step-directions-from-a-binary-tree-node-to-another/submissions/ 
+
   思路 1. find lowest common ancestor 2. find lca to node''s path, separately 
   .... 
   
