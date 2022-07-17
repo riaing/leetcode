@@ -27,7 +27,7 @@ The minimum depth is the number of nodes along the shortest path from the root n
  *     TreeNode(int x) { val = x; }
  * }
  */
- -----------------------------recursion------------------------------------------------------------------------------
+ -----------------------------recursion D&C ------------------------------------------------------------------------------
 class Solution {
     public int minDepth(TreeNode root) {
         if (root == null) {
