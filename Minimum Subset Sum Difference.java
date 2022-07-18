@@ -17,6 +17,9 @@ Explanation: We can partition the given set into two subsets where minimum absol
 between the sum of numbers is '92'. Here are the two subsets: {1, 3, 4} & {100}.
 ------------------------DP 背包 ------------------------------------------------------------------
 /*
+
+dp[i][j] : 前i个元素，能否组成sum为j。
+return: loop through dp[n][j], if true,则另一个bucket sum 为：sum - i。两者差为一个解： abs（i, sum-i) 
  we are trying to find a subset whose sum is as close to ‘S/2’ as possible, because if we can 
  partition the given set into two subsets of an equal sum, we get the minimum difference, i.e. zero.
 Essentially, we need to calculate all the possible sums up to ‘S/2’ for all numbers.
