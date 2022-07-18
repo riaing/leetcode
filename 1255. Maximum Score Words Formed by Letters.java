@@ -43,13 +43,17 @@ words[i], letters[i] contains only lower case English letters.
 
 ------------------------------ DFS ----------------------------------------------------
 /*
+参考的解法：DFS 每层循环每个词，如果能组成当前词的话，两个选择：选or不选来递归。当遍历完words list后terminate
+https://leetcode.cn/problems/maximum-score-words-formed-by-letters/solution/java-dfs-bei-bao-shuang-100-by-zsq/
+*/
+
+/*
 没做过此类题型的话，可以看一下此题的前置题型，我是打完周赛碰到这类题型特地找这些题型练手的，链接如下：2151：基于陈述统计最多好人数
 
-1、map数组用于记录可用的字母个数
+1、freq map数组用于记录可用的字母个数
 2、words数组长度不超过15，所以联想到状态压缩
 3、对于每个子集是否合理的判断，不能直接在map数组上进行操作，因为每个子集状态都需要map的原始状态，所以copy一个数组，这里注意需要深度拷贝，不能改变原数组map中的值
 4、在子集所包括的单词分数的枚举过程中，如果字母个数不够用了，需要退出当前子集状态，并先将scores置零，否则会记录到此前已经累加到的分数
-
 
 
 作者：yuzihan
@@ -59,12 +63,6 @@ words[i], letters[i] contains only lower case English letters.
 
 */
 
-/*
-参考的解法：
-https://leetcode.cn/problems/maximum-score-words-formed-by-letters/solution/java-dfs-bei-bao-shuang-100-by-zsq/
-*/
-
-
 class Solution {
     int max; 
     String[] words;
@@ -72,19 +70,14 @@ class Solution {
     public int maxScoreWords(String[] words, char[] letters, int[] score) {
         this.words = words; 
         this.output = new ArrayList<>(); 
-        // 1. build wordScore map 
-        int[] weight = new int[score.length];
-        for (int i = 0; i < score.length; i++) {
-            weight[i] = score[i];
-        }
-        // 2. build number map 
+
+        //  build number-> freq map 
         int[] wordNum = new int[26];
         for (char c : letters) {
             wordNum[c - 'a'] += 1;
         }
-        
-        DFS(0, 0, wordNum, weight, new ArrayList<String>());
-        System.out.println(output); 
+        DFS(0, 0, wordNum, score, new ArrayList<String>());
+        // System.out.println(output); 
         return max; 
 
     }
@@ -122,3 +115,5 @@ class Solution {
 
 }
 
+
+ 
