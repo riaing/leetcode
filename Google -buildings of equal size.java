@@ -51,7 +51,7 @@ public int minRemoval(int[] heights) {
         
         int curHeight = heights[i];
         // remove 0...i-1th building 
-        int curCost = preSum[i] + preSum[preSum.length - 1] - preSum[i+1] - curHeight * (heights.length - i-1); 
+        int curCost = preSum[i] + （preSum[preSum.length] - preSum[i+1] - curHeight * (heights.length - i-1)）; 
         res = Math.min(res, curCost);
     }
     
