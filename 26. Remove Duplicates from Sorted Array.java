@@ -49,7 +49,30 @@ class Solution {
         return placeToreplaceDup;
         }
 }
---------- for loop 版本 -----------------------------
+
+-------------2022.6 快慢指针 -------------
+  基础题： 我们让慢指针 slow 走在后面，快指针 fast 走在前面探路，找到一个不重复的元素就告诉 slow 
+  并让 slow 前进一步。这样当 fast 指针遍历完整个数组 nums 后，**nums[0..slow] 就是不重复元素**。 
+  class Solution {
+    public int removeDuplicates(int[] nums) {
+        int slow = 0; 
+        int fast = slow; 
+        while (fast < nums.length && slow < nums.length) {
+            if (nums[slow] == nums[fast]) {
+                fast++;
+            }
+            else {
+                slow++;
+                nums[slow] = nums[fast]; 
+            }
+        }
+        return slow+1; // k代表个数，所以index+1
+        
+    }
+
+}
+
+--------- for loop 版本 模板 -----------------------------
   
 /*
 2 pointer 
@@ -73,24 +96,3 @@ class Solution {
         }
 }
 
--------------2022.6 快慢指针 -------------
-  基础题： 我们让慢指针 slow 走在后面，快指针 fast 走在前面探路，找到一个不重复的元素就告诉 slow 
-  并让 slow 前进一步。这样当 fast 指针遍历完整个数组 nums 后，**nums[0..slow] 就是不重复元素**。 
-  class Solution {
-    public int removeDuplicates(int[] nums) {
-        int slow = 0; 
-        int fast = slow; 
-        while (fast < nums.length && slow < nums.length) {
-            if (nums[slow] == nums[fast]) {
-                fast++;
-            }
-            else {
-                slow++;
-                nums[slow] = nums[fast]; 
-            }
-        }
-        return slow+1; // k代表个数，所以index+1
-        
-    }
-
-}
