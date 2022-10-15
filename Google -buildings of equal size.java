@@ -7,12 +7,14 @@ Given the number of floors in each building, devise an algorithm to make the bui
 
 Let there be 3 buildings in the city with 7, 3, and 5 floors respectively. We can remove 2 floors from the first building leaving it with 5 floors. We can then remove all the 3 floors from the second building leaving the plot for community services. After removing the floors, we will be left with two buildings each with 5 floors. The number of floors removed in this case is 2 + 3 = 5.
 
-4 + 2 = 6 
 
 ex2: 
 7 , 5 => 1) remove 5, return 5 ;  2) 5,5 return 2  
 
+common pitfall: 
+sort后，对于building i，如果删除i但不删除i-1，肯定不是最优解（保持i-1高度的话，对于i，最好是移平而不是删除i）。所以要求的是对于buidling i，删掉前面所有+把后面的铲平的effort。比较所有building的effort，返回最小值
 
+ex3：
 3, 5, 7, 9, 11, 13 
 1) Keep everything: 0 + 2 + 4 + 6 + 8 + 10 = 30 
 
