@@ -7,11 +7,11 @@ Given the number of floors in each building, devise an algorithm to make the bui
 
 Let there be 3 buildings in the city with 7, 3, and 5 floors respectively. We can remove 2 floors from the first building leaving it with 5 floors. We can then remove all the 3 floors from the second building leaving the plot for community services. After removing the floors, we will be left with two buildings each with 5 floors. The number of floors removed in this case is 2 + 3 = 5.
 
-4 + 2 = 6.
+4 + 2 = 6 
 
-7 , 5 => 1) 7 - 5;  2) 5,5, - 2  
+ex2: 
+7 , 5 => 1) remove 5, return 5 ;  2) 5,5 return 2  
 
-3, 5, 7 => 
 
 3, 5, 7, 9, 11, 13 
 1) Keep everything: 0 + 2 + 4 + 6 + 8 + 10 = 30 
