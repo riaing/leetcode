@@ -74,7 +74,7 @@ class Solution {
 }
 -------------- 2022.3.9 求 path ----------------------------------
     /*
-dp[i] 前 i 个元素的 LIS. 
+dp[i] 以i结尾的 i个元素的 LIS. 
 dp[i] = Max{dp[j] +1 }, 0 <= j <= i-1, if nums[i] > nums[j]
 
 Time: loop is n, 第一次 1， 第二次2， 第 n 次 n-1 -> 1+2+、、、n-1 = n^2
